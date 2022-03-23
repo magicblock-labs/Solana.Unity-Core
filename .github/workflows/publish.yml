@@ -31,9 +31,7 @@ jobs:
           PACKAGE_NAME: Sol.Unity.Extensions
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
-          TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-          INCLUDE_SYMBOLS: true
       - name: Publish Sol.Unity.Wallet on version change
         uses: rohith/publish-nuget@v2
         with:
