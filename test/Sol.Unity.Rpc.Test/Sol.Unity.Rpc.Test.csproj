@@ -270,13 +270,13 @@
     <None Update="Resources\Streaming\Account\AccountSubscribeProcessed.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Streaming\Logs\LogsSubscribeAllProcessed.json">
+    <None Update="Resources\Streaming\LogsSubscribe\LogsSubscribeAllProcessed.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Streaming\Logs\LogsSubscribeMentionConfirmed.json">
+    <None Update="Resources\Streaming\LogsSubscribe\LogsSubscribeMentionConfirmed.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Streaming\Logs\LogsSubscribeNotificationWithError.json">
+    <None Update="Resources\Streaming\LogsSubscribe\LogsSubscribeNotificationWithError.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Streaming\Program\ProgramSubscribeConfirmed.json">
@@ -339,13 +339,13 @@
     <None Update="Resources\Streaming\Account\AccountSubUnsubscription.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Streaming\Logs\LogsSubscribeAll.json">
+    <None Update="Resources\Streaming\LogsSubscribe\LogsSubscribeAll.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Streaming\Logs\LogsSubscribeMention.json">
+    <None Update="Resources\Streaming\LogsSubscribe\LogsSubscribeMention.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Streaming\Logs\LogsSubscribeNotification.json">
+    <None Update="Resources\Streaming\LogsSubscribe\LogsSubscribeNotification.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="Resources\Http\Accounts\GetAccountInfoRequest.json">

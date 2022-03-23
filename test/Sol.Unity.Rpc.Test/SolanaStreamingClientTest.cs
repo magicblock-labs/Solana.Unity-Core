@@ -236,7 +236,7 @@ namespace Sol.Unity.Rpc.Test
         [TestMethod]
         public void SubscribeLogsMentionTest()
         {
-            var expected = File.ReadAllText("Resources/Streaming/Logs/LogsSubscribeMention.json");
+            var expected = File.ReadAllText("Resources/Streaming/LogsSubscribe/LogsSubscribeMention.json");
             var subConfirmContent = File.ReadAllBytes("Resources/Streaming/SubscribeConfirm.json");
             ResponseValue<LogInfo> resultNotification = null;
             var result = new ReadOnlyMemory<byte>();
@@ -266,7 +266,7 @@ namespace Sol.Unity.Rpc.Test
         [TestMethod]
         public void SubscribeLogsMentionConfirmed()
         {
-            var expected = File.ReadAllText("Resources/Streaming/Logs/LogsSubscribeMentionConfirmed.json");
+            var expected = File.ReadAllText("Resources/Streaming/LogsSubscribe/LogsSubscribeMentionConfirmed.json");
             var subConfirmContent = File.ReadAllBytes("Resources/Streaming/SubscribeConfirm.json");
             ResponseValue<LogInfo> resultNotification = null;
             var result = new ReadOnlyMemory<byte>();
@@ -296,9 +296,9 @@ namespace Sol.Unity.Rpc.Test
         [TestMethod]
         public void SubscribeLogsAllTest()
         {
-            var expected = File.ReadAllText("Resources/Streaming/Logs/LogsSubscribeAll.json");
+            var expected = File.ReadAllText("Resources/Streaming/LogsSubscribe/LogsSubscribeAll.json");
             var subConfirmContent = File.ReadAllBytes("Resources/Streaming/SubscribeConfirm.json");
-            var notificationContents = File.ReadAllBytes("Resources/Streaming/Logs/LogsSubscribeNotification.json");
+            var notificationContents = File.ReadAllBytes("Resources/Streaming/LogsSubscribe/LogsSubscribeNotification.json");
             ResponseValue<LogInfo> resultNotification = null;
             var result = new ReadOnlyMemory<byte>();
 
@@ -331,9 +331,9 @@ namespace Sol.Unity.Rpc.Test
         [TestMethod]
         public void SubscribeLogsAllProcessed()
         {
-            var expected = File.ReadAllText("Resources/Streaming/Logs/LogsSubscribeAllProcessed.json");
+            var expected = File.ReadAllText("Resources/Streaming/LogsSubscribe/LogsSubscribeAllProcessed.json");
             var subConfirmContent = File.ReadAllBytes("Resources/Streaming/SubscribeConfirm.json");
-            var notificationContents = File.ReadAllBytes("Resources/Streaming/Logs/LogsSubscribeNotification.json");
+            var notificationContents = File.ReadAllBytes("Resources/Streaming/LogsSubscribe/LogsSubscribeNotification.json");
             ResponseValue<LogInfo> resultNotification = null;
             var result = new ReadOnlyMemory<byte>();
 
@@ -366,9 +366,9 @@ namespace Sol.Unity.Rpc.Test
         [TestMethod]
         public void SubscribeLogsWithErrors()
         {
-            var expected = File.ReadAllText("Resources/Streaming/Logs/LogsSubscribeAllProcessed.json");
+            var expected = File.ReadAllText("Resources/Streaming/LogsSubscribe/LogsSubscribeAllProcessed.json");
             var subConfirmContent = File.ReadAllBytes("Resources/Streaming/SubscribeConfirm.json");
-            var notificationContents = File.ReadAllBytes("Resources/Streaming/Logs/LogsSubscribeNotificationWithError.json");
+            var notificationContents = File.ReadAllBytes("Resources/Streaming/LogsSubscribe/LogsSubscribeNotificationWithError.json");
             ResponseValue<LogInfo> resultNotification = null;
             var result = new ReadOnlyMemory<byte>();
 
