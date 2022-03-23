@@ -25,7 +25,7 @@ jobs:
           target: Pack
           cake-bootstrap: true
       - name: Publish Sol.Unity.Extensions on version change
-        uses: bmresearch/publish-nuget@master
+        uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src/Sol.Unity.Extensions/Sol.Unity.Extensions.csproj
           PACKAGE_NAME: Sol.Unity.Extensions
@@ -35,7 +35,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
       - name: Publish Sol.Unity.Wallet on version change
-        uses: bmresearch/publish-nuget@master
+        uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src/Sol.Unity.Wallet/Sol.Unity.Wallet.csproj
           PACKAGE_NAME: Sol.Unity.Wallet
@@ -45,7 +45,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
       - name: Publish Sol.Unity.Rpc on version change
-        uses: bmresearch/publish-nuget@master
+        uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src/Sol.Unity.Rpc/Sol.Unity.Rpc.csproj
           PACKAGE_NAME: Sol.Unity.Rpc
@@ -55,7 +55,7 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
       - name: Publish Sol.Unity.KeyStore on version change
-        uses: bmresearch/publish-nuget@master
+        uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src/Sol.Unity.KeyStore/Sol.Unity.KeyStore.csproj
           PACKAGE_NAME: Sol.Unity.KeyStore
@@ -66,7 +66,7 @@ jobs:
           INCLUDE_SYMBOLS: true
       - name: Publish Sol.Unity.Programs on version change
         id: publish_nuget
-        uses: bmresearch/publish-nuget@master
+        uses: rohith/publish-nuget@v2
         with:
           PROJECT_FILE_PATH: src/Sol.Unity.Programs/Sol.Unity.Programs.csproj
           PACKAGE_NAME: Sol.Unity.Programs
