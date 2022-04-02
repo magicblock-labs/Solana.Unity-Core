@@ -6,20 +6,20 @@
 
 <p align="center">
     <a href="https://github.com/bmresearch/Solnet/actions/workflows/dotnet.yml">
-        <img src="https://github.com/bmresearch/Solnet/actions/workflows/dotnet.yml/badge.svg"
+        <img src="https://github.com/garbles-dev/Sol.Unity/actions/workflows/dotnet.yml/badge.svg"
             alt="Build" ></a>
     <a href="https://github.com/bmresearch/Solnet/actions/workflows/publish.yml">
-       <img src="https://github.com/bmresearch/Solnet/actions/workflows/publish.yml/badge.svg" 
+       <img src="https://github.com/garbles-dev/Sol.Unity/actions/workflows/publish.yml/badge.svg" 
             alt="Release"></a>
     <a href="https://coveralls.io/github/bmresearch/Solnet?branch=master">
-        <img src="https://coveralls.io/repos/github/bmresearch/Solnet/badge.svg?branch=master" 
+        <img src="https://coveralls.io/repos/github/garbles-dev/Sol.Unity/badge.svg?branch=master" 
             alt="Coverage Status" ></a>
 <br/>
     <a href="">
-        <img src="https://img.shields.io/github/license/bmresearch/Solnet?style=flat-square"
+        <img src="https://img.shields.io/github/license/garbles-dev/Sol.Unity?style=flat-square"
             alt="Code License"></a>
-    <a href="https://twitter.com/intent/follow?screen_name=blockmountainio">
-        <img src="https://img.shields.io/twitter/follow/blockmountainio?style=flat-square&logo=twitter"
+    <a href="https://twitter.com/intent/follow?screen_name=garblesfun">
+        <img src="https://img.shields.io/twitter/follow/garblesfun?style=flat-square&logo=twitter"
             alt="Follow on Twitter"></a>
     <a href="https://discord.gg/MBkdC3gxcv">
        <img alt="Discord" src="https://img.shields.io/discord/943797222162726962?style=flat-square"
