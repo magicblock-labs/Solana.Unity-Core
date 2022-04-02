@@ -21,8 +21,8 @@
     <a href="https://twitter.com/intent/follow?screen_name=blockmountainio">
         <img src="https://img.shields.io/twitter/follow/blockmountainio?style=flat-square&logo=twitter"
             alt="Follow on Twitter"></a>
-    <a href="https://discord.gg/cReXaBReZt">
-       <img alt="Discord" src="https://img.shields.io/discord/849407317761064961?style=flat-square"
+    <a href="https://discord.gg/MBkdC3gxcv">
+       <img alt="Discord" src="https://img.shields.io/discord/943797222162726962?style=flat-square"
             alt="Join the discussion!"></a>
 </p>
 
@@ -425,7 +425,11 @@ var sig = wallet.Send(source, 12.75D, target, feePayer);
 
 ## Support
 
-Consider supporting us:
+Consider supporting the us for mantaining the integration with Unity:
+
+* Sol Address: **59JofSV1DiU2rrhFRghvFY2j8Pmhq4cgbEp6dSTJMiHx**
+
+Consider supporting the solnet develipers:
 
 * Sol Address: **oaksGKfwkFZwCniyCF35ZVxHDPexQ3keXNTiLa7RCSp**
 * [Mango Ref Link](https://trade.mango.markets/?ref=MangoSharp)
@@ -435,7 +439,13 @@ Consider supporting us:
 
 We encourage everyone to contribute, submit issues, PRs, discuss. Every kind of help is welcome.
 
-## Maintainers
+## Sol.Unity Maintainers
+
+
+* **Gabriele** - [murlokito](https://github.com/GabrielePicco)
+* **Luca** - [tiago](https://github.com/lucacillario)
+
+## Solnet Maintainers
 
 * **Hugo** - [murlokito](https://github.com/murlokito)
 * **Tiago** - [tiago](https://github.com/tiago18c)
