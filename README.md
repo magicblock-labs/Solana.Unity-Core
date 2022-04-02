@@ -442,8 +442,8 @@ We encourage everyone to contribute, submit issues, PRs, discuss. Every kind of 
 ## Sol.Unity Maintainers
 
 
-* **Gabriele** - [murlokito](https://github.com/GabrielePicco)
-* **Luca** - [tiago](https://github.com/lucacillario)
+* **Gabriele** - [GabrielePicco](https://github.com/GabrielePicco)
+* **Luca** - [lucacillario](https://github.com/lucacillario)
 
 ## Solnet Maintainers
 
