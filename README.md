@@ -32,11 +32,11 @@
 
 # Introduction
 
-Solnet.Unity is a ported version of [Solnet](https://blockmountain.io/Solnet/), compatible with .net 2.0. It can be used with [Unity](https://unity.com/).
+Sol.Unity is a ported version of [Solnet](https://blockmountain.io/Solnet/), compatible with .net 2.0. It can be used with [Unity](https://unity.com/).
 
 ## Solnet
 
-Solnet is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you are developing for the Web or Desktop, we are here to help. Learn more about the provided samples, documentation, integrating the SDK into your app, and more [here](https://blockmountain.io/Solnet/).
+Sol.Unity is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you are developing for the Web or Desktop, we are here to help. Learn more about the provided samples, documentation, integrating the SDK into your app, and more [here](https://blockmountain.io/Solnet/).
 
 </p>
 
