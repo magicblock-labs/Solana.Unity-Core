@@ -6,23 +6,23 @@
 
 <p align="center">
     <a href="https://github.com/bmresearch/Solnet/actions/workflows/dotnet.yml">
-        <img src="https://github.com/bmresearch/Solnet/actions/workflows/dotnet.yml/badge.svg"
+        <img src="https://github.com/garbles-dev/Sol.Unity/actions/workflows/dotnet.yml/badge.svg"
             alt="Build" ></a>
     <a href="https://github.com/bmresearch/Solnet/actions/workflows/publish.yml">
-       <img src="https://github.com/bmresearch/Solnet/actions/workflows/publish.yml/badge.svg" 
+       <img src="https://github.com/garbles-dev/Sol.Unity/actions/workflows/publish.yml/badge.svg" 
             alt="Release"></a>
     <a href="https://coveralls.io/github/bmresearch/Solnet?branch=master">
-        <img src="https://coveralls.io/repos/github/bmresearch/Solnet/badge.svg?branch=master" 
+        <img src="https://coveralls.io/repos/github/garbles-dev/Sol.Unity/badge.svg?branch=master" 
             alt="Coverage Status" ></a>
 <br/>
     <a href="">
-        <img src="https://img.shields.io/github/license/bmresearch/Solnet?style=flat-square"
+        <img src="https://img.shields.io/github/license/garbles-dev/Sol.Unity?style=flat-square"
             alt="Code License"></a>
-    <a href="https://twitter.com/intent/follow?screen_name=blockmountainio">
-        <img src="https://img.shields.io/twitter/follow/blockmountainio?style=flat-square&logo=twitter"
+    <a href="https://twitter.com/intent/follow?screen_name=garblesfun">
+        <img src="https://img.shields.io/twitter/follow/garblesfun?style=flat-square&logo=twitter"
             alt="Follow on Twitter"></a>
-    <a href="https://discord.gg/cReXaBReZt">
-       <img alt="Discord" src="https://img.shields.io/discord/849407317761064961?style=flat-square"
+    <a href="https://discord.gg/MBkdC3gxcv">
+       <img alt="Discord" src="https://img.shields.io/discord/943797222162726962?style=flat-square"
             alt="Join the discussion!"></a>
 </p>
 
@@ -36,7 +36,7 @@ Sol.Unity is a ported version of [Solnet](https://blockmountain.io/Solnet/), com
 
 ## Solnet
 
-Solnet is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you are developing for the Web or Desktop, we are here to help. Learn more about the provided samples, documentation, integrating the SDK into your app, and more [here](https://blockmountain.io/Solnet/).
+Sol.Unity is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you are developing for the Web or Desktop, we are here to help. Learn more about the provided samples, documentation, integrating the SDK into your app, and more [here](https://blockmountain.io/Solnet/).
 
 </p>
 
@@ -425,7 +425,11 @@ var sig = wallet.Send(source, 12.75D, target, feePayer);
 
 ## Support
 
-Consider supporting us:
+Consider supporting the us for mantaining the integration with Unity:
+
+* Sol Address: **59JofSV1DiU2rrhFRghvFY2j8Pmhq4cgbEp6dSTJMiHx**
+
+Consider supporting the solnet develipers:
 
 * Sol Address: **oaksGKfwkFZwCniyCF35ZVxHDPexQ3keXNTiLa7RCSp**
 * [Mango Ref Link](https://trade.mango.markets/?ref=MangoSharp)
@@ -435,7 +439,13 @@ Consider supporting us:
 
 We encourage everyone to contribute, submit issues, PRs, discuss. Every kind of help is welcome.
 
-## Maintainers
+## Sol.Unity Maintainers
+
+
+* **Gabriele** - [GabrielePicco](https://github.com/GabrielePicco)
+* **Luca** - [lucacillario](https://github.com/lucacillario)
+
+## Solnet Maintainers
 
 * **Hugo** - [murlokito](https://github.com/murlokito)
 * **Tiago** - [tiago](https://github.com/tiago18c)
