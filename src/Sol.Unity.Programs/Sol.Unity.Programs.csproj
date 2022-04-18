@@ -9,7 +9,7 @@
     <ProjectReference Include="..\Sol.Unity.Rpc\Sol.Unity.Rpc.csproj" />
     <PackageReference Include="IsExternalInit" Version="1.0.2" PrivateAssets="all" />
     <PackageReference Include="IndexRange" Version="1.0.1" />
-    <PackageReference Include="TA.System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray" Version="1.0.1" />
+    <PackageReference Include="TA.System.Runtime.CompilerServices.RuntimeHelpers.GetSubArray" Version="1.0.1" PrivateAssets="all"/>
     <PackageReference Include="Mono.DataConverter" Version="1.0.0" />
   </ItemGroup>
 

@@ -14,8 +14,8 @@
     </AssemblyAttribute>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0-preview.3.22175.4" />
+    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4" />
     <PackageReference Include="IsExternalInit" Version="1.0.2" PrivateAssets="all" />
     <ProjectReference Include="..\Sol.Unity.Wallet\Sol.Unity.Wallet.csproj" />
   </ItemGroup>

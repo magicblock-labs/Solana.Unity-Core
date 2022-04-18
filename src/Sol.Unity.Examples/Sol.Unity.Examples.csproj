@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4" />
     <ProjectReference Include="..\Sol.Unity.Extensions\Sol.Unity.Extensions.csproj" />
     <ProjectReference Include="..\Sol.Unity.KeyStore\Sol.Unity.KeyStore.csproj" />
     <ProjectReference Include="..\Sol.Unity.Programs\Sol.Unity.Programs.csproj" />
