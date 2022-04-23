@@ -425,15 +425,13 @@ var sig = wallet.Send(source, 12.75D, target, feePayer);
 
 ## Support
 
-Consider supporting the us for mantaining the integration with Unity:
+Consider supporting us for mantaining the integration with Unity:
 
 * Sol Address: **59JofSV1DiU2rrhFRghvFY2j8Pmhq4cgbEp6dSTJMiHx**
 
-Consider supporting the solnet develipers:
+Consider supporting the solnet developers:
 
 * Sol Address: **oaksGKfwkFZwCniyCF35ZVxHDPexQ3keXNTiLa7RCSp**
-* [Mango Ref Link](https://trade.mango.markets/?ref=MangoSharp)
-
 
 ## Contribution
 
