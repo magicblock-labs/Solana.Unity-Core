@@ -1,4 +1,8 @@
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using Sol.Unity.Rpc.Converters;
 using Sol.Unity.Rpc.Core;
 using Sol.Unity.Rpc.Core.Sockets;
@@ -10,8 +14,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -69,103 +71,45 @@ namespace Sol.Unity.Rpc
         /// <inheritdoc cref="StreamingRpcClient.HandleNewMessage(Memory{byte})"/>
         protected override void HandleNewMessage(Memory<byte> messagePayload)
         {
-            Utf8JsonReader jsonReader = new Utf8JsonReader(messagePayload.Span);
-            jsonReader.Read();
+            bool parsedValue;
+            
+            var jToken = JToken.Parse(Encoding.UTF8.GetString(messagePayload.Span.ToArray()));
 
             if (_logger?.IsEnabled(LogLevel.Information) ?? false)
             {
-                var str = Encoding.UTF8.GetString(messagePayload.Span.ToArray());
+                var str = jToken.ToString();
                 _logger?.LogInformation($"[Received]{str}");
             }
 
-            string prop = "", method = "";
-            int id = -1, intResult = -1;
-            bool handled = false;
-            bool? boolResult = null;
-
-            Utf8JsonReader savedState = default;
-
-            while (!handled && jsonReader.Read())
+            if (jToken["error"] != null)
             {
-                switch (jsonReader.TokenType)
-                {
-                    case JsonTokenType.PropertyName:
-                        prop = jsonReader.GetString();
-                        if (prop == "params")
-                        {
-                            savedState = jsonReader;
-                            jsonReader.Read();
-                            jsonReader.Read();
-                            jsonReader.Skip();
-                        }
-                        else if (prop == "error")
-                        {
-                            HandleError(ref jsonReader);
-                            handled = true;
-                        }
-                        break;
-                    case JsonTokenType.String:
-                        if (prop == "method")
-                        {
-                            method = jsonReader.GetString();
-                        }
-                        break;
-                    case JsonTokenType.Number:
-                        if (prop == "id")
-                        {
-                            id = jsonReader.GetInt32();
-                        }
-                        else if (prop == "result")
-                        {
-                            intResult = jsonReader.GetInt32();
-                        }
-                        else if (prop == "subscription")
-                        {
-                            id = jsonReader.GetInt32();
-                            HandleDataMessage(ref savedState, method, id);
-                            handled = true;
-                        }
-                        if (id != -1 && intResult != -1)
-                        {
-                            ConfirmSubscription(id, intResult);
-                            handled = true;
-                        }
-                        break;
-                    case JsonTokenType.True:
-                    case JsonTokenType.False:
-                        if (prop == "result")
-                        {
-                            // this is the result of an unsubscription
-                            // I don't think its supposed to ever be false if we correctly manage the subscription ids
-                            // maybe future followup
-                            boolResult = jsonReader.GetBoolean();
-                        }
-                        break;
-                }
+                HandleError(jToken);
+            }else if(jToken["method"] != null && jToken["params"] != null && jToken["params"]["subscription"] != null)
+            {
+                var id = Convert.ToInt32(jToken["params"]["subscription"]);
+                var method = jToken["method"].ToString();
+                HandleDataMessage(jToken["params"], method, id);
+            }else if (jToken["id"] != null && jToken["result"] != null 
+                      && Boolean.TryParse(jToken["result"].ToString(), out parsedValue) && parsedValue)
+            {
+                RemoveSubscription(Convert.ToInt32(jToken["id"]), true);
             }
-
-            if (boolResult.HasValue)
+            else if (jToken["id"] != null && jToken["result"] != null )
             {
-                RemoveSubscription(id, boolResult.Value);
+                ConfirmSubscription(Convert.ToInt32(jToken["id"]), Convert.ToInt32(jToken["result"]));
             }
         }
 
         /// <summary>
         /// Handles and finishes parsing the contents of an error message.
         /// </summary>
-        /// <param name="reader">The jsonReader that read the message so far.</param>
-        private void HandleError(ref Utf8JsonReader reader)
+        /// <param name="jToken">The jtoken that read the message so far.</param>
+        private void HandleError(JToken jToken)
         {
-            JsonSerializerOptions opts = new JsonSerializerOptions() { MaxDepth = 64, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-            var err = JsonSerializer.Deserialize<ErrorContent>(ref reader, opts);
+            JsonSerializerSettings opts = new() { MaxDepth = 64,  ContractResolver = new CamelCasePropertyNamesContractResolver() };
+            var err = jToken["error"].ToObject<ErrorContent>(JsonSerializer.Create(opts));
 
-            reader.Read();
-
-            //var prop = reader.GetString(); //don't care about property name
-
-            reader.Read();
-
-            var id = reader.GetInt32();
+            var id = Convert.ToInt32(jToken["id"]);
 
             var sub = RemoveUnconfirmedSubscription(id);
 
@@ -266,12 +210,12 @@ namespace Sol.Unity.Rpc
         /// <summary>
         /// Handles a notification message and finishes parsing the contents.
         /// </summary>
-        /// <param name="reader">The current JsonReader being used to parse the message.</param>
+        /// <param name="jToken">The current JToken being used to parse the message.</param>
         /// <param name="method">The method parameter already parsed within the message.</param>
         /// <param name="subscriptionId">The subscriptionId for this message.</param>
-        private void HandleDataMessage(ref Utf8JsonReader reader, string method, int subscriptionId)
+        private void HandleDataMessage(JToken jToken, string method, int subscriptionId)
         {
-            JsonSerializerOptions opts = new JsonSerializerOptions() { MaxDepth = 64, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+            JsonSerializerSettings opts = new() { MaxDepth = 64,  ContractResolver = new CamelCasePropertyNamesContractResolver() };
 
             var sub = RetrieveSubscription(subscriptionId);
 
@@ -283,36 +227,35 @@ namespace Sol.Unity.Rpc
                     {
                         if (sub.Channel == SubscriptionChannel.TokenAccount)
                         {
-                            //var newReader = new Utf8JsonReader()
-                            var tokenAccNotification = JsonSerializer.Deserialize<JsonRpcStreamResponse<ResponseValue<TokenAccountInfo>>>(ref reader, opts);
+                            var tokenAccNotification = jToken.ToObject<JsonRpcStreamResponse<ResponseValue<TokenAccountInfo>>>(JsonSerializer.Create(opts));
                             result = tokenAccNotification.Result;
                         }
                         else
                         {
-                            var accNotification = JsonSerializer.Deserialize<JsonRpcStreamResponse<ResponseValue<AccountInfo>>>(ref reader, opts);
+                            var accNotification = jToken.ToObject<JsonRpcStreamResponse<ResponseValue<AccountInfo>>>(JsonSerializer.Create(opts));
                             result = accNotification.Result;
                         }
                         break;
                     }
                 case "logsNotification":
-                    var logsNotification = JsonSerializer.Deserialize<JsonRpcStreamResponse<ResponseValue<LogInfo>>>(ref reader, opts);
+                    var logsNotification = jToken.ToObject<JsonRpcStreamResponse<ResponseValue<LogInfo>>>(JsonSerializer.Create(opts));
                     result = logsNotification.Result;
                     break;
                 case "programNotification":
-                    var programNotification = JsonSerializer.Deserialize<JsonRpcStreamResponse<ResponseValue<AccountKeyPair>>>(ref reader, opts);
+                    var programNotification = jToken.ToObject<JsonRpcStreamResponse<ResponseValue<AccountKeyPair>>>(JsonSerializer.Create(opts));
                     result = programNotification.Result; 
                     break;
                 case "signatureNotification":
-                    var signatureNotification = JsonSerializer.Deserialize<JsonRpcStreamResponse<ResponseValue<ErrorResult>>>(ref reader, opts);
+                    var signatureNotification = jToken.ToObject<JsonRpcStreamResponse<ResponseValue<ErrorResult>>>(JsonSerializer.Create(opts));
                     result = signatureNotification.Result;
                     RemoveSubscription(signatureNotification.Subscription, true);
                     break;
                 case "slotNotification":
-                    var slotNotification = JsonSerializer.Deserialize<JsonRpcStreamResponse<SlotInfo>>(ref reader, opts);
+                    var slotNotification = jToken.ToObject<JsonRpcStreamResponse<SlotInfo>>(JsonSerializer.Create(opts));
                     result = slotNotification.Result;
                     break;
                 case "rootNotification":
-                    var rootNotification = JsonSerializer.Deserialize<JsonRpcStreamResponse<int>>(ref reader, opts);
+                    var rootNotification = jToken.ToObject<JsonRpcStreamResponse<int>>(JsonSerializer.Create(opts));
                     result = rootNotification.Result;
                     break;
             }
@@ -504,16 +447,18 @@ namespace Sol.Unity.Rpc
         /// <returns>A task representing the state of the asynchronous operation-</returns>
         private async Task<SubscriptionState> Subscribe(SubscriptionState sub, JsonRpcRequest msg)
         {
-            var json = JsonSerializer.SerializeToUtf8Bytes(msg, new JsonSerializerOptions
+
+            var opts = new JsonSerializerSettings()
             {
-                WriteIndented = false,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                Formatting = Formatting.None,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
                 {
                     new EncodingConverter(),
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
                 }
-            });
+            };
+            var json = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(msg, opts));
 
             if (_logger?.IsEnabled(LogLevel.Information) ?? false)
             {
@@ -558,5 +503,21 @@ namespace Sol.Unity.Rpc
 
         /// <inheritdoc cref="IStreamingRpcClient.Unsubscribe(SubscriptionState)"/>
         public void Unsubscribe(SubscriptionState subscription) => UnsubscribeAsync(subscription).Wait();
+        
+        /// <summary>
+        /// Clones a object via shallow copy
+        /// </summary>
+        /// <typeparam name="T">Object Type to Clone</typeparam>
+        /// <param name="obj">Object to Clone</param>
+        /// <returns>New Object reference</returns>
+        public static T CloneObject<T>(T obj) where T : class
+        {
+            if (obj == null) return null;
+            System.Reflection.MethodInfo inst = obj.GetType().GetMethod("MemberwiseClone",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            if (inst != null)
+                return (T)inst.Invoke(obj, null);
+            return null;
+        }
     }
 }

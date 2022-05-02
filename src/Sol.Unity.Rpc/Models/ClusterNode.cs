@@ -1,5 +1,6 @@
 // ReSharper disable ClassNeverInstantiated.Global
-using System.Text.Json.Serialization;
+
+using Newtonsoft.Json;
 
 namespace Sol.Unity.Rpc.Models
 {
@@ -16,7 +17,7 @@ namespace Sol.Unity.Rpc.Models
         /// <summary>
         /// A base-58 encoded public key associated with the node.
         /// </summary>
-        [JsonPropertyName("pubkey")]
+        [JsonProperty("pubkey")]
         public string PublicKey { get; set; }
 
         /// <summary>

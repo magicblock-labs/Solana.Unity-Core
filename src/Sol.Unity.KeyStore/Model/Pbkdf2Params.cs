@@ -1,14 +1,13 @@
-
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Sol.Unity.KeyStore.Model
 {
     public class Pbkdf2Params : KdfParams
     {
-        [JsonPropertyName("c")]
+        [JsonProperty("c")]
         public int Count { get; init; }
 
-        [JsonPropertyName("prf")]
+        [JsonProperty("prf")]
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Prf { get; init; }
     }

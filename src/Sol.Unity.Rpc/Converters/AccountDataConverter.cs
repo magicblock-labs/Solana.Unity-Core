@@ -1,38 +1,43 @@
-﻿using Sol.Unity.Rpc.Types;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Sol.Unity.Rpc.Converters
 {
     /// <inheritdoc/>
     public class AccountDataConverter : JsonConverter<List<string>>
     {
-        /// <inheritdoc/>
-        public override List<string> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        /// <inheritdoc />
+        public override void WriteJson(JsonWriter writer, List<string> value, JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonTokenType.StartArray)
-                return JsonSerializer.Deserialize<List<string>>(ref reader, options);
+            throw new NotImplementedException();
+        }
 
-            if(reader.TokenType == JsonTokenType.StartObject)
+        /// <summary>
+        /// Read an AccountDataConverter from json into its model representation.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="objectType"></param>
+        /// <param name="existingValue"></param>
+        /// <param name="hasExistingValue"></param>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
+        /// <exception cref="JsonException"></exception>
+        public override List<string> ReadJson(JsonReader reader, Type objectType, List<string> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            if (reader.TokenType == JsonToken.StartArray)
+                return serializer.Deserialize<List<string>>(reader);
+
+            if(reader.TokenType == JsonToken.StartObject)
             {
-                JsonDocument doc = JsonDocument.ParseValue(ref reader);
-                var jsonAsString = doc.RootElement.ToString();
-
+                var doc = JObject.Load(reader);
+                var jsonAsString = doc.Root.ToString();
+            
                 return new List<string>() { jsonAsString, "jsonParsed" };
             }
 
             throw new JsonException("Unable to parse account data");
-        }
-
-        /// <inheritdoc/>
-        public override void Write(Utf8JsonWriter writer, List<string> value, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
         }
     }
 }

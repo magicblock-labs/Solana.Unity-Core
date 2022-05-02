@@ -1,7 +1,7 @@
+using Newtonsoft.Json;
 using Sol.Unity.Rpc.Models;
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+
 
 namespace Sol.Unity.Rpc.Converters
 {
@@ -14,18 +14,21 @@ namespace Sol.Unity.Rpc.Converters
         /// Reads and converts the JSON to type <c>TransactionError</c>.
         /// </summary>
         /// <param name="reader">The reader.</param>
-        /// <param name="typeToConvert"> The type to convert.</param>
-        /// <param name="options">An object that specifies serialization options to use.</param>
+        /// <param name="objectType"> The type to convert.</param>
+        /// <param name="existingValue">An existing values</param>
+        /// <param name="hasExistingValue">If it has an existing values</param>
+        /// <param name="serializer">The serializer</param>
         /// <returns>The converted value.</returns>
-        public override TransactionError Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override TransactionError ReadJson(JsonReader reader, Type objectType, TransactionError existingValue, bool hasExistingValue,
+            JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonTokenType.Null) return null;
+            if (reader.TokenType == JsonToken.Null) return null;
 
             var err = new TransactionError();
 
-            if (reader.TokenType == JsonTokenType.String)
+            if (reader.TokenType == JsonToken.String)
             {
-                var enumValue = reader.GetString();
+                var enumValue = reader.ReadAsString();
 
                 Enum.TryParse(enumValue, ignoreCase: false, out TransactionErrorType errorType);
                 err.Type = errorType;
@@ -33,21 +36,21 @@ namespace Sol.Unity.Rpc.Converters
                 return err;
             }
 
-            if (reader.TokenType != JsonTokenType.StartObject)
+            if (reader.TokenType != JsonToken.StartObject)
             {
                 throw new JsonException("Unexpected error value.");
             }
 
             reader.Read();
 
-            if (reader.TokenType != JsonTokenType.PropertyName)
+            if (reader.TokenType != JsonToken.PropertyName)
             {
                 throw new JsonException("Unexpected error value.");
             }
 
 
             {
-                var enumValue = reader.GetString();
+                var enumValue = (string)reader.Value;
                 Enum.TryParse(enumValue, ignoreCase: false, out TransactionErrorType errorType);
                 err.Type = errorType;
             }
@@ -55,25 +58,25 @@ namespace Sol.Unity.Rpc.Converters
             reader.Read();
             err.InstructionError = new InstructionError();
 
-            if (reader.TokenType != JsonTokenType.StartArray)
+            if (reader.TokenType != JsonToken.StartArray)
             {
                 throw new JsonException("Unexpected error value.");
             }
 
             reader.Read();
 
-            if (reader.TokenType != JsonTokenType.Number)
+            if (reader.TokenType != JsonToken.Integer)
             {
                 throw new JsonException("Unexpected error value.");
             }
 
-            err.InstructionError.InstructionIndex = reader.GetInt32();
+            err.InstructionError.InstructionIndex = Convert.ToInt32(reader.Value);
 
             reader.Read();
 
-            if (reader.TokenType == JsonTokenType.String)
+            if (reader.TokenType == JsonToken.String)
             {
-                var enumValue = reader.GetString();
+                var enumValue = (string)reader.Value;
 
                 Enum.TryParse(enumValue, ignoreCase: false, out InstructionErrorType errorType);
                 err.InstructionError.Type = errorType;
@@ -83,7 +86,7 @@ namespace Sol.Unity.Rpc.Converters
                 return err;
             }
 
-            if (reader.TokenType != JsonTokenType.StartObject)
+            if (reader.TokenType != JsonToken.StartObject)
             {
                 throw new JsonException("Unexpected error value.");
             }
@@ -91,21 +94,21 @@ namespace Sol.Unity.Rpc.Converters
             reader.Read();
 
 
-            if (reader.TokenType != JsonTokenType.PropertyName)
+            if (reader.TokenType != JsonToken.PropertyName)
             {
                 throw new JsonException("Unexpected error value.");
             }
             {
-                var enumValue = reader.GetString();
+                var enumValue = (string)reader.Value;
                 Enum.TryParse(enumValue, ignoreCase: false, out InstructionErrorType errorType);
                 err.InstructionError.Type = errorType;
             }
 
             reader.Read();
 
-            if (reader.TokenType == JsonTokenType.Number)
+            if (reader.TokenType == JsonToken.Integer)
             {
-                err.InstructionError.CustomError = reader.GetUInt32();
+                err.InstructionError.CustomError = Convert.ToUInt32(reader.Value);
                 reader.Read(); //number
                 reader.Read(); //endobj
                 reader.Read(); //endarray
@@ -113,26 +116,20 @@ namespace Sol.Unity.Rpc.Converters
                 return err;
             }
 
-            if (reader.TokenType != JsonTokenType.String)
+            if (reader.TokenType != JsonToken.String)
             {
                 throw new JsonException("Unexpected error value.");
             }
 
-            err.InstructionError.BorshIoError = reader.GetString();
+            err.InstructionError.BorshIoError = reader.ReadAsString();
             reader.Read(); //string
             reader.Read(); //endobj
             reader.Read(); //endarray
 
             return err;
         }
-
-        /// <summary>
-        /// Partially implemented.
-        /// </summary>
-        /// <param name="writer">n/a</param>
-        /// <param name="value">n/a</param>
-        /// <param name="options">n/a</param>
-        public override void Write(Utf8JsonWriter writer, TransactionError value, JsonSerializerOptions options)
+        
+        public override void WriteJson(JsonWriter writer, TransactionError value, JsonSerializer serializer)
         {
             if (value.InstructionError != null)
             {
@@ -145,8 +142,8 @@ namespace Sol.Unity.Rpc.Converters
                 // innards
                 var enumName = value.InstructionError.Type.ToString();
                 writer.WriteStartArray();
-                writer.WriteNumberValue(value.InstructionError.InstructionIndex);
-                writer.WriteStringValue(enumName);
+                writer.WriteValue(value.InstructionError.InstructionIndex);
+                writer.WriteValue(enumName);
                 writer.WriteEndArray();
 
                 writer.WriteEndObject();

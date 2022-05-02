@@ -1,4 +1,7 @@
-﻿using Sol.Unity.Rpc.Core.Http;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using Sol.Unity.Rpc.Core.Http;
 using Sol.Unity.Rpc.Messages;
 using Sol.Unity.Rpc.Models;
 using Sol.Unity.Rpc.Types;
@@ -6,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Sol.Unity.Extensions.Test
@@ -28,7 +29,7 @@ namespace Sol.Unity.Extensions.Test
         /// <summary>
         /// The Json serializer options to be reused between calls.
         /// </summary>
-        private readonly JsonSerializerOptions _serializerOptions;
+        private readonly JsonSerializerSettings _serializerOptions;
 
         /// <summary>
         /// Constructor for the MockWalletRpc
@@ -37,12 +38,12 @@ namespace Sol.Unity.Extensions.Test
         {
             _reqSeqId = 0;
             _responses = new Queue<string>();
-            _serializerOptions = new JsonSerializerOptions
+            _serializerOptions = new JsonSerializerSettings()
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
                 {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
                 }
             };
         }
@@ -98,7 +99,7 @@ namespace Sol.Unity.Extensions.Test
             }
 
             // deserialize JSON RPC response
-            var result = JsonSerializer.Deserialize<JsonRpcResponse<T>>(json, _serializerOptions);
+            var result = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(json, _serializerOptions);
             if (result == null) throw new ApplicationException("Mock response did not deserialize");
 
             // overwrite response id

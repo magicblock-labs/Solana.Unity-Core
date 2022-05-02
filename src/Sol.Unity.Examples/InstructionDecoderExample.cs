@@ -3,10 +3,8 @@ using Sol.Unity.Rpc;
 using Sol.Unity.Rpc.Builders;
 using Sol.Unity.Rpc.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace Sol.Unity.Examples
 {

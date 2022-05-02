@@ -1,11 +1,12 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Sol.Unity.Rpc.Models;
 using Sol.Unity.Wallet;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Sol.Unity.Programs.Test
 {
@@ -163,12 +164,15 @@ namespace Sol.Unity.Programs.Test
         public void DecodeInstructionsFromTransactionMetaTest()
         {
             string responseData = File.ReadAllText("Resources/TestDecodeInstructionFromBlockTransactionMetaInfo.json");
-            TransactionMetaInfo txMeta = JsonSerializer.Deserialize<TransactionMetaInfo>(responseData,
-                new JsonSerializerOptions
+            var options = new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters =
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-                });
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
+                }
+            };
+            TransactionMetaInfo txMeta = JsonConvert.DeserializeObject<TransactionMetaInfo>(responseData, options);
 
             List<DecodedInstruction> decodedInstructions = InstructionDecoder.DecodeInstructions(txMeta);
 
@@ -218,12 +222,15 @@ namespace Sol.Unity.Programs.Test
         public void DecodeInstructionsFromTransactionUnknownInstructionTest()
         {
             string responseData = File.ReadAllText("Resources/TestDecodeFromTransactionUnknownInstruction.json");
-            TransactionMetaSlotInfo txMeta = JsonSerializer.Deserialize<TransactionMetaSlotInfo>(responseData,
-                new JsonSerializerOptions
+            var options = new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters =
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-                });
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
+                }
+            };
+            TransactionMetaSlotInfo txMeta = JsonConvert.DeserializeObject<TransactionMetaSlotInfo>(responseData, options);
 
             List<DecodedInstruction> decodedInstructions = InstructionDecoder.DecodeInstructions(txMeta);
 
@@ -241,12 +248,15 @@ namespace Sol.Unity.Programs.Test
         public void DecodeInstructionsFromTransactionUnknownInnerInstructionTest()
         {
             string responseData = File.ReadAllText("Resources/TestDecodeFromTransactionUnknownInnerInstruction.json");
-            TransactionMetaSlotInfo txMeta = JsonSerializer.Deserialize<TransactionMetaSlotInfo>(responseData,
-                new JsonSerializerOptions
+            var options = new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters =
                 {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
-                });
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
+                }
+            };
+            TransactionMetaSlotInfo txMeta = JsonConvert.DeserializeObject<TransactionMetaSlotInfo>(responseData, options);
 
             List<DecodedInstruction> decodedInstructions = InstructionDecoder.DecodeInstructions(txMeta);
             Assert.AreEqual(2, decodedInstructions.Count);

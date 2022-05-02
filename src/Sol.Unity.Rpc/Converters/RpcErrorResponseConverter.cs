@@ -1,8 +1,6 @@
-using Sol.Unity.Rpc.Models;
+using Newtonsoft.Json;
 using Sol.Unity.Rpc.Messages;
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Sol.Unity.Rpc.Converters
 {
@@ -11,24 +9,28 @@ namespace Sol.Unity.Rpc.Converters
     /// </summary>
     public class RpcErrorResponseConverter : JsonConverter<JsonRpcErrorResponse>
     {
+        
         /// <summary>
         /// Reads and converts the JSON to type <c>JsonRpcErrorResponse</c>.
         /// </summary>
         /// <param name="reader">The reader.</param>
-        /// <param name="typeToConvert"> The type to convert.</param>
-        /// <param name="options">An object that specifies serialization options to use.</param>
+        /// <param name="objectType"> The type to convert.</param>
+        /// <param name="existingValue">An existing values</param>
+        /// <param name="hasExistingValue">If it has an existing values</param>
+        /// <param name="serializer">The serializer</param>
         /// <returns>The converted value.</returns>
-        public override JsonRpcErrorResponse Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override JsonRpcErrorResponse ReadJson(JsonReader reader, Type objectType, JsonRpcErrorResponse existingValue,
+            bool hasExistingValue, JsonSerializer serializer)
         {
-            if (reader.TokenType != JsonTokenType.StartObject) return null;
+            if (reader.TokenType != JsonToken.StartObject) return null;
 
             reader.Read();
 
             var err = new JsonRpcErrorResponse();
 
-            while (reader.TokenType != JsonTokenType.EndObject)
+            while (reader.TokenType != JsonToken.EndObject)
             {
-                var prop = reader.GetString();
+                var prop = (string)reader.Value;
 
                 reader.Read();
 
@@ -38,40 +40,41 @@ namespace Sol.Unity.Rpc.Converters
                 }
                 else if ("id" == prop)
                 {
-                    err.Id = reader.GetInt32();
+                    err.Id = Convert.ToInt32(reader.Value);
                 }
                 else if ("error" == prop)
                 {
-                    if(reader.TokenType == JsonTokenType.String)
+                    if(reader.TokenType == JsonToken.String)
                     {
-                        err.ErrorMessage = reader.GetString();
+                        err.ErrorMessage = (string)reader.Value;
                     }
-                    else if(reader.TokenType == JsonTokenType.StartObject)
+                    else if(reader.TokenType == JsonToken.StartObject)
                     {
-                        err.Error = JsonSerializer.Deserialize<ErrorContent>(ref reader, options);
+                        err.Error = serializer.Deserialize<ErrorContent>(reader);
                     }
                     else
                     {
-                        reader.TrySkip();
+                        reader.Skip();
                     }
                 }
                 else
                 {
-                    reader.TrySkip();
+                    reader.Skip();
                 }
 
                 reader.Read();
             }
             return err;
         }
-
+        
         /// <summary>
-        /// Not implemented.
+        /// Not yet implemented
         /// </summary>
-        /// <param name="writer">n/a</param>
-        /// <param name="value">n/a</param>
-        /// <param name="options">n/a</param>
-        public override void Write(Utf8JsonWriter writer, JsonRpcErrorResponse value, JsonSerializerOptions options)
+        /// <param name="writer"></param>
+        /// <param name="value"></param>
+        /// <param name="serializer"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        public override void WriteJson(JsonWriter writer, JsonRpcErrorResponse value, JsonSerializer serializer)
         {
             throw new NotImplementedException();
         }

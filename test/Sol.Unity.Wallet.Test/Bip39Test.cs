@@ -3,12 +3,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Sol.Unity.Wallet.Bip39;
-using Sol.Unity.Wallet.Utilities;
 using System;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Text.Json;
 
 namespace Sol.Unity.Wallet.Test
 {
@@ -45,9 +42,9 @@ namespace Sol.Unity.Wallet.Test
         [TestMethod]
         public void EnglishTest()
         {
-            var test = JsonDocument.Parse(File.ReadAllText("Resources/Bip39Vectors.json")).RootElement;
+            var test = JArray.Parse(File.ReadAllText("Resources/Bip39Vectors.json")).Root;
 
-            foreach (var unitTest in test.EnumerateArray())
+            foreach (var unitTest in test)
             {
                 var entropy = BitConverter.ToString(Encoding.Default.GetBytes(unitTest[0].ToString())).ToLowerInvariant().Replace("-", "");
                 string mnemonicStr = unitTest[1].ToString();
@@ -83,13 +80,13 @@ namespace Sol.Unity.Wallet.Test
         [TestMethod]
         public void JapaneseTest()
         {
-            var test = JsonDocument.Parse(File.ReadAllText("Resources/Bip39Japanese.json")).RootElement;
+            var test = JArray.Parse(File.ReadAllText("Resources/Bip39Japanese.json")).Root;
 
-            foreach (var unitTest in test.EnumerateArray())
+            foreach (var unitTest in test)
             {
-                string mnemonicStr = unitTest.GetProperty("mnemonic").ToString();
-                string seed = unitTest.GetProperty("seed").ToString();
-                string passphrase = unitTest.GetProperty("passphrase").ToString();
+                string mnemonicStr = unitTest["mnemonic"].ToString();
+                string seed = unitTest["seed"].ToString();
+                string passphrase = unitTest["passphrase"].ToString();
                 var mnemonic = new Mnemonic(mnemonicStr, WordList.Japanese);
                 Assert.IsTrue(mnemonic.IsValidChecksum);
                 Assert.AreEqual(seed, BitConverter.ToString(mnemonic.DeriveSeed(passphrase)).ToLowerInvariant().Replace("-", ""));

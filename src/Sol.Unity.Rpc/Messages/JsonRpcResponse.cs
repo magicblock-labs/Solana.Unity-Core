@@ -1,7 +1,6 @@
-﻿using Sol.Unity.Rpc.Converters;
+﻿using Newtonsoft.Json;
+using Sol.Unity.Rpc.Converters;
 using Sol.Unity.Rpc.Models;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Sol.Unity.Rpc.Messages
 {
@@ -24,7 +23,7 @@ namespace Sol.Unity.Rpc.Messages
     public class JsonRpcErrorResponse : JsonRpcBase
     {
         /// <summary>
-        /// The detailed error desserialized.
+        /// The detailed error deserialized.
         /// </summary>
         public ErrorContent Error { get; set; }
 

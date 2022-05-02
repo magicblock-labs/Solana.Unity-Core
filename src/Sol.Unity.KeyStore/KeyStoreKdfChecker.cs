@@ -1,9 +1,10 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Sol.Unity.KeyStore.Exceptions;
 using Sol.Unity.KeyStore.Model;
 using Sol.Unity.KeyStore.Services;
 using System;
 using System.Runtime.Serialization;
-using System.Text.Json;
 
 namespace Sol.Unity.KeyStore
 {
@@ -18,15 +19,15 @@ namespace Sol.Unity.KeyStore
         /// <param name="keyStoreDocument">The json document.</param>
         /// <returns>The kdf type string.</returns>
         /// <exception cref="JsonException">Throws exception when json property <c>crypto</c> or <c>kdf</c> couldn't be found</exception>
-        private static string GetKdfTypeFromJson(JsonDocument keyStoreDocument)
+        private static string GetKdfTypeFromJson(JObject keyStoreDocument)
         {
-            var cryptoObjExist = keyStoreDocument.RootElement.TryGetProperty("crypto", out var cryptoObj);
-            if (!cryptoObjExist) throw new JsonException("could not get crypto params object from json");
+            var cryptoObj = keyStoreDocument.Property("crypto");
+            if (cryptoObj == null) throw new JsonException("could not get crypto params object from json");
 
-            var kdfObjExist = cryptoObj.TryGetProperty("kdf", out var kdfObj);
-            if (!kdfObjExist) throw new JsonException("could not get kdf object from json");
+            var kdfObj = ((JObject)cryptoObj.Value).Property("kdf");
+            if (kdfObj == null) throw new JsonException("could not get kdf object from json");
 
-            return kdfObj.GetString();
+            return kdfObj.Value.ToString();
         }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace Sol.Unity.KeyStore
         public static KdfType GetKeyStoreKdfType(string json)
         {
             if (json == null) throw new ArgumentNullException(nameof(json));
-            var keyStoreDocument = JsonSerializer.Deserialize<JsonDocument>(json);
+            var keyStoreDocument = JsonConvert.DeserializeObject<JObject>(json);
             if (keyStoreDocument == null) throw new SerializationException("could not process json");
 
             var kdfString = GetKdfTypeFromJson(keyStoreDocument);

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;
+using System;
 
 namespace Sol.Unity.Rpc.Messages
 {
@@ -16,7 +12,7 @@ namespace Sol.Unity.Rpc.Messages
         /// <summary>
         /// The anticipated runtime type of this result.
         /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.Always)]
+        [JsonIgnore]
         public Type ResultType { get; set; }
 
         /// <summary>

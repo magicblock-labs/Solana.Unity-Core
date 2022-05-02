@@ -1,15 +1,16 @@
 ﻿using Microsoft.Extensions.Logging;
-using Sol.Unity.Rpc.Converters;
 using Sol.Unity.Rpc.Messages;
 using Sol.Unity.Rpc.Utilities;
 using System;
 using System.Linq;
-using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using Sol.Unity.Rpc.Converters;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using JsonException = Newtonsoft.Json.JsonException;
 
 namespace Sol.Unity.Rpc.Core.Http
 {
@@ -18,11 +19,12 @@ namespace Sol.Unity.Rpc.Core.Http
     /// </summary>
     internal abstract class JsonRpcClient
     {
+        
         /// <summary>
         /// The Json serializer options to be reused between calls.
         /// </summary>
-        private readonly JsonSerializerOptions _serializerOptions;
-
+        private readonly JsonSerializerSettings _serializerOptions;
+        
         /// <summary>
         /// The HttpClient.
         /// </summary>
@@ -54,13 +56,13 @@ namespace Sol.Unity.Rpc.Core.Http
             NodeAddress = new Uri(url);
             _httpClient = httpClient ?? new HttpClient { BaseAddress = NodeAddress };
             _rateLimiter = rateLimiter;
-            _serializerOptions = new JsonSerializerOptions
+            _serializerOptions = new JsonSerializerSettings
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
                 {
                     new EncodingConverter(),
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
                 }
             };
         }
@@ -73,7 +75,7 @@ namespace Sol.Unity.Rpc.Core.Http
         /// <returns>A task that represents the asynchronous operation that holds the request result.</returns>
         protected async Task<RequestResult<T>> SendRequest<T>(JsonRpcRequest req)
         {
-            var requestJson = JsonSerializer.Serialize(req, _serializerOptions);
+            var requestJson = JsonConvert.SerializeObject(req, _serializerOptions);
 
             try
             {
@@ -139,16 +141,16 @@ namespace Sol.Unity.Rpc.Core.Http
                 result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 _logger?.LogInformation(new EventId(req.Id, req.Method), $"Result: {result.RawRpcResponse}");
-                var res = JsonSerializer.Deserialize<JsonRpcResponse<T>>(result.RawRpcResponse, _serializerOptions);
+                var res = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(result.RawRpcResponse, _serializerOptions);
 
                 if (res.Result != null)
                 {
-                    result.Result = res.Result;
+                    result.Result = (T)res.Result;
                     result.WasRequestSuccessfullyHandled = true;
                 }
                 else
                 {
-                    var errorRes = JsonSerializer.Deserialize<JsonRpcErrorResponse>(result.RawRpcResponse, _serializerOptions);
+                    var errorRes = JsonConvert.DeserializeObject<JsonRpcErrorResponse>(result.RawRpcResponse, _serializerOptions);
                     if (errorRes is { Error: { } })
                     {
                         result.Reason = errorRes.Error.Message;
@@ -185,7 +187,7 @@ namespace Sol.Unity.Rpc.Core.Http
             if (reqs == null) throw new ArgumentNullException(nameof(reqs));
             if (reqs.Count == 0) throw new ArgumentException("Empty batch");
             var id_for_log = reqs.Min(x => x.Id);
-            var requestsJson = JsonSerializer.Serialize(reqs, _serializerOptions);
+            var requestsJson = JsonConvert.SerializeObject(reqs, _serializerOptions);
             try
             {
                 // pre-flight check with rate limiter if set
@@ -249,7 +251,7 @@ namespace Sol.Unity.Rpc.Core.Http
                 result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 _logger?.LogInformation(new EventId(id_for_log, $"[batch of {reqs.Count}]"), $"Result: {result.RawRpcResponse}");
-                var res = JsonSerializer.Deserialize<JsonRpcBatchResponse>(result.RawRpcResponse, _serializerOptions);
+                var res = JsonConvert.DeserializeObject<JsonRpcBatchResponse>(result.RawRpcResponse, _serializerOptions);
 
                 if (res != null)
                 {
@@ -258,7 +260,7 @@ namespace Sol.Unity.Rpc.Core.Http
                 }
                 else
                 {
-                    var errorRes = JsonSerializer.Deserialize<JsonRpcErrorResponse>(result.RawRpcResponse, _serializerOptions);
+                    var errorRes = JsonConvert.DeserializeObject<JsonRpcErrorResponse>(result.RawRpcResponse, _serializerOptions);
                     if (errorRes is { Error: { } })
                     {
                         result.Reason = errorRes.Error.Message;

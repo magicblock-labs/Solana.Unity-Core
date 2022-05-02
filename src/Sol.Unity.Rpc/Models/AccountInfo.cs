@@ -1,9 +1,9 @@
 ﻿// ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ClassNeverInstantiated.Global
 
+using Newtonsoft.Json;
 using Sol.Unity.Rpc.Converters;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Sol.Unity.Rpc.Models
 {
@@ -64,7 +64,7 @@ namespace Sol.Unity.Rpc.Models
         /// <summary>
         /// A base-58 encoded public key representing the account's public key.
         /// </summary>
-        [JsonPropertyName("pubkey")]
+        [JsonProperty("pubkey")]
         public string PublicKey { get; set; }
     }
 

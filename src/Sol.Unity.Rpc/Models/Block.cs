@@ -1,7 +1,7 @@
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ClassNeverInstantiated.Global
 
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Sol.Unity.Rpc.Models
 {
@@ -210,7 +210,7 @@ namespace Sol.Unity.Rpc.Models
         /// <summary>
         /// Possible transaction error.
         /// </summary>
-        [JsonPropertyName("err")]
+        [JsonProperty("err")]
         public TransactionError Error { get; set; }
 
         /// <summary>

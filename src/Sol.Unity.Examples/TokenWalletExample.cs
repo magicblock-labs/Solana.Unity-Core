@@ -2,10 +2,7 @@
 using Sol.Unity.Extensions.TokenMint;
 using Sol.Unity.Rpc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sol.Unity.Examples
 {

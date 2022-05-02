@@ -1,5 +1,5 @@
-﻿using Sol.Unity.Rpc.Converters;
-using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
+using Sol.Unity.Rpc.Converters;
 
 namespace Sol.Unity.Rpc.Models
 {

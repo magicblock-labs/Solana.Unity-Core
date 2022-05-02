@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace Sol.Unity.Rpc.Messages
 {
@@ -16,9 +15,17 @@ namespace Sol.Unity.Rpc.Messages
         /// <summary>
         /// The method parameters list.
         /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IList<object> Params { get; }
 
+        
+        /// <summary>
+        /// Serialize params only if not null
+        /// </summary>
+        /// <returns></returns>
+        public bool ShouldSerializeParams()
+        {
+            return Params != null;
+        }
         internal JsonRpcRequest(int id, string method, IList<object> parameters)
         {
             Params = parameters;
