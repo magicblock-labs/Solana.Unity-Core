@@ -12,12 +12,12 @@ to address bugs and feature requests in Solana.Unity itself. Use one of the
 following resources for questions about using Solana.Unity or issues with your
 own code:
 
--   The `discussions`_ page
+-   The `discussions`_ channel on Discord
     can be used to discuss a number of different questions, including support.
--   The email blockmountainresearch(at)protonmail.com can be used for longer term
+-   The email dev(at)garbles.fun can be used for longer term
     discussion or larger issues.
 		
-.. _discussions: https://github.com/bmresearch/Solana.Unity/discussions
+.. _discussions: https://discord.gg/MBkdC3gxcv
 
 Reporting issues
 ----------------
