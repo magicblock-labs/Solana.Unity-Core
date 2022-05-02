@@ -85,39 +85,39 @@ jobs:
           release_name: ${{ steps.publish_nuget.outputs.VERSION }}
           body_path: RELEASE-NOTES.txt
         env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload Solana.Unity.Extensions release assets
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: artifacts/Solana.Unity.Extensions.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
       - name: Upload Solana.Unity.Wallet release assets
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: artifacts/Solana.Unity.Wallet.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
       - name: Upload Solana.Unity.Rpc release assets
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: artifacts/Solana.Unity.Rpc.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
       - name: Upload Solana.Unity.KeyStore release assets
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: artifacts/Solana.Unity.KeyStore.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
       - name: Upload Solana.Unity.Programs release assets
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: artifacts/Solana.Unity.Programs.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
