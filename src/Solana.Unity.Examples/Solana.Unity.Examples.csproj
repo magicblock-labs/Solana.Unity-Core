@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="7.0.0-preview.3.22175.4" />
+    <ProjectReference Include="..\Solana.Unity.Extensions\Solana.Unity.Extensions.csproj" />
+    <ProjectReference Include="..\Solana.Unity.KeyStore\Solana.Unity.KeyStore.csproj" />
+    <ProjectReference Include="..\Solana.Unity.Programs\Solana.Unity.Programs.csproj" />
+    <ProjectReference Include="..\Solana.Unity.Rpc\Solana.Unity.Rpc.csproj" />
+    <ProjectReference Include="..\Solana.Unity.Wallet\Solana.Unity.Wallet.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Chaos.NaCl.Standard" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>
