@@ -1,4 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Sol.Unity.Programs;
 using Sol.Unity.Rpc.Core.Http;
 using Sol.Unity.Rpc.Messages;
@@ -7,12 +10,8 @@ using Sol.Unity.Rpc.Types;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +45,7 @@ namespace Sol.Unity.Rpc.Test
 
             // serialize and check we're good
             var serializerOptions = CreateJsonOptions();
-            var json = JsonSerializer.Serialize<JsonRpcBatchRequest>(reqs, serializerOptions);
+            var json = JsonConvert.SerializeObject(reqs, serializerOptions);
             var expected = File.ReadAllText("Resources/Http/Batch/SampleBatchRequest.json");
             Assert.AreEqual(expected, json);
 
@@ -57,7 +56,7 @@ namespace Sol.Unity.Rpc.Test
         {
             var responseData = File.ReadAllText("Resources/Http/Batch/SampleBatchResponse.json");
             var serializerOptions = CreateJsonOptions();
-            var res = JsonSerializer.Deserialize<JsonRpcBatchResponse>(responseData, serializerOptions);
+            var res = JsonConvert.DeserializeObject<JsonRpcBatchResponse>(responseData, serializerOptions);
             Assert.IsNotNull(res);
             Assert.AreEqual(5, res.Count);
         }
@@ -93,7 +92,7 @@ namespace Sol.Unity.Rpc.Test
             // serialize and check we're good
             var reqs = batch.Composer.CreateJsonRequests();
             var serializerOptions = CreateJsonOptions();
-            var json = JsonSerializer.Serialize<JsonRpcBatchRequest>(reqs, serializerOptions);
+            var json = JsonConvert.SerializeObject(reqs, serializerOptions);
             Assert.IsNotNull(reqs);
             Assert.AreEqual(5, reqs.Count);
             Assert.AreEqual(expected_requests, json);
@@ -167,11 +166,11 @@ namespace Sol.Unity.Rpc.Test
 
             // from json...
             var options = CreateJsonOptions();
-            var obj = JsonSerializer.Deserialize<TransactionError>(example_fail, options);
+            var obj = JsonConvert.DeserializeObject<TransactionError>(example_fail, options);
             Assert.IsNotNull(obj);
 
             // and back again
-            var json = JsonSerializer.Serialize<TransactionError>(obj, options);
+            var json = JsonConvert.SerializeObject(obj, options);
             Assert.IsNotNull(json);
             Assert.AreEqual(example_fail, json);
         }
@@ -180,14 +179,14 @@ namespace Sol.Unity.Rpc.Test
         /// Common JSON options
         /// </summary>
         /// <returns></returns>
-        private JsonSerializerOptions CreateJsonOptions()
+        private JsonSerializerSettings CreateJsonOptions()
         {
-            return new JsonSerializerOptions
+            return new JsonSerializerSettings()
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
                 {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
                 }
             };
         }
@@ -211,7 +210,7 @@ namespace Sol.Unity.Rpc.Test
             if (status == HttpStatusCode.OK)
             {
                 var serializerOptions = CreateJsonOptions();
-                x.Result = JsonSerializer.Deserialize<T>(resp, serializerOptions);
+                x.Result = JsonConvert.DeserializeObject<T>(resp, serializerOptions);
             }
 
             return x;

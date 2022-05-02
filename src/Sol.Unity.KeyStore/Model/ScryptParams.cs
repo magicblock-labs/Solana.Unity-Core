@@ -1,16 +1,16 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Sol.Unity.KeyStore.Model
 {
     public class ScryptParams : KdfParams
     {
-        [JsonPropertyName("n")]
+        [JsonProperty("n")]
         public int N { get; init; }
 
-        [JsonPropertyName("r")]
+        [JsonProperty("r")]
         public int R { get; init; }
 
-        [JsonPropertyName("p")]
+        [JsonProperty("p")]
         public int P { get; init; }
     }
 }

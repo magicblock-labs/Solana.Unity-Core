@@ -1,4 +1,5 @@
-using System.Text.Json.Serialization;
+
+using Newtonsoft.Json;
 
 namespace Sol.Unity.Rpc.Models
 {
@@ -20,7 +21,7 @@ namespace Sol.Unity.Rpc.Models
         /// <summary>
         /// The error if the transaction failed, null if it succeeded.
         /// </summary>
-        [JsonPropertyName("err")]
+        [JsonProperty("err")]
         public TransactionError Error { get; set; }
 
         /// <summary>

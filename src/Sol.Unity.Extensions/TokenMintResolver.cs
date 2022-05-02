@@ -1,10 +1,11 @@
-﻿using Sol.Unity.Extensions.TokenMint;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
+using Sol.Unity.Extensions.TokenMint;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Sol.Unity.Extensions
@@ -102,8 +103,15 @@ namespace Sol.Unity.Extensions
         public static TokenMintResolver ParseTokenList(string json)
         {
             if (json is null) throw new ArgumentNullException(nameof(json));
-            var options = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-            var tokenList = JsonSerializer.Deserialize<TokenListDoc>(json, options);
+            var options = new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters =
+                {
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
+                }
+            };
+            var tokenList = JsonConvert.DeserializeObject<TokenListDoc>(json, options);
             return new TokenMintResolver(tokenList);
         }
 
@@ -160,11 +168,11 @@ namespace Sol.Unity.Extensions
 
             // pick out the coingecko identifier if available
             string coingeckoId = null;
-            if (tokenItem.Extensions?.ContainsKey("coingeckoId") ?? false) coingeckoId = ((JsonElement) tokenItem.Extensions["coingeckoId"]).GetString();
+            if (tokenItem.Extensions?.ContainsKey("coingeckoId") ?? false) coingeckoId = tokenItem.Extensions["coingeckoId"].ToString();
 
             // pick out the project website if available
             string projectUrl = null;
-            if (tokenItem.Extensions?.ContainsKey("website") ?? false) projectUrl = ((JsonElement)tokenItem.Extensions["website"]).GetString();
+            if (tokenItem.Extensions?.ContainsKey("website") ?? false) projectUrl = tokenItem.Extensions["website"].ToString();
 
             // construct the TokenDef instance
             var token = new TokenDef(tokenItem.Address, tokenItem.Name, tokenItem.Symbol, tokenItem.Decimals)

@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using Sol.Unity.Programs;
 using Sol.Unity.Rpc.Builders;
 using Sol.Unity.Rpc.Messages;
 using Sol.Unity.Wallet;
-using Sol.Unity.Wallet.Utilities;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Sol.Unity.Extensions.Test
 {
@@ -329,32 +329,32 @@ namespace Sol.Unity.Extensions.Test
         [TestMethod]
         public void TestMockJsonRpcParseResponseValue()
         {
-            var serializerOptions = new JsonSerializerOptions
+            var serializerOptions = new JsonSerializerSettings()
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
-            {
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-            }
+                {
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
+                }
             };
             var json = File.ReadAllText("Resources/TokenWallet/GetBalanceResponse.json");
-            var result = JsonSerializer.Deserialize<JsonRpcResponse<ResponseValue<ulong>>>(json, serializerOptions);
+            var result = JsonConvert.DeserializeObject<JsonRpcResponse<ResponseValue<ulong>>>(json, serializerOptions);
             Assert.IsNotNull(result);
         }
 
         [TestMethod]
         public void TestMockJsonRpcSendTxParse()
         {
-            var serializerOptions = new JsonSerializerOptions
+            var serializerOptions = new JsonSerializerSettings()
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
-            {
-                new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-            }
+                {
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
+                }
             };
             var json = File.ReadAllText("Resources/TokenWallet/SendTransactionResponse.json");
-            var result = JsonSerializer.Deserialize<JsonRpcResponse<string>>(json, serializerOptions);
+            var result = JsonConvert.DeserializeObject(json, serializerOptions);
             Assert.IsNotNull(result);
         }
 

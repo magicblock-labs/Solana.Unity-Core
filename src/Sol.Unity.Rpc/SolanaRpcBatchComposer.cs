@@ -1,16 +1,15 @@
-﻿using Sol.Unity.Rpc.Core;
-using Sol.Unity.Rpc.Models;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using Sol.Unity.Rpc.Core.Http;
 using Sol.Unity.Rpc.Messages;
 using Sol.Unity.Rpc.Types;
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Sol.Unity.Rpc
@@ -34,7 +33,7 @@ namespace Sol.Unity.Rpc
         /// <summary>
         /// JSON serializer options
         /// </summary>
-        private JsonSerializerOptions _jsonOptions;
+        private JsonSerializerSettings _jsonOptions;
 
         /// <summary>
         /// How many requests are in this batch
@@ -59,12 +58,12 @@ namespace Sol.Unity.Rpc
         {
             _rpcClient = rpcClient ?? throw new ArgumentNullException(nameof(rpcClient));
             _reqs = new List<RpcBatchReqRespItem>();
-            _jsonOptions = new JsonSerializerOptions
+            _jsonOptions = new JsonSerializerSettings()
             {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Converters =
                 {
-                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+                    new StringEnumConverter(new CamelCaseNamingStrategy())
                 }
             };
         }
@@ -275,19 +274,25 @@ namespace Sol.Unity.Rpc
         /// <returns></returns>
         public object MapJsonTypeToNativeType(object input, Type nativeType)
         {
-            if (input is JsonElement)
+            if (input is JObject or JArray)
             {
                 // serializes + deserializes the JSON into runtime type - suboptimal but expedient
-                var elem = (JsonElement)input;
                 var bufferWriter = new MemoryStream();
-                using (var writer = new Utf8JsonWriter(bufferWriter))
-                    elem.WriteTo(writer);
-                return JsonSerializer.Deserialize(bufferWriter.ToArray(), nativeType, _jsonOptions);
+                using (var writer = new JsonTextWriter(new StreamWriter( bufferWriter)))
+                    if (input is JObject)
+                    {
+                        ((JObject)input).WriteTo(writer);
+                    }
+                    else
+                    {
+                        ((JArray)input).WriteTo(writer);
+                    }
+                return JsonSerializer.Create(_jsonOptions)
+                    .Deserialize(
+                        new StringReader( Encoding.UTF8.GetString( bufferWriter.ToArray())), nativeType);
             }
-            else
-            {
-                return input;
-            }
+
+            return input;
         }
 
         #endregion

@@ -1,38 +1,33 @@
-﻿using Sol.Unity.Rpc.Types;
+﻿using Newtonsoft.Json;
+using Sol.Unity.Rpc.Types;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Sol.Unity.Rpc.Converters
 {
     /// <inheritdoc/>
     public class EncodingConverter : JsonConverter<BinaryEncoding>
     {
-        /// <inheritdoc/>
-        public override BinaryEncoding Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void Write(Utf8JsonWriter writer, BinaryEncoding value, JsonSerializerOptions options)
+        public override void WriteJson(JsonWriter writer, BinaryEncoding value, JsonSerializer serializer)
         {
             if(value == BinaryEncoding.JsonParsed)
             {
-                writer.WriteStringValue("jsonParsed");
+                writer.WriteValue("jsonParsed");
             }
             else if (value == BinaryEncoding.Base64Zstd)
             {
-                writer.WriteStringValue("base64+zstd");
+                writer.WriteValue("base64+zstd");
             }
             else
             {
-                writer.WriteStringValue("base64");
+                writer.WriteValue("base64");
             }
+        }
+
+        /// <inheritdoc />
+        public override BinaryEncoding ReadJson(JsonReader reader, Type objectType, BinaryEncoding existingValue, bool hasExistingValue,
+            JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
         }
     }
 }

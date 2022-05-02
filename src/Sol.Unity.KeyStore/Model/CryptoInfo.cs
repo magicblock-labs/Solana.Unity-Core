@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Sol.Unity.KeyStore.Model
 {
@@ -20,31 +20,31 @@ namespace Sol.Unity.KeyStore.Model
             Kdf = kdfType;
         }
 
-        [JsonPropertyName("cipher")]
+        [JsonProperty("cipher")]
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Cipher { get; }
 
-        [JsonPropertyName("ciphertext")]
+        [JsonProperty("ciphertext")]
         // ReSharper disable once MemberCanBePrivate.Global
         public string CipherText { get; init; }
 
         // ReSharper disable once StringLiteralTypo
-        [JsonPropertyName("cipherparams")]
+        [JsonProperty("cipherparams")]
         // ReSharper disable once MemberCanBePrivate.Global
         public CipherParams CipherParams { get; init; }
 
-        [JsonPropertyName("kdf")]
+        [JsonProperty("kdf")]
         // ReSharper disable once MemberCanBePrivate.Global
         // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Kdf { get; }
 
-        [JsonPropertyName("mac")]
+        [JsonProperty("mac")]
         // ReSharper disable once MemberCanBePrivate.Global
         public string Mac { get; init; }
 
         // ReSharper disable once StringLiteralTypo
-        [JsonPropertyName("kdfparams")]
+        [JsonProperty("kdfparams")]
         // ReSharper disable once IdentifierTypo
         // ReSharper disable once MemberCanBePrivate.Global
         public TKdfParams Kdfparams { get; init; }

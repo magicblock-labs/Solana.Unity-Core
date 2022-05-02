@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Sol.Unity.KeyStore.Model;
 
 namespace Sol.Unity.KeyStore.Serialization
@@ -6,12 +7,12 @@ namespace Sol.Unity.KeyStore.Serialization
     {
         public static string SerializeScrypt(KeyStore<ScryptParams> scryptKeyStore)
         {
-            return System.Text.Json.JsonSerializer.Serialize(scryptKeyStore);
+            return JsonConvert.SerializeObject(scryptKeyStore);
         }
 
         public static KeyStore<ScryptParams> DeserializeScrypt(string json)
         {
-            return System.Text.Json.JsonSerializer.Deserialize<KeyStore<ScryptParams>>(json);
+            return JsonConvert.DeserializeObject<KeyStore<ScryptParams>>(json);
         }
     }
 }

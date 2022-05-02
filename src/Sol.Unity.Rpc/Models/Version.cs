@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Sol.Unity.Rpc.Models
 {
@@ -10,13 +10,13 @@ namespace Sol.Unity.Rpc.Models
         /// <summary>
         /// Software version of solana-core.
         /// </summary>
-        [JsonPropertyName("solana-core")]
+        [JsonProperty("solana-core")]
         public string SolanaCore { get; set; }
 
         /// <summary>
         /// unique identifier of the current software's feature set.
         /// </summary>
-        [JsonPropertyName("feature-set")]
+        [JsonProperty("feature-set")]
         public ulong? FeatureSet { get; set; }
     }
 }

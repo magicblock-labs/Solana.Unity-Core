@@ -3,7 +3,7 @@ using Sol.Unity.KeyStore.Exceptions;
 using Sol.Unity.KeyStore.Services;
 using System;
 using System.IO;
-using System.Text.Json;
+using System.Runtime.Serialization;
 
 namespace Sol.Unity.KeyStore.Test
 {
@@ -48,7 +48,7 @@ namespace Sol.Unity.KeyStore.Test
         }
 
         [TestMethod]
-        [ExpectedException(typeof(JsonException))]
+        [ExpectedException(typeof(SerializationException))]
         public void TestKeyStoreInvalidEmptyFilePath()
         {
             _ = KeyStore.DecryptKeyStoreFromFile("randomPassword", InvalidEmptyFilePath);

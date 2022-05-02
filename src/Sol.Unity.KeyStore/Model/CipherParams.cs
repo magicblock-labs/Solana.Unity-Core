@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Sol.Unity.KeyStore.Model
 {
@@ -13,7 +13,7 @@ namespace Sol.Unity.KeyStore.Model
             Iv = iv.ToHex();
         }
 
-        [JsonPropertyName("iv")]
+        [JsonProperty("iv")]
         // ReSharper disable once MemberCanBePrivate.Global
         public string Iv { get; init; }
     }
