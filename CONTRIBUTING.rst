@@ -1,15 +1,15 @@
 Introduction
 ============
 
-First off, thank you for considering contributing to Sol.Unity. It's people like you that will make Sol.Unity a great tool.
+First off, thank you for considering contributing to Solana.Unity. It's people like you that will make Solana.Unity a great tool.
 
 
 Support questions
 -----------------
 
 Please don't use the issue tracker for this. The issue tracker is a tool
-to address bugs and feature requests in Sol.Unity itself. Use one of the
-following resources for questions about using Sol.Unity or issues with your
+to address bugs and feature requests in Solana.Unity itself. Use one of the
+following resources for questions about using Solana.Unity or issues with your
 own code:
 
 -   The `discussions`_ page
@@ -17,7 +17,7 @@ own code:
 -   The email blockmountainresearch(at)protonmail.com can be used for longer term
     discussion or larger issues.
 		
-.. _discussions: https://github.com/bmresearch/Sol.Unity/discussions
+.. _discussions: https://github.com/bmresearch/Solana.Unity/discussions
 
 Reporting issues
 ----------------
@@ -30,7 +30,7 @@ Include the following information in your post:
     your own code.
 -   Describe what actually happened. Include the full traceback if there
     was an exception.
--   List your .NET and Sol.Unity versions. If possible, check if this
+-   List your .NET and Solana.Unity versions. If possible, check if this
     issue is already fixed in the latest releases or the latest code in
     the repository.
     

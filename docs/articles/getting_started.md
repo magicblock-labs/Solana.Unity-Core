@@ -1,4 +1,4 @@
-# Getting started with Sol.Unity
+# Getting started with Solana.Unity
 
 ## 1 - What is Solnet
 

@@ -21,56 +21,56 @@ jobs:
           script-path: build.cake
           target: Pack
           cake-bootstrap: true
-      - name: Publish Sol.Unity.Extensions on version change
+      - name: Publish Solana.Unity.Extensions on version change
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: src/Sol.Unity.Extensions/Sol.Unity.Extensions.csproj
-          PACKAGE_NAME: Sol.Unity.Extensions
+          PROJECT_FILE_PATH: src/Solana.Unity.Extensions/Solana.Unity.Extensions.csproj
+          PACKAGE_NAME: Solana.Unity.Extensions
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
           NCLUDE_SYMBOLS: true
-      - name: Publish Sol.Unity.Wallet on version change
+      - name: Publish Solana.Unity.Wallet on version change
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: src/Sol.Unity.Wallet/Sol.Unity.Wallet.csproj
-          PACKAGE_NAME: Sol.Unity.Wallet
+          PROJECT_FILE_PATH: src/Solana.Unity.Wallet/Solana.Unity.Wallet.csproj
+          PACKAGE_NAME: Solana.Unity.Wallet
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
           INCLUDE_SYMBOLS: true
-      - name: Publish Sol.Unity.Rpc on version change
+      - name: Publish Solana.Unity.Rpc on version change
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: src/Sol.Unity.Rpc/Sol.Unity.Rpc.csproj
-          PACKAGE_NAME: Sol.Unity.Rpc
+          PROJECT_FILE_PATH: src/Solana.Unity.Rpc/Solana.Unity.Rpc.csproj
+          PACKAGE_NAME: Solana.Unity.Rpc
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
-      - name: Publish Sol.Unity.KeyStore on version change
+      - name: Publish Solana.Unity.KeyStore on version change
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: src/Sol.Unity.KeyStore/Sol.Unity.KeyStore.csproj
-          PACKAGE_NAME: Sol.Unity.KeyStore
+          PROJECT_FILE_PATH: src/Solana.Unity.KeyStore/Solana.Unity.KeyStore.csproj
+          PACKAGE_NAME: Solana.Unity.KeyStore
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
-      - name: Publish Sol.Unity.Programs on version change
+      - name: Publish Solana.Unity.Programs on version change
         id: publish_nuget
         uses: rohith/publish-nuget@v2
         with:
-          PROJECT_FILE_PATH: src/Sol.Unity.Programs/Sol.Unity.Programs.csproj
-          PACKAGE_NAME: Sol.Unity.Programs
+          PROJECT_FILE_PATH: src/Solana.Unity.Programs/Solana.Unity.Programs.csproj
+          PACKAGE_NAME: Solana.Unity.Programs
           VERSION_FILE_PATH: SharedBuildProperties.props
           VERSION_REGEX: ^\s*<Version>(.*)<\/Version>\s*$
           TAG_FORMAT: v*
@@ -86,38 +86,38 @@ jobs:
           body_path: RELEASE-NOTES.txt
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      - name: Upload Sol.Unity.Extensions release assets
+      - name: Upload Solana.Unity.Extensions release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Sol.Unity.Extensions.dll
+          file: artifacts/Solana.Unity.Extensions.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Sol.Unity.Wallet release assets
+      - name: Upload Solana.Unity.Wallet release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Sol.Unity.Wallet.dll
+          file: artifacts/Solana.Unity.Wallet.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Sol.Unity.Rpc release assets
+      - name: Upload Solana.Unity.Rpc release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Sol.Unity.Rpc.dll
+          file: artifacts/Solana.Unity.Rpc.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Sol.Unity.KeyStore release assets
+      - name: Upload Solana.Unity.KeyStore release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Sol.Unity.KeyStore.dll
+          file: artifacts/Solana.Unity.KeyStore.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Sol.Unity.Programs release assets
+      - name: Upload Solana.Unity.Programs release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Sol.Unity.Programs.dll
+          file: artifacts/Solana.Unity.Programs.dll
           tag: ${{ steps.publish_nuget.outputs.VERSION }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
