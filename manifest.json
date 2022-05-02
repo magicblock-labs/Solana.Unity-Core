@@ -1,0 +1,2411 @@
+{
+  "homepages": [],
+  "source_base_path": "C:/Users/tiago/source/repos/Sol-Net/Solana.Unity/docs",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.ITokenMintResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.ITokenMintResolver.html",
+          "hash": "t3c3yZsxRPD5PoUmxD+NpLFoe7q0cm+pESd1ux5ZDyM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.ITokenWalletRpcProxy.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.ITokenWalletRpcProxy.html",
+          "hash": "RF3uIkRoEMr0QK4KA/j3HSAW3hurhdIj4QwVYBsF52E="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.Models.TokenWalletFilterList.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.Models.TokenWalletFilterList.html",
+          "hash": "gkJ/lhc02NiD4jQWW1OM0AVdJVwHj6xVfkUgm1GH0pY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.Models.html",
+          "hash": "u25yWvFIbVXkuWV62YVLEgm5q4IoTnhr16k56wyZ8xw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenMint.TokenDef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenMint.TokenDef.html",
+          "hash": "tMhNPcb4pKCHiFDmFO46XSFSJ6h/SWD5ZaeQemdPcxo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenMint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenMint.html",
+          "hash": "5K0DvQrPKpPRtepZ1JE0UtNc7ntdHOuFRY8OLsXEWlI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenMintResolver.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenMintResolver.html",
+          "hash": "+3JELHwLV5Yk5+wY65hnEK3ocFEv4OZBfnNZ2z7fDHA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenQuantity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenQuantity.html",
+          "hash": "xrPZHt+7Ojtw/Tnh+Ww5H66mMcAG+AlzM7XMJt2KUaY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenWallet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenWallet.html",
+          "hash": "VEqbtZEKKnwtSsCH7xWiLpf3Fz+X0wnp64U8zYGUVgU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenWalletAccount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenWalletAccount.html",
+          "hash": "LoqLy/8N1uXDiVT6K8FqnfGPHUZY7+M6Uvb3nv+AlW4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenWalletBalance.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenWalletBalance.html",
+          "hash": "gItEUQoqH3r9hg7cjGaDwawUizFvvYlso5KxEB56E6A="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.TokenWalletException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.TokenWalletException.html",
+          "hash": "BVdAWXKgI/LoyU5JRcH9vV6RQLPDT+NQC/Enox7MbC8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.WellKnownTokens.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.WellKnownTokens.html",
+          "hash": "udcBaYomf0XW09F6dAZLHCkIxr5BHMNSXKrK6d9kDxk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Extensions.html",
+          "hash": "WT8Go5oCcIL+lwGZBbakC3W92lDjFvkGtv38d/ccr4U="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Crypto.IRandomBytesGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Crypto.IRandomBytesGenerator.html",
+          "hash": "tFI+wokzmr69ue7CnefSKxXtEpnxQMdKG8iLfIA82ZA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Crypto.KeyStoreCrypto.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Crypto.KeyStoreCrypto.html",
+          "hash": "fIb0j+CXZvS5Ev02UIQQ0DhI5y/AX6kQWLZ3u602uxI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Crypto.RandomBytesGenerator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Crypto.RandomBytesGenerator.html",
+          "hash": "wl+DcQ3BRCblTVN3VIspPH5OkzGoqeS+XpSMRi6wSjE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Crypto.Scrypt.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Crypto.Scrypt.html",
+          "hash": "07mOMly1grmZ4mcziyBqRJpm4GtJ2ljrmVLdYBNOwZ4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Crypto.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Crypto.html",
+          "hash": "UhKx9+PODSghJa9CmnrAAAONARPdrl4GawMNHl/fBPg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Exceptions.DecryptionException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Exceptions.DecryptionException.html",
+          "hash": "cBLFcj3oFVNgzjlpD1yESefFszuAfZFmIB+X22ZkgWE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Exceptions.InvalidKdfException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Exceptions.InvalidKdfException.html",
+          "hash": "ZbPDM81SY+/k+HOFaFdRvn13TMuHFFh15angS9xVSyY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Exceptions.html",
+          "hash": "auPC1puqH3ytiO9LXFzG/JGn3S8UDKs7dtkGKXskt8k="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.KeyStoreKdfChecker.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.KeyStoreKdfChecker.html",
+          "hash": "KYJix9naOGoiQZ30+BN89kTXleSDmGP332YNKraG3xg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.CipherParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.CipherParams.html",
+          "hash": "lbjYPOCTadvZHClvjsSz7RYuYAYdpQductRUcfjmkxA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.CryptoInfo-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.CryptoInfo-1.html",
+          "hash": "i73UoBQgbs7NXkhnkYKh81/ULeVSrIuunZnfvZjgwro="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.KdfParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.KdfParams.html",
+          "hash": "YnFGf4Br69VwFN5VQ7mxDOCaA3rcoOuOqXY8stcGry0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.KdfType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.KdfType.html",
+          "hash": "sMt3XOf/iI+KSLj/NQbpwnsUielMyVKXjTvjaVnY5rA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.KeyStore-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.KeyStore-1.html",
+          "hash": "199CiY6DbBSS5A3kz0CfLFp/4brjYVA/U6B8AELnrZE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.Pbkdf2Params.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.Pbkdf2Params.html",
+          "hash": "ZACphM5/KEZJ4HnxI1re8q+EashLTGq9wESODNeusNI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.ScryptParams.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.ScryptParams.html",
+          "hash": "CmRtmWd5V9SsE6VBoE5LSGovvrG9zZUF90iP145Zlow="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Model.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Model.html",
+          "hash": "NoGulqur3NZxymo8iiO6Ohb8cautPl/XpPppTV24nCM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.SecretKeyStoreService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.SecretKeyStoreService.html",
+          "hash": "+w+jDMo5SeGwy5GZKFJc8p0lgW5Ca3DxMmGvHvEexnA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Serialization.JsonKeyStorePbkdf2Serializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Serialization.JsonKeyStorePbkdf2Serializer.html",
+          "hash": "7o3BoGIHMmWjWqnWMczdwbkAWpqa/HPYD+QQmuKSHW8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Serialization.JsonKeyStoreScryptSerializer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Serialization.JsonKeyStoreScryptSerializer.html",
+          "hash": "HjVqrvZSzvaR5/Nk4McVau2GmghonkWcipK2NGUBnxI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Serialization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Serialization.html",
+          "hash": "KoQsKRsO9pUgfi9OkubwgdE1uxcZ1bRUGgADgGZior0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Services.ISecretKeyStoreService-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Services.ISecretKeyStoreService-1.html",
+          "hash": "Ki+B5Q9IZFXfUh80Iu7rWOLfH5CA+xhIHNyZ7Yco60w="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Services.KeyStorePbkdf2Service.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Services.KeyStorePbkdf2Service.html",
+          "hash": "RE6TmhyZy3oARXdd/dMi3/BBJaMCfhVwM2zri1pWdEc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Services.KeyStoreScryptService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Services.KeyStoreScryptService.html",
+          "hash": "QfCJbAwqsnpObe3+nCR4ZSj4X4vlrK+QjB487Kwyzso="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Services.KeyStoreServiceBase-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Services.KeyStoreServiceBase-1.html",
+          "hash": "lyiknh8BSB3tHvqeil61K0B0Ozu6nfsNT2DW2x9HCQg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Services.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Services.html",
+          "hash": "ZqWlaQD8s4qTyQxteO1exm5wat6KBc+0DRSXpziYzlU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.SolanaKeyStoreService.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.SolanaKeyStoreService.html",
+          "hash": "h/eFZjFcDvz3B4fKUGkF8zHtEv/g27z+IC5c8AJ2Lts="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.Utils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.Utils.html",
+          "hash": "cTycxINd4pVxta52tCIvKB2Dl5gNh+cKmi5D0lxSSOQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.KeyStore.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.KeyStore.html",
+          "hash": "TB7qkqII8nzocCY99xA+xQ5zu1gqmTCeUgJMy22DeTI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Abstract.ByteFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Abstract.ByteFlag.html",
+          "hash": "JkIb0W2a2U8qY+nBO4shH7zG8jDaQfWSl/kG26maxf4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Abstract.Flag-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Abstract.Flag-1.html",
+          "hash": "/8WPDJqBezI6YSAQ/gvVffbWuBAhR+qhv+54jWguMFE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Abstract.IntFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Abstract.IntFlag.html",
+          "hash": "ozt8ZWdPwEM+5fDGBEjLFniy0J1OqlSr6CEt0dh6vKU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Abstract.LongFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Abstract.LongFlag.html",
+          "hash": "o0kGhiOJ0d6poi5hJ+nDBQrNsDXw/YwyVXpUUaoICbU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Abstract.ShortFlag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Abstract.ShortFlag.html",
+          "hash": "ZDmHWDGCynke8eP4vjkh8cJ/4Q1XkG5fkXlNrdIIMCU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Abstract.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Abstract.html",
+          "hash": "AC+HEV4kcUuoZuo+YYn1LnDo462D1tbaQv/Hn+v7iZA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.AssociatedTokenAccountProgram.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.AssociatedTokenAccountProgram.html",
+          "hash": "WHJySwPiYZaaa19pzeCR+SNYCO8Oj8+3vYfmTitYuOU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.AuthorityType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.AuthorityType.html",
+          "hash": "O5tetTUhO/H25Q34o6HuduWlqtFKqw9mEm6MViguT3M="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.DecodedInstruction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.DecodedInstruction.html",
+          "hash": "W/HLNj59Y4UC5s/b/6WAIZYaarWwIeqFR571hFb7t2o="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.InstructionDecoder.DecodeMethodType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.InstructionDecoder.DecodeMethodType.html",
+          "hash": "J1Uv9KbdY4G/ReBgwsmRHyQnBM6WZ+O8+1jUjdZZlvg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.InstructionDecoder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.InstructionDecoder.html",
+          "hash": "TMQZdtiClhgEXh1cb51BQm9AXNNhrGKJ4ie7PwagwQY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.MemoProgram.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.MemoProgram.html",
+          "hash": "a+s+w+y4jAGs6J7VhRhe3Jz1E83H9I3AziYAKsW5BWA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Models.NonceAccount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Models.NonceAccount.html",
+          "hash": "spQCCmSOj5yjaVbqHfBMEkRJOKan064jAEXgMfnIkkw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Models.html",
+          "hash": "qbaBIuc50heTA1PpJ4kn7GnWYg0ktZbiYumWbk5EUfM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.NameServiceProgram.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.NameServiceProgram.html",
+          "hash": "vOvyGQEQxAqlUrsr7Pq0l/6hMOLz5N+gQuQTwszDMWI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.SharedMemoryProgram.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.SharedMemoryProgram.html",
+          "hash": "6YF9X+JvVw/2B9eryOeqntd1AIsfJB0YtozlBl38mlw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.SystemProgram.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.SystemProgram.html",
+          "hash": "3t8UitXcY7f/lqOfbuOR9esJllMjjM+mZwxw4Gq8HnA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.TokenProgram.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.TokenProgram.html",
+          "hash": "wWT/20J8ioG4L9becZOi3DeatmQAlSzX1+8J5r9Rv5M="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Utilities.Deserialization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Utilities.Deserialization.html",
+          "hash": "qZGmFFrbdUC4ojleunnp0NHP9R3CoB1mXPViCBrPvl4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Utilities.Serialization.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Utilities.Serialization.html",
+          "hash": "cwicO99ALIzKO6NsRbveb2AJN2aNhTBZPYK46jD9SJo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.Utilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.Utilities.html",
+          "hash": "oYLXXGEI9iADTqSCtSzIKT72aQZcjn5yPhy/6xF9Ucs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Programs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Programs.html",
+          "hash": "7ltnjDxFOahGz/WTm+gHi5x8uSPiJCsZKLrX0yefvH8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Builders.MessageBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Builders.MessageBuilder.html",
+          "hash": "h8QAMJAH/cj9hTfHgSFuBIpd87JVCp7wOsteNLt/TD8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Builders.TransactionBuilder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Builders.TransactionBuilder.html",
+          "hash": "CilUV7Dnq1WgzbS6kh7wEZt3HtrrtpN5tErZB5KT2OI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Builders.TransactionInstructionFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Builders.TransactionInstructionFactory.html",
+          "hash": "UvTXs2mXS7lbjveL7Ii5cAVpFozIesGzaPm7ZqRt9oI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Builders.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Builders.html",
+          "hash": "uyPt6lReXXkHfQUXLnqheXzSPMbG3oNV5c6xI/RB7xQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.ClientFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.ClientFactory.html",
+          "hash": "ZWKo6xQ9BOFJolUKVxiq299DoZCmyhVECaKv/0jWC7g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Cluster.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Cluster.html",
+          "hash": "UZDG9v3+3FqY+Px4VwRfg1X02BPbRTqnjxvrh/AE6a0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Http.IRequestResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Http.IRequestResult.html",
+          "hash": "xr+2HqO+lsSQfDGmClscb39O/3MIeK9St9IrALL50U4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Http.RequestResult-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Http.RequestResult-1.html",
+          "hash": "LPy1Ed5PB8/66Uc3lsKe9WOVGFnmJUi0GoKobCUzx/Q="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Http.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Http.html",
+          "hash": "cxuvA21ZLeZ9MA1RWAH8CisyGeWkNSzH53CeGXwKbIk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionChannel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionChannel.html",
+          "hash": "3ig+nB7tsgPA8Rrif4k2xlNOgKOgJZRMCwcH/7To0ws="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionEvent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionEvent.html",
+          "hash": "HwgU323uzRw2zss7gcZK3oM7HOU8995ZVjeibhv4Gkk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionState.html",
+          "hash": "VrR6+WBfnUqv+o6WJ7V9GvuW/Ppv9QeIqCaJQ0VN/dU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionStatus.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Sockets.SubscriptionStatus.html",
+          "hash": "5CMkHOobAN3/6R8yzfE7UI4A3FIx7qGnFTK6O7EUap4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Core.Sockets.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Core.Sockets.html",
+          "hash": "3qnTAils38qMl0icvBpd91M5e6gcX1sJ+xPOnX2UCOs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.IRpcClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.IRpcClient.html",
+          "hash": "LRjuFVW/PsbQZkFd/+9LUAMI6mcqa18wt4BcYbyiCcQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.IStreamingRpcClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.IStreamingRpcClient.html",
+          "hash": "ZfmA2Agy7UgQPmZisSakHDj7bCKGEjsJ4pIxb6TvKKE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.ContextObj.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.ContextObj.html",
+          "hash": "Nh+Fq2pN4LkjqqBLI+/SQqP+8mo8cI3fhghqyMu++zY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.ErrorContent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.ErrorContent.html",
+          "hash": "KkHYmz+c+ygDP8IyOS4VK318Efuq1cgI3ODGjeNyYdc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcBase.html",
+          "hash": "5jm3dVm4C1gyN546j/OEtC3jaRCK6q2rkJRl625j6iw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcErrorResponse.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcErrorResponse.html",
+          "hash": "Wi1ux0qLQiX3fb1hsJab8wGErwpHxEPB88rKNoLZBe8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcRequest.html",
+          "hash": "jVTz0d6Vwfvu8zxwpiuQ7ND4qKywkl+v9MRCSceOQMs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcResponse-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcResponse-1.html",
+          "hash": "FWKVLGJJPPMT1+DRt9GX8EDZ7STByQGKBklGNuuLk4Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcStreamResponse-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.JsonRpcStreamResponse-1.html",
+          "hash": "iC6MNZHaKPGZ4Cy4cCRtThs+Tzz3uDqemjxweUbNwFU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.ResponseValue-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.ResponseValue-1.html",
+          "hash": "k2fEspB6qTf409peYYwDQA9+u0z5ZMPt1K/Qko2zP/Q="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Messages.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Messages.html",
+          "hash": "Ok4QWeDNyhlZSXeQ4uvuhYcD9AQPMYJeC4vIXYA8ztY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.AccountInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.AccountInfo.html",
+          "hash": "bcy2yH9CuiesD4bjjb/wf9TujznD1a6LN4ANga86uiA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.AccountInfoBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.AccountInfoBase.html",
+          "hash": "w6cBZS6vzZlovKmotQx0OkTgzCxfJBokpSoBlaG8go0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.AccountKeyPair.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.AccountKeyPair.html",
+          "hash": "iEcjMWwDq1lge8u/Yuhsv3Uv/g0+gQu6WfY9treSsF0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.AccountMeta.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.AccountMeta.html",
+          "hash": "hvRGjwbW1QsFSD04D4aN5vS7vUGGvikuamJ5S3NEN98="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.BlockCommitment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.BlockCommitment.html",
+          "hash": "AXnqwcmlYGTKN1oDK6rdFlxabOK45nluqi8MUDzydtg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.BlockHash.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.BlockHash.html",
+          "hash": "tM0aukfoYepA6EBkA0lP4SS5ab1tn2qKX2vXx0dC9iU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.BlockInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.BlockInfo.html",
+          "hash": "PQGBWaloEaFs1xKNll+e7QXj7WphHClslmtaN9VbaX4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.BlockProductionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.BlockProductionInfo.html",
+          "hash": "4f8K4v3/BmpnAWGIuG8GeQgYqQrZ8xYz3N4UyHbdhi8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.ClusterNode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.ClusterNode.html",
+          "hash": "ZJrN4vgKbf7zmaTxCDFvD9oGEaWYOi8wL2UzoV9kWp4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.CompiledInstruction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.CompiledInstruction.html",
+          "hash": "mnudYUSFUydEd7JcWfMWDOI53fkSUU6KAZgRzsnlXv0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.EpochInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.EpochInfo.html",
+          "hash": "8JDZxaYBlSejLgeisY3/caKPf+bxwuSkabWoT7O3R60="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.EpochScheduleInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.EpochScheduleInfo.html",
+          "hash": "QG4VApGUNQGP+W/j5pdnOY5hV62VgAjM9YahW9kF63o="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.ErrorResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.ErrorResult.html",
+          "hash": "tGTGmIYjhh2GdEX548/4Cv6WcUqKxfp/FwlZ4EE/Ors="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.FeeCalculator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.FeeCalculator.html",
+          "hash": "UJqQ70NHhKh3kAhRgKhaSYBnvkhKjJaz+DMjPtjVBpg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.FeeCalculatorInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.FeeCalculatorInfo.html",
+          "hash": "G58mwVnIOOj3qY+sZCccIai085LyDV3msl0W2QbqEpU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.FeeRateGovernor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.FeeRateGovernor.html",
+          "hash": "qJLh75OnpZcvu8gj1fGJekZRMusrIxmEcnwiVb38MBc="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.FeeRateGovernorInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.FeeRateGovernorInfo.html",
+          "hash": "PsFyDf85nxm3RrDvY0QZ98Q6ppKm0cPlJ6ydvJtAFGE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.FeesInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.FeesInfo.html",
+          "hash": "6zcFFoDTef4811TIOvEsY9EVJXsavIGiG4HZrYFEBm4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.InflationGovernor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.InflationGovernor.html",
+          "hash": "RZL1N5qTLzfa305RKVWmKitivYqmBTLIN2QH+j+DIS0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.InflationRate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.InflationRate.html",
+          "hash": "xScBiK/ilBzhFDx6J4azuz+ykZPjwj4edrHQxeehcDI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.InflationReward.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.InflationReward.html",
+          "hash": "MF2K8IHOmXGCpvFj8tCXboKtYTdIBQLjZIwlOL90a8g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.InnerInstruction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.InnerInstruction.html",
+          "hash": "E1DS2fzujncA1G8xpAOM5jzcI6961X8nlE86bPriuQQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.InstructionError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.InstructionError.html",
+          "hash": "XPnabvN7+9yq5rjHkOt5BzqeXWKj0qkFSHv0z6Acmh0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.InstructionErrorType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.InstructionErrorType.html",
+          "hash": "bQA0CuwClTK3KRWXGhfdxqWDYj2v7KPyLgKCIV3qtt0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.InstructionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.InstructionInfo.html",
+          "hash": "W5VhIjBVmyMgQD5Ha/2uAOftD/I6+OewY9yR3paODjY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.LargeAccount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.LargeAccount.html",
+          "hash": "KEXgnqwEImz/ycHtDO59PweIYW0iHYWpAw3bXPENiwM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.LargeTokenAccount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.LargeTokenAccount.html",
+          "hash": "fQ4oywjFr302yjrkdRUH7NGIuTP6hDDYbeQuRh2Me8o="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.Log.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.Log.html",
+          "hash": "G8q6fVA61mgH29NriEizSterfu56RAG6b71HOl/7i+g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.LogInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.LogInfo.html",
+          "hash": "l1ZDYtNURwtwHpgf/JVOlTnTNIjxXGUjQHd1cMLmEFE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.MemCmp.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.MemCmp.html",
+          "hash": "EPRABP3c1Vqfn0ZTYnHvdUS/ne3GfNyGM6Xro9RfD5M="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.Message.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.Message.html",
+          "hash": "92L3NCMBbYXlYQYIyjekOsvWpD+ZcXbiyn1SIrBjbrk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.MessageHeader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.MessageHeader.html",
+          "hash": "5/6RPs9DlWIREQimFPBj6IKTMgXzgwQrIDfVZ9NyeCU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.NodeIdentity.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.NodeIdentity.html",
+          "hash": "oo7oPAx6F2OnAF2BFqxCtmTcf+IbSM+KsAZNVnuhOEA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.NodeVersion.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.NodeVersion.html",
+          "hash": "Ci3gjW7yfNUquXOsOQ3Wwf4y5zX9j+h+tEJhXnH7nXM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.NonceInformation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.NonceInformation.html",
+          "hash": "tdv7QaThOkLc/kUXJBON867WWqkmc/CKFNzKgRCbxgg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.ParsedTokenAccountData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.ParsedTokenAccountData.html",
+          "hash": "pQIrlV2dmBjWmFOpfxQfJBglPM3Lpj1QTdLy8z0FyB4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.PerformanceSample.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.PerformanceSample.html",
+          "hash": "/js/98jdVPDA3o4Iz7i9gkmuxwqObqcKbzhaffLqhEM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.RewardInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.RewardInfo.html",
+          "hash": "KPPY4S1kWhlNe7QOEecZBFhEcegwKBuatk7IlbkXkXE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.RewardType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.RewardType.html",
+          "hash": "GZF2vxqEq5pA7eVazY+2+xY0sqdrCujLpMOE0W01qA0="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.SignaturePubKeyPair.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.SignaturePubKeyPair.html",
+          "hash": "EohDH2vw6AsPWe/Q6c4lFTlNfmK6opiWxDsaoGlAH3k="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.SignatureStatusInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.SignatureStatusInfo.html",
+          "hash": "rV7K0KyFkK8L+MDCj5HBnJGj5GTBAEyEjkpn4r19Kpg="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.SimulationLogs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.SimulationLogs.html",
+          "hash": "xbrhmMQtc4W0LYG+P+nbxJhAQIhAGI9IALpMh6i9UsM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.SlotInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.SlotInfo.html",
+          "hash": "HjWpSrThMSxr6uBDI1U6tB9ft3ZQXN39Wq3B3xdDMFo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.SlotRange.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.SlotRange.html",
+          "hash": "lBT70Rnz8UQqPqSFIKW20LkHxieV7oRDZrT5WF84bvk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.StakeActivationInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.StakeActivationInfo.html",
+          "hash": "xu2ZgIeL+7dP4hvZbWvZPe3MsDZVs3rWluHYMwOsVKE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.Supply.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.Supply.html",
+          "hash": "DPxnxankdTH/TzPiPgI1mZZqAfSLpPdzNpilPrNOCzw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TokenAccount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TokenAccount.html",
+          "hash": "KYeBXHVBn7bx0op3gGskYsBRVAADxjWcLvORwLUNzrE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TokenAccountData.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TokenAccountData.html",
+          "hash": "az4+mAfOtBfPX+j4H30RSAaKpeqNufRqY/Nt4rEWdhE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TokenAccountInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TokenAccountInfo.html",
+          "hash": "t2N48+hj2/W1lgv9L5FSmNtOKMYkKjjPIveA5yzQ33k="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TokenAccountInfoDetails.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TokenAccountInfoDetails.html",
+          "hash": "wyXYmhVCwxKwxAEO8hMXFf/1Hwmh5yLTAAKjzPhESxA="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TokenBalance.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TokenBalance.html",
+          "hash": "fAPHYON+CgplxRR8ohRHl8Z6xdEyW/6m85ucdJoQ+0o="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TokenBalanceInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TokenBalanceInfo.html",
+          "hash": "nYmqd7bBeNuyndLYua9BWvalCQ4O1ml9DOtLlwfhBuI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.Transaction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.Transaction.html",
+          "hash": "IHk3o5oOzuuhYj16BX5k4c9Fe5RssyMDJX7sf2Plnqs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionContentInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionContentInfo.html",
+          "hash": "9A5/UYWWJamO5tm5IdBm5o31pSxeKlHzl2nmhL6LwQw="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionError.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionError.html",
+          "hash": "htNEWESCpKIeCUjoD0bRTQhMzDPIOwQx0u8TtWLv7Lk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionErrorJsonConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionErrorJsonConverter.html",
+          "hash": "1Eqjk9PYXk1JHiw5nw7Lfnp1MRWFiGY1M47rXxQq7YM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionErrorType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionErrorType.html",
+          "hash": "CffPvUxMsaS471k/clCn0/qN/w6ErTzQNSWAJxOOvxQ="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionHeaderInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionHeaderInfo.html",
+          "hash": "tEeVXKL8rbbbOB+MlwPWlhE6cH7CzpDUtgofBrfGFh4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionInfo.html",
+          "hash": "DMkwXfsshIZOP+mvjj1+L87vC6o1QXZNVR2hKiPCXJE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionInstruction.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionInstruction.html",
+          "hash": "Wc809bpe4HruWJx+PrQZFgMYz0HsYSd4syih1EBPjbI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionMeta.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionMeta.html",
+          "hash": "YMx6S/DP4S2D2jV4vUw3nI5Kcp7mJTvMGL3GG37yIf4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionMetaInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionMetaInfo.html",
+          "hash": "KS4XNmUgV8Nq6SZQer4TsxgzwDAX8qe5Ph5FQWJOpbI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.TransactionMetaSlotInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.TransactionMetaSlotInfo.html",
+          "hash": "VX2P9WieEids1GbEFWL9spsKPwlQRvrOcdmRIAh9QFE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.VoteAccount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.VoteAccount.html",
+          "hash": "o5RobM/CklPwwrPhbU52sIaPshDS8yi2inY8AAEDTg4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.VoteAccounts.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.VoteAccounts.html",
+          "hash": "9GV8PWhqXw3O9dRoCxq0Eyzk+bKqIYVEEwSOT2JC+sY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Models.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Models.html",
+          "hash": "FB/kgFPzif8vHaxuUqxa9UkgkFsbSD+Lk3XM1cz1V3Q="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.AccountFilterType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.AccountFilterType.html",
+          "hash": "lJaE0fNIiSI6wpZlYtJnimsrTQDxlTAdKXbe5LxMyys="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.BinaryEncoding.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.BinaryEncoding.html",
+          "hash": "R4gPaneuSr7hFnPci+MnapRaL6HMMzksYdX+Z60V4Ug="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.Commitment.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.Commitment.html",
+          "hash": "v9Fn3YUlX4LQlZ1M6NG/CmYom03iIskio63DDfGsFZY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.IConnectionStatistics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.IConnectionStatistics.html",
+          "hash": "r2UQbYfeLwvqiZzOntJdVMXWps1d6N3kkoYfc9WuiTM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.LogsSubscriptionType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.LogsSubscriptionType.html",
+          "hash": "3MhC/llrpwjg2SgNqDVrlLSva1GJFxN8ZjGZLsAxves="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.TransactionDetails.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.TransactionDetails.html",
+          "hash": "xOp1RgOXKB+uHDqGxyJqRR+Dy9lfbLxgxr4gaOpxABM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.TransactionDetailsFilterType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.TransactionDetailsFilterType.html",
+          "hash": "ytlETfPRfG+/1o9fyel/IPdcVs9iuKQhKubjhigxWw8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Types.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Types.html",
+          "hash": "yuWD8QoUkV1cjC/N52sNBnX4JE5FUk8sdqEWlKcHXQ8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Utilities.AddressExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Utilities.AddressExtensions.html",
+          "hash": "tcBRXhtOSmbz27No5U/czuf7UyAm7VrfWZA808Xw2MI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Utilities.Ed25519Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Utilities.Ed25519Extensions.html",
+          "hash": "/YNsrP0p1TyL/C+E5qURyUMkY1XkP3r17zJE8zOD4xs="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.Utilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.Utilities.html",
+          "hash": "+Xfq5G0h5JBOyttOdxt2/ApElOPiiNef57zqjjKVKw8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Rpc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Rpc.html",
+          "hash": "8Q7jqpwZ7BGgQgK45LTnH5+Ye/sze48p0c4gJMNg4hI="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Account.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Account.html",
+          "hash": "zsc5Ib5e9orCsoyKsuSwt7RgmEse0q3uPmAzJTLql8Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Bip39.Language.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Bip39.Language.html",
+          "hash": "fLEJ13ZbSpUG9P9U9RwohbwzFFQ2Xvkr5K7VgkjAYRE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Bip39.Mnemonic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Bip39.Mnemonic.html",
+          "hash": "Wjb5dCr7yqdTfOUchyk/d+mt4M8Bpxk8D2CfDyANFP4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Bip39.WordCount.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Bip39.WordCount.html",
+          "hash": "/V+x9x1UCojYbtlCtw/gzVw1j23ifZxrefOYLojvktk="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Bip39.WordList.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Bip39.WordList.html",
+          "hash": "G0wZIOKWZ5W55SZDV2manxOC0xgW5Q5fsaeR0Cg2eK8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Bip39.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Bip39.html",
+          "hash": "fWAEDwafcdwBbmQJv2LcSTU0yg151jvT1x2cG8KANAU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Ed25519Bip32.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Ed25519Bip32.html",
+          "hash": "ditL0cF+ve3aJ/pUja4dmtaD7D6thhdnFuctvmni1c8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.PrivateKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.PrivateKey.html",
+          "hash": "3D9+9YTy5Q0/MV8/Sxb86/anKYso9D8AlXamqmr6l5Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.PublicKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.PublicKey.html",
+          "hash": "O8tP3yOcfsXfG+jB/0m61fV1VM/xdj+m4iIg1QTulUo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.SeedMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.SeedMode.html",
+          "hash": "ptqbRWm9mc6CkYdscvCp4SCrTurtanuCFVsFJirNxuM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Utilities.Base58Encoder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Utilities.Base58Encoder.html",
+          "hash": "Fgp77blomEdf6WAYVGzli3vQZ+ywzMsAraD3maaegSM="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Utilities.DataEncoder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Utilities.DataEncoder.html",
+          "hash": "RE2XKcGg4G6iLzL8qHARyMDGVp/LLzx0tdgFAX98ymU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Utilities.Encoders.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Utilities.Encoders.html",
+          "hash": "/O5iW+oYDAsYz0tSaW4omKQ8Lkfj4YokLlSWiFUaiFU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Utilities.IRandom.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Utilities.IRandom.html",
+          "hash": "c4oCA6+bs02uharjIM6/lXC49zuEDPyWsZha73fxqCU="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Utilities.RandomUtils.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Utilities.RandomUtils.html",
+          "hash": "3LNhqWSEocgpguGK9z1mwUDUUp4PtqJXRMFd0Vhct+Y="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Utilities.RngCryptoServiceProviderRandom.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Utilities.RngCryptoServiceProviderRandom.html",
+          "hash": "NulmXtKKjQ3XYPknoecunWiYRIxZ5Q+jK6sXsuoTe0c="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Utilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Utilities.html",
+          "hash": "XndfL4J/+b+SyYrfXfzDR6nC0TmEYvGvkbNCw6R6IaY="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.Wallet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.Wallet.html",
+          "hash": "3fqYzlpSENpCsWftTDuWQgG4em0t733uxJu78ukFWoo="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/Solana.Unity.Wallet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/Solana.Unity.Wallet.html",
+          "hash": "I/VEu6etQUSvJh18uklpsvzXk876eXQ8+ndSxJx+xk4="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "Kv9DQIjpFSJiY7qVs5HwFYpBBlApmo2feKags63yVDQ="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/getting_started.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/getting_started.html",
+          "hash": "oQ4fnRqA0Y6aWwYqbM3w3RB/p4cEuBbR3OFJnkJUy5g="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/hello_world.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/hello_world.html",
+          "hash": "nFJNb1axVNn8brUiTmX/aMQ65qnEuwGjaRCm0Oc8zPE="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "articles/imgs/memo.png",
+      "output": {
+        "resource": {
+          "relative_path": "articles/imgs/memo.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "articles/imgs/nuget.png",
+      "output": {
+        "resource": {
+          "relative_path": "articles/imgs/nuget.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "articles/package_description.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/package_description.html",
+          "hash": "m0wapeLZotHYfF8d4sjvcyL1SsB/Nf3HzXKpSVMG0N8="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "articles/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "articles/toc.html",
+          "hash": "boJbHzirsu5IIQG1xdZFFgE4zV0LK63tBEZAUzP6YQY="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html",
+          "hash": "Jv8ZvHS8fLDA0wf3OiksXO+kyv+5Fz8+EBpyl7djBBE="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html",
+          "hash": "EsUI0U0fbuvZjV9OagRjtxI51x+TdPNA5VfFqcsQp3s="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    }
+  ],
+  "incremental_info": [
+    {
+      "status": {
+        "can_incremental": true,
+        "incrementalPhase": "build",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 4,
+          "skipped_file_count": 3
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 187,
+          "skipped_file_count": 187
+        },
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        },
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+          "incrementalPhase": "build",
+          "total_file_count": 0,
+          "skipped_file_count": 0
+        }
+      }
+    },
+    {
+      "status": {
+        "can_incremental": true,
+        "details": "Can support incremental post processing.",
+        "incrementalPhase": "postProcessing",
+        "total_file_count": 0,
+        "skipped_file_count": 0
+      },
+      "processors": {}
+    }
+  ],
+  "version_info": {},
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}
