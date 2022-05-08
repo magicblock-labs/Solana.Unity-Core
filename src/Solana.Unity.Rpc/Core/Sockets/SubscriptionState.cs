@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Solana.Unity.Rpc.Core.Sockets
@@ -43,7 +43,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
         /// <summary>
         /// The collection of parameters that were submitted for this subscription.
         /// </summary>
-        public ImmutableList<object> AdditionalParameters { get; protected set; }
+        public List<object> AdditionalParameters { get; protected set; }
 
         /// <summary>
         /// Event fired when the state of the subcription changes.
@@ -60,7 +60,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
         {
             _rpcClient = rpcClient;
             Channel = chan;
-            AdditionalParameters = additionalParameters?.ToImmutableList();
+            AdditionalParameters = additionalParameters?.ToList();
         }
 
         /// <summary>

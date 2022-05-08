@@ -206,7 +206,7 @@ namespace Solana.Unity.Wallet
             }
             else
             {
-                (byte[] privateKey, byte[] publicKey) = Utils.EdKeyPairFromSeed(_seed[..32]);
+                (byte[] privateKey, byte[] publicKey) = Utils.EdKeyPairFromSeed(_seed.Slice(0, 32));
                 Account = new Account(privateKey, publicKey);
             }
         }
