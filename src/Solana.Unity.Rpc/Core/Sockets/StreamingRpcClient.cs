@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Solana.Unity.Rpc.Types;
+﻿using Solana.Unity.Rpc.Types;
 using System;
 using System.IO;
 using System.Net.WebSockets;
@@ -25,7 +24,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
         /// <summary>
         /// The logger instance.
         /// </summary>
-        protected readonly ILogger _logger;
+        protected readonly object _logger;
 
         /// <inheritdoc cref="IStreamingRpcClient.NodeAddress"/>
         public Uri NodeAddress { get; }
@@ -50,7 +49,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
         /// <param name="logger">The possible logger instance.</param>
         /// <param name="socket">The possible websocket instance. A new instance will be created if null.</param>
         /// <param name="clientWebSocket">The possible ClientWebSocket instance. A new instance will be created if null.</param>
-        protected StreamingRpcClient(string url, ILogger logger, IWebSocket socket = default, ClientWebSocket clientWebSocket = default)
+        protected StreamingRpcClient(string url, object logger, IWebSocket socket = default, ClientWebSocket clientWebSocket = default)
         {
             NodeAddress = new Uri(url);
             ClientSocket = socket ?? new WebSocketWrapper(clientWebSocket ?? new ClientWebSocket());
@@ -120,10 +119,17 @@ namespace Solana.Unity.Rpc.Core.Sockets
                 }
                 catch (Exception e)
                 {
-                    _logger?.LogDebug(new EventId(), e, "Exception trying to read next message.");
+                    if (_logger != null)
+                    {
+                        Console.WriteLine($"Exception trying to read next message: {e.Message}");
+                    }
                 }
             }
-            _logger?.LogDebug(new EventId(), $"Stopped reading messages. ClientSocket.State changed to {ClientSocket.State}");
+
+            if (_logger != null)
+            {
+                Console.WriteLine($"Stopped reading messages. ClientSocket.State changed to {ClientSocket.State}");
+            }
             ConnectionStateChangedEvent?.Invoke(this, State);
         }
 

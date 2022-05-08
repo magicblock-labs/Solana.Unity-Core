@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Solana.Unity.Rpc.Messages;
+﻿using Solana.Unity.Rpc.Messages;
 using Solana.Unity.Rpc.Utilities;
 using System;
 using System.Linq;
@@ -33,7 +32,7 @@ namespace Solana.Unity.Rpc.Core.Http
         /// <summary>
         /// The logger instance.
         /// </summary>
-        private readonly ILogger _logger;
+        private readonly object _logger;
 
         /// <summary>
         /// Rate limiting strategy
@@ -50,7 +49,7 @@ namespace Solana.Unity.Rpc.Core.Http
         /// <param name="logger">The possible logger instance.</param>
         /// <param name="httpClient">The possible HttpClient instance. If null, a new instance will be created.</param>
         /// <param name="rateLimiter">An IRateLimiter instance or null for no rate limiting.</param>
-        protected JsonRpcClient(string url, ILogger logger = default, HttpClient httpClient = default, IRateLimiter rateLimiter = null)
+        protected JsonRpcClient(string url, object logger = default, HttpClient httpClient = default, IRateLimiter rateLimiter = null)
         {
             _logger = logger;
             NodeAddress = new Uri(url);
@@ -83,7 +82,10 @@ namespace Solana.Unity.Rpc.Core.Http
                 _rateLimiter?.Fire(); 
                 
                 // logging
-                _logger?.LogInformation(new EventId(req.Id, req.Method), $"Sending request: {requestJson}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{req.Id} {req.Method} Sending request: {requestJson}");
+                }
 
                 // create byte buffer to avoid charset=utf-8 in content-type header
                 // as this is rejected by some RPC nodes
@@ -112,14 +114,20 @@ namespace Solana.Unity.Rpc.Core.Http
             {
                 var result = new RequestResult<T>(System.Net.HttpStatusCode.BadRequest, e.Message);
                 result.RawRpcRequest = requestJson;
-                _logger?.LogDebug(new EventId(req.Id, req.Method), $"Caught exception: {e.Message}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{req.Id} {req.Method} Caught exception: {e.Message}");
+                }
                 return result;
             }
             catch (Exception e)
             {
                 var result = new RequestResult<T>(System.Net.HttpStatusCode.BadRequest, e.Message);
                 result.RawRpcRequest = requestJson;
-                _logger?.LogDebug(new EventId(req.Id, req.Method), $"Caught exception: {e.Message}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{req.Id} {req.Method} Caught exception: {e.Message}");
+                }
                 return result;
             }
 
@@ -140,7 +148,10 @@ namespace Solana.Unity.Rpc.Core.Http
             {
                 result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                _logger?.LogInformation(new EventId(req.Id, req.Method), $"Result: {result.RawRpcResponse}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{req.Id} {req.Method} Result: {result.RawRpcResponse}");
+                }
                 var res = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(result.RawRpcResponse, _serializerOptions);
 
                 if (res.Result != null)
@@ -169,7 +180,10 @@ namespace Solana.Unity.Rpc.Core.Http
             }
             catch (JsonException e)
             {
-                _logger?.LogDebug(new EventId(req.Id, req.Method), $"Caught exception: {e.Message}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{req.Id} {req.Method} Caught exception: {e.Message}");
+                }
                 result.WasRequestSuccessfullyHandled = false;
                 result.Reason = "Unable to parse json.";
             }
@@ -193,7 +207,10 @@ namespace Solana.Unity.Rpc.Core.Http
                 // pre-flight check with rate limiter if set
                 _rateLimiter?.Fire(); 
                 
-                _logger?.LogInformation(new EventId(id_for_log, $"[batch of {reqs.Count}]"), $"Sending request: {requestsJson}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{id_for_log} [batch of {reqs.Count}] Sending request: {requestsJson}");
+                }
 
                 // create byte buffer to avoid charset=utf-8 in content-type header
                 // as this is rejected by some RPC nodes
@@ -221,14 +238,20 @@ namespace Solana.Unity.Rpc.Core.Http
             {
                 var result = new RequestResult<JsonRpcBatchResponse>(System.Net.HttpStatusCode.BadRequest, e.Message);
                 result.RawRpcRequest = requestsJson;
-                _logger?.LogDebug(new EventId(id_for_log, $"[batch of {reqs.Count}]"), $"Caught exception: {e.Message}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{id_for_log} [batch of {reqs.Count}] Caught exception: {e.Message}");
+                }
                 return result;
             }
             catch (Exception e)
             {
                 var result = new RequestResult<JsonRpcBatchResponse>(System.Net.HttpStatusCode.BadRequest, e.Message);
                 result.RawRpcRequest = requestsJson;
-                _logger?.LogDebug(new EventId(id_for_log, $"[batch of {reqs.Count}]"), $"Caught exception: {e.Message}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{id_for_log} [batch of {reqs.Count}] Caught exception: {e.Message}");
+                }
                 return result;
             }
 
@@ -250,7 +273,10 @@ namespace Solana.Unity.Rpc.Core.Http
             {
                 result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                _logger?.LogInformation(new EventId(id_for_log, $"[batch of {reqs.Count}]"), $"Result: {result.RawRpcResponse}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{id_for_log} [batch of {reqs.Count}] Result: {result.RawRpcResponse}");
+                }
                 var res = JsonConvert.DeserializeObject<JsonRpcBatchResponse>(result.RawRpcResponse, _serializerOptions);
 
                 if (res != null)
@@ -279,7 +305,10 @@ namespace Solana.Unity.Rpc.Core.Http
             }
             catch (JsonException e)
             {
-                _logger?.LogDebug(new EventId(id_for_log, $"[batch of {reqs.Count}]"), $"Caught exception: {e.Message}");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{id_for_log} [batch of {reqs.Count}] Caught exception: {e.Message}");
+                }
                 result.WasRequestSuccessfullyHandled = false;
                 result.Reason = "Unable to parse json.";
             }

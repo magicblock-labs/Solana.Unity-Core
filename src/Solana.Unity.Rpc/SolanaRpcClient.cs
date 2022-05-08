@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Solana.Unity.Rpc.Core;
 using Solana.Unity.Rpc.Core.Http;
 using Solana.Unity.Rpc.Messages;
@@ -33,7 +32,7 @@ namespace Solana.Unity.Rpc
         /// <param name="httpClient">An http client.</param>
 
         /// <param name="rateLimiter">A rate limiting strategy or null.</param>
-        internal SolanaRpcClient(string url, ILogger logger, HttpClient httpClient = default, IRateLimiter rateLimiter = null) 
+        internal SolanaRpcClient(string url, object logger, HttpClient httpClient = default, IRateLimiter rateLimiter = null) 
             : base(url, logger, httpClient, rateLimiter)
         {
         }

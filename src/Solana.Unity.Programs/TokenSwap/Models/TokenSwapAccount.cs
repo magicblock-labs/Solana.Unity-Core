@@ -1,4 +1,5 @@
-﻿using Solana.Unity.Wallet;
+﻿using Solana.Unity.Programs.Utilities;
+using Solana.Unity.Wallet;
 
 namespace Solana.Unity.Programs.TokenSwap.Models
 {
@@ -105,15 +106,15 @@ namespace Solana.Unity.Programs.TokenSwap.Models
                 Version = SwapVersion.SwapV1,
                 IsInitialized = data[1] == 1,
                 Nonce = data[2],
-                TokenProgramId = new PublicKey(data[3..35]),
-                TokenAAccount = new PublicKey(data[35..67]),
-                TokenBAccount = new PublicKey(data[67..99]),
-                PoolMint = new PublicKey(data[99..131]),
-                TokenAMint = new PublicKey(data[131..163]),
-                TokenBMint = new PublicKey(data[163..195]),
-                PoolFeeAccount = new PublicKey(data[195..227]),
-                Fees = Fees.Deserialize(data[227..291]),
-                SwapCurve = SwapCurve.Deserialize(data[291..]),
+                TokenProgramId = new PublicKey(data.Slice(3, 35)),
+                TokenAAccount = new PublicKey(data.Slice(35, 67)),
+                TokenBAccount = new PublicKey(data.Slice(67, 99)),
+                PoolMint = new PublicKey(data.Slice(99, 131)),
+                TokenAMint = new PublicKey(data.Slice(131, 163)),
+                TokenBMint = new PublicKey(data.Slice(163, 195)),
+                PoolFeeAccount = new PublicKey(data.Slice(195, 227)),
+                Fees = Fees.Deserialize(data.Slice(227, 291)),
+                SwapCurve = SwapCurve.Deserialize(data.Slice(291)),
             };
             return ret;
         }

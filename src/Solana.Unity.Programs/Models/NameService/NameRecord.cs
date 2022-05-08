@@ -1,4 +1,5 @@
 ﻿using Solana.Unity.Programs.Clients;
+using Solana.Unity.Programs.Utilities;
 using System.Diagnostics;
 
 namespace Solana.Unity.Programs.Models.NameService
@@ -39,7 +40,7 @@ namespace Solana.Unity.Programs.Models.NameService
 
             var res = new NameRecord(header, recordType);
 
-            res.Value = input[96..];
+            res.Value = input.Slice(96);
 
             return res;
         }

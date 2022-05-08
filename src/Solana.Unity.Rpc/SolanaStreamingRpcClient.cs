@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
@@ -47,7 +46,7 @@ namespace Solana.Unity.Rpc
         /// <param name="logger">The possible ILogger instance.</param>
         /// <param name="websocket">The possible IWebSocket instance.</param>
         /// <param name="clientWebSocket">The possible ClientWebSocket instance.</param>
-        internal SolanaStreamingRpcClient(string url, ILogger logger = null, IWebSocket websocket = default, ClientWebSocket clientWebSocket = default) : base(url, logger, websocket, clientWebSocket)
+        internal SolanaStreamingRpcClient(string url, object logger = null, IWebSocket websocket = default, ClientWebSocket clientWebSocket = default) : base(url, logger, websocket, clientWebSocket)
         {
         }
 
@@ -74,11 +73,11 @@ namespace Solana.Unity.Rpc
             bool parsedValue;
             
             var jToken = JToken.Parse(Encoding.UTF8.GetString(messagePayload.Span.ToArray()));
-
-            if (_logger?.IsEnabled(LogLevel.Information) ?? false)
+            
+            if (_logger != null)
             {
                 var str = jToken.ToString();
-                _logger?.LogInformation($"[Received]{str}");
+                Console.WriteLine($"[Received]{str}");
             }
 
             if (jToken["error"] != null)
@@ -131,7 +130,10 @@ namespace Solana.Unity.Rpc
                 unconfirmedRequests.TryGetValue(id, out sub);
                 if (!unconfirmedRequests.Remove(id))
                 {
-                    _logger.LogDebug(new EventId(), $"No unconfirmed subscription found with ID:{id}");
+                    if (_logger != null)
+                    {
+                        Console.WriteLine($"No unconfirmed subscription found with ID:{id}");
+                    }
                 }
             }
             return sub;
@@ -150,7 +152,10 @@ namespace Solana.Unity.Rpc
                 confirmedSubscriptions.TryGetValue(id, out sub);
                 if (!confirmedSubscriptions.Remove(id))
                 {
-                    _logger.LogDebug(new EventId(), $"No subscription found with ID:{id}");
+                    if (_logger != null)
+                    {
+                        Console.WriteLine($"No subscription found with ID:{id}");
+                    }
                 }
             }
             if (shouldNotify)
@@ -460,10 +465,10 @@ namespace Solana.Unity.Rpc
             };
             var json = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(msg, opts));
 
-            if (_logger?.IsEnabled(LogLevel.Information) ?? false)
+            if (_logger != null)
             {
                 var jsonString = Encoding.UTF8.GetString(json);
-                _logger?.LogInformation(new EventId(msg.Id, msg.Method), $"[Sending]{jsonString}");
+                Console.WriteLine($"{msg.Id} {msg.Method} [Sending]{jsonString}");
             }
 
             ReadOnlyMemory<byte> mem = new ReadOnlyMemory<byte>(json);
@@ -476,7 +481,11 @@ namespace Solana.Unity.Rpc
             catch (Exception e)
             {
                 sub.ChangeState(SubscriptionStatus.ErrorSubscribing, e.Message);
-                _logger?.LogDebug(new EventId(msg.Id, msg.Method), e, $"Unable to send message");
+                if (_logger != null)
+                {
+                    Console.WriteLine($"{msg.Id} {msg.Method} Unable to send message");
+                }
+                
             }
 
             return sub;
