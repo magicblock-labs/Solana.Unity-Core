@@ -81,8 +81,8 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: ${{ steps.publish_nuget.outputs.VERSION }}
-          release_name: ${{ steps.publish_nuget.outputs.VERSION }}
+          tag_name: ${{ steps.publish_nuget.outputs.Version }}
+          release_name: ${{ steps.publish_nuget.outputs.Version }}
           body_path: RELEASE-NOTES.txt
         env:
           GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
@@ -91,21 +91,21 @@ jobs:
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           file: artifacts/Solana.Unity.Extensions.dll
-          tag: ${{ steps.publish_nuget.outputs.VERSION }}
+          tag: ${{ steps.publish_nuget.outputs.Version }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
       - name: Upload Solana.Unity.Wallet release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           file: artifacts/Solana.Unity.Wallet.dll
-          tag: ${{ steps.publish_nuget.outputs.VERSION }}
+          tag: ${{ steps.publish_nuget.outputs.Version }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
       - name: Upload Solana.Unity.Rpc release assets
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.ACCESS_TOKEN }}
           file: artifacts/Solana.Unity.Rpc.dll
-          tag: ${{ steps.publish_nuget.outputs.VERSION }}
+          tag: ${{ steps.publish_nuget.outputs.Version }}
           upload_url: ${{ steps.create_release.outputs.upload_url }}
       - name: Upload Solana.Unity.KeyStore release assets
         uses: svenstaro/upload-release-action@v2
