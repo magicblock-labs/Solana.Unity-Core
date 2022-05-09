@@ -1,17 +1,17 @@
 <p align="center">
-    <img src="https://raw.githubusercontent.com/bmresearch/Solnet/master/assets/icon.png" margin="auto" height="175"/>
+    <img src="https://raw.githubusercontent.com/garbles-dev/Solana.Unity/master/assets/icon.png" margin="auto" height="175"/>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Unity_Technologies_logo.svg/550px-Unity_Technologies_logo.svg.png?20210922191320" margin="auto" height="175"/>
 </p>
 
 
 <p align="center">
-    <a href="https://github.com/bmresearch/Solnet/actions/workflows/dotnet.yml">
+    <a href="https://github.com/garbles-dev/Solana.Unity/actions/workflows/dotnet.yml">
         <img src="https://github.com/garbles-dev/Solana.Unity/actions/workflows/dotnet.yml/badge.svg"
             alt="Build" ></a>
-    <a href="https://github.com/bmresearch/Solnet/actions/workflows/publish.yml">
+    <a href="https://github.com/garbles-dev/Solana.Unity/actions/workflows/publish.yml">
        <img src="https://github.com/garbles-dev/Solana.Unity/actions/workflows/publish.yml/badge.svg" 
             alt="Release"></a>
-    <a href="https://coveralls.io/github/bmresearch/Solnet?branch=master">
+    <a href="https://coveralls.io/garbles-dev/Solana.Unity/Solnet?branch=master">
         <img src="https://coveralls.io/repos/github/garbles-dev/Solana.Unity/badge.svg?branch=master" 
             alt="Coverage Status" ></a>
 <br/>
