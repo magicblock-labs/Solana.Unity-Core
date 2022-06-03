@@ -12,7 +12,8 @@ var testProjectsRelativePaths = new string[]
 };
 
 var target = Argument("target", "Pack");
-var configuration = Argument("configuration", "Release");
+var configuration = Argument("configuration", "Debug");
+var configurationRelease = Argument("configuration", "Release");
 var solutionFolder = "./";
 var artifactsDir = MakeAbsolute(Directory("artifacts"));
 
@@ -47,6 +48,16 @@ Task("Build")
         });
     });
 
+Task("BuildRelease")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Restore")
+    .Does(() => {
+        DotNetCoreBuild(solutionFolder, new DotNetCoreBuildSettings
+        {
+            NoRestore = true,
+            Configuration = configurationRelease
+        });
+    });
     
 Task("Test")
     .IsDependentOn("Build")
@@ -94,11 +105,12 @@ Task("Report")
 
 Task("Publish")
     .IsDependentOn("Report")
+    .IsDependentOn("BuildRelease")
     .Does(() => {
         DotNetCorePublish(solutionFolder, new DotNetCorePublishSettings
         {
             NoRestore = true,
-            Configuration = configuration,
+            Configuration = configurationRelease,
             NoBuild = true,
             OutputDirectory = artifactsDir
         });
@@ -110,7 +122,7 @@ Task("Pack")
     {
         var settings = new DotNetCorePackSettings
         {
-            Configuration = configuration,
+            Configuration = configurationRelease,
             NoBuild = true,
             NoRestore = true,
             OutputDirectory = packagesDir,

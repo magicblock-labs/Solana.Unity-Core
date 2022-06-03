@@ -6,10 +6,13 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Solana.Unity.Rpc.Converters;
+using System.ComponentModel;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using JsonException = Newtonsoft.Json.JsonException;
+using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Solana.Unity.Rpc.Core.Http
 {
@@ -101,14 +104,12 @@ namespace Solana.Unity.Rpc.Core.Http
                 };
 
                 // execute POST
-                using (var response = await _httpClient.SendAsync(httpReq).ConfigureAwait(false))
+                using (var response = await SendAsyncRequest(_httpClient, httpReq))
                 {
                     var result = await HandleResult<T>(req, response).ConfigureAwait(false);
                     result.RawRpcRequest = requestJson;
                     return result;
                 }
-
-
             }
             catch (HttpRequestException e)
             {
@@ -130,9 +131,9 @@ namespace Solana.Unity.Rpc.Core.Http
                 }
                 return result;
             }
-
-
+            
         }
+
 
         /// <summary>
         /// Handles the result after sending a request.
@@ -143,7 +144,7 @@ namespace Solana.Unity.Rpc.Core.Http
         /// <returns>A task that represents the asynchronous operation that holds the request result.</returns>
         private async Task<RequestResult<T>> HandleResult<T>(JsonRpcRequest req, HttpResponseMessage response)
         {
-            RequestResult<T> result = new RequestResult<T>(response);
+            RequestResult<T> result = new(response);
             try
             {
                 result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
@@ -154,9 +155,10 @@ namespace Solana.Unity.Rpc.Core.Http
                 }
                 var res = JsonConvert.DeserializeObject<JsonRpcResponse<T>>(result.RawRpcResponse, _serializerOptions);
 
+                
                 if (res.Result != null)
                 {
-                    result.Result = (T)res.Result;
+                    result.Result = res.Result;
                     result.WasRequestSuccessfullyHandled = true;
                 }
                 else
@@ -226,7 +228,7 @@ namespace Solana.Unity.Rpc.Core.Http
                 };
 
                 // execute POST
-                using (var response = await _httpClient.SendAsync(httpReq).ConfigureAwait(false))
+                using (var response = await SendAsyncRequest(_httpClient, httpReq))
                 {
                     var result = await HandleBatchResult(reqs, response).ConfigureAwait(false);
                     result.RawRpcRequest = requestsJson;
@@ -315,7 +317,74 @@ namespace Solana.Unity.Rpc.Core.Http
 
             return result;
         }
-
+        
+        /// <summary>
+        /// Return True if running on Unity, False otherwise
+        /// </summary>
+        /// <returns>Return True if running on Unity, False otherwise</returns>
+        private bool IsUnityPlayer()
+        {
+            #if NETSTANDARD2_0 && !DEBUG
+            try
+            {
+                if (Application.platform != null)
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            #endif
+            return false;
+        }
+        
+        /// <summary>
+        /// Send an async request using HttpClient or UnityWebRequest if running on Unity
+        /// </summary>
+        /// <param name="httpClient"></param>
+        /// <param name="httpReq"></param>
+        /// <returns></returns>
+        private async Task<HttpResponseMessage> SendAsyncRequest(HttpClient httpClient, HttpRequestMessage httpReq)
+        {
+            if (IsUnityPlayer())
+            {
+                return await SendUnityWebRequest(httpClient.BaseAddress, httpReq);
+            }
+            return await _httpClient.SendAsync(httpReq).ConfigureAwait(false);
+        }
+        
+        /// <summary>
+        /// Convert a httReq to a Unity Web request
+        /// </summary>
+        /// <param name="uri">RPC URI</param> 
+        /// <param name="httpReq">The http request</param>
+        /// <returns>Http response</returns>
+        /// <exception cref="HttpRequestException"></exception>
+        private async Task<HttpResponseMessage> SendUnityWebRequest(Uri uri, HttpRequestMessage httpReq)
+        {
+            Byte[] buffer = await httpReq.Content.ReadAsByteArrayAsync();
+            Console.WriteLine($"Send A");
+            using (var request = new UnityWebRequest(uri, httpReq.Method.ToString()))
+            {
+                request.uploadHandler = new UploadHandlerRaw(buffer);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                request.SetRequestHeader("Content-Type", "application/json");
+                request.SendWebRequest();
+                if (request.result == UnityWebRequest.Result.ConnectionError)
+                {
+                    throw new HttpRequestException("Error While Sending: " + request.error);
+                }
+                while (!request.isDone)
+                {
+                    await Task.Yield();
+                }
+                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                response.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(request.downloadHandler.text));
+                return response;
+            }
+        }
     }
 
 }
