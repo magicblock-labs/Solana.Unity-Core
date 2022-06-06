@@ -30,5 +30,9 @@ namespace Solana.Unity.Programs
         /// The public key of the Stake History System Variable.
         /// </summary>
         public static readonly PublicKey StakeHistoryKey = new("SysvarStakeHistory1111111111111111111111111");
+        /// <summary>
+        /// The public key of the Instruction Account Variable.
+        /// </summary>
+        public static readonly PublicKey InstructionAccount = new("Sysvar1nstructions1111111111111111111111111");
     }
 }
