@@ -34,9 +34,11 @@
 
 Solana.Unity is a ported version of [Solnet](https://blockmountain.io/Solnet/), compatible with .net 2.0. It can be used with [Unity](https://unity.com/).
 
+Several changes have been made to make it compatible with Unity, libraries have been replaced and external dependencies have been reduced. The API is the documentation they remain though. The original tests are run on every commit.
+    
 ## Solnet
 
-Solana.Unity is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you are developing for the Web or Desktop, we are here to help. Learn more about the provided samples, documentation, integrating the SDK into your app, and more [here](https://blockmountain.io/Solnet/).
+Solnet is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you are developing for the Web or Desktop, we are here to help. Learn more about the provided samples, documentation, integrating the SDK into your app, and more [here](https://blockmountain.io/Solnet/).
 
 </p>
 
