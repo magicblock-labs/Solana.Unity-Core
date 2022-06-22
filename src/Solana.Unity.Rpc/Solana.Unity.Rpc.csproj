@@ -12,10 +12,10 @@
     <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
       <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
     </AssemblyAttribute>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.*"/>
     <PackageReference Include="System.Collections.Immutable" Version="6.0.*" />
     <PackageReference Include="IsExternalInit" Version="1.0.*" PrivateAssets="all" />
-    <PackageReference Include="Unity3D.SDK" Version="2021.*" />
+    <PackageReference Include="Unity3D.SDK" Version="2021.*" PrivateAssets="all" />
     <ProjectReference Include="..\Solana.Unity.Wallet\Solana.Unity.Wallet.csproj" />
   </ItemGroup>
 

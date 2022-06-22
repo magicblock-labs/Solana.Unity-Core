@@ -365,7 +365,6 @@ namespace Solana.Unity.Rpc.Core.Http
         private async Task<HttpResponseMessage> SendUnityWebRequest(Uri uri, HttpRequestMessage httpReq)
         {
             Byte[] buffer = await httpReq.Content.ReadAsByteArrayAsync();
-            Console.WriteLine($"Send A");
             using (var request = new UnityWebRequest(uri, httpReq.Method.ToString()))
             {
                 request.uploadHandler = new UploadHandlerRaw(buffer);
