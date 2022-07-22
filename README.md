@@ -75,7 +75,7 @@ for a list of other commonly needed programs see below:
 - [Metaplex](https://github.com/bmresearch/Solnet.Metaplex/)
 
 ## Requirements
-- net 5.0
+- net standard 2.0
 
 ## Dependencies
 - Chaos.NaCl.Standard
