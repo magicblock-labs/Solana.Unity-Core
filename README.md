@@ -1,10 +1,13 @@
-<p align="center">
-    <img src="https://raw.githubusercontent.com/garbles-dev/Solana.Unity/master/assets/icon.png" margin="auto" height="175"/>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Unity_Technologies_logo.svg/550px-Unity_Technologies_logo.svg.png?20210922191320" margin="auto" height="175"/>
-</p>
+<div align="center">
+  <img height="170x" src="https://i.imgur.com/UvulxS0.png" />
 
+  <h1>Solana.Unity Core</h1>
 
-<p align="center">
+  <p>
+    <strong>Solana.Unity integration Framework</strong>
+  </p>
+
+  <p>
     <a href="https://github.com/garbles-dev/Solana.Unity/actions/workflows/dotnet.yml">
         <img src="https://github.com/garbles-dev/Solana.Unity/actions/workflows/dotnet.yml/badge.svg"
             alt="Build" ></a>
@@ -14,7 +17,6 @@
     <a href="https://coveralls.io/garbles-dev/Solana.Unity/Solnet?branch=master">
         <img src="https://coveralls.io/repos/github/garbles-dev/Solana.Unity/badge.svg?branch=master" 
             alt="Coverage Status" ></a>
-<br/>
     <a href="">
         <img src="https://img.shields.io/github/license/garbles-dev/Solana.Unity?style=flat-square"
             alt="Code License"></a>
@@ -24,11 +26,8 @@
     <a href="https://discord.gg/MBkdC3gxcv">
        <img alt="Discord" src="https://img.shields.io/discord/943797222162726962?style=flat-square"
             alt="Join the discussion!"></a>
-</p>
-
-<div style="text-align:center">
-
-<p>
+  </p>
+</div>
 
 # Introduction
 
