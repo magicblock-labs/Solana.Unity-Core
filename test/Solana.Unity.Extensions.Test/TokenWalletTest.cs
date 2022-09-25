@@ -21,8 +21,8 @@ namespace Solana.Unity.Extensions.Test
     {
 
         private const string MnemonicWords =
-              "route clerk disease box emerge airport loud waste attitude film army tray" +
-              " forward deal onion eight catalog surface unit card window walnut wealth medal";
+            "route clerk disease box emerge airport loud waste attitude film army tray" +
+            " forward deal onion eight catalog surface unit card window walnut wealth medal";
 
         private const string Blockhash = "5cZja93sopRB9Bkhckj5WzCxCaVyriv2Uh5fFDPDFFfj";
 
@@ -146,7 +146,7 @@ namespace Solana.Unity.Extensions.Test
             var testAccounts = wallet.TokenAccounts().WithMint("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819");
             Assert.AreEqual(1, testAccounts.Count());
             Assert.AreEqual(0, testAccounts.WhichAreAssociatedTokenAccounts().Count());
-          
+
             // provision the ata
             var builder = new TransactionBuilder();
             builder
