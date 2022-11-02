@@ -27,9 +27,9 @@ namespace Solana.Unity.Wallet
         {
             get
             {
-                if (_key == null)
+                if (_key == null && _keyBytes != null)
                 {
-                    Key = Encoders.Base58.EncodeData(KeyBytes);
+                    _key = Encoders.Base58.EncodeData(_keyBytes);
                 }
                 return _key;
             }
@@ -46,9 +46,9 @@ namespace Solana.Unity.Wallet
         {
             get
             {
-                if (_keyBytes == null)
+                if (_keyBytes == null && _key != null)
                 {
-                    KeyBytes = Encoders.Base58.DecodeData(Key);
+                    _keyBytes = Encoders.Base58.DecodeData(_key);
                 }
                 return _keyBytes;
             }
