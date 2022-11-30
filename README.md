@@ -35,7 +35,7 @@ Solana.Unity is a ported version of [Solnet](https://blockmountain.io/Solnet/), 
 
 If you are looking for the installable version via Unity Package Manager with examples, see here: https://github.com/garbles-labs/Solana.Unity-SDK. 
 
-Several changes have been made to make it compatible with Unity, libraries have been replaced and external dependencies have been reduced. The API and documentation remain unchanged. The original tests are run on every commit.
+Several changes have been made to make it compatible with Unity, incompatibile libraries have been replaced and external dependencies have been reduced. The API and documentation remain unchanged. The original tests are run on every commit.
     
 ## Solnet
 
