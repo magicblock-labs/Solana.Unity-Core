@@ -1136,20 +1136,20 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
         /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
-        /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
+        /// <param name="commitment">The block commitment used for preflight and transaction commitment.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false,
-            Commitment preFlightCommitment = Commitment.Finalized);
+            Commitment commitment = Commitment.Finalized);
 
         /// <summary>
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
         /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
-        /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
+        /// <param name="commitment">The block commitment used for preflight and transaction commitment.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         RequestResult<string> SendTransaction(string transaction, bool skipPreflight = false,
-            Commitment preFlightCommitment = Commitment.Finalized);
+            Commitment commitment = Commitment.Finalized);
 
         /// <summary>
         /// Sends a transaction.

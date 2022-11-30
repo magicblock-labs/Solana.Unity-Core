@@ -974,16 +974,16 @@ namespace Solana.Unity.Rpc
 
         /// <inheritdoc cref="IRpcClient.SendTransactionAsync(byte[], bool, Commitment)"/>
         public async Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false,
-            Commitment preflightCommitment = Commitment.Finalized)
+            Commitment commitment = Commitment.Finalized)
         {
-            return await SendTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, preflightCommitment)
+            return await SendTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, commitment)
                 .ConfigureAwait(false);
         }
 
 
         /// <inheritdoc cref="IRpcClient.SendTransactionAsync(string, bool, Commitment)"/>
         public async Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false,
-            Commitment preflightCommitment = Commitment.Finalized)
+            Commitment commitment = Commitment.Finalized)
         {
             return await SendRequestAsync<string>("sendTransaction",
                 Parameters.Create(
@@ -991,19 +991,20 @@ namespace Solana.Unity.Rpc
                     ConfigObject.Create(
                         KeyValue.Create("skipPreflight", skipPreflight ? skipPreflight : null),
                         KeyValue.Create("preflightCommitment",
-                            preflightCommitment == Commitment.Finalized ? null : preflightCommitment),
-                        KeyValue.Create("encoding", BinaryEncoding.Base64))));
+                            commitment == Commitment.Finalized ? null : commitment),
+                        KeyValue.Create("encoding", BinaryEncoding.Base64),
+                        HandleCommitment(commitment))));
         }
 
         /// <inheritdoc cref="IRpcClient.SendTransaction(string, bool, Commitment)"/>
         public RequestResult<string> SendTransaction(string transaction, bool skipPreFlight = false,
-            Commitment preFlightCommitment = Commitment.Finalized)
-            => SendTransactionAsync(transaction, skipPreFlight, preFlightCommitment).Result;
+            Commitment commitment = Commitment.Finalized)
+            => SendTransactionAsync(transaction, skipPreFlight, commitment).Result;
 
         /// <inheritdoc cref="IRpcClient.SendTransactionAsync(byte[], bool, Commitment)"/>
         public RequestResult<string> SendTransaction(byte[] transaction, bool skipPreFlight = false,
-            Commitment preFlightCommitment = Commitment.Finalized)
-            => SendTransactionAsync(transaction, skipPreFlight, preFlightCommitment).Result;
+            Commitment commitment = Commitment.Finalized)
+            => SendTransactionAsync(transaction, skipPreFlight, commitment).Result;
 
         /// <inheritdoc cref="IRpcClient.SimulateTransactionAsync(string, bool, Commitment, bool, IList{string})"/>
         public async Task<RequestResult<ResponseValue<SimulationLogs>>> SimulateTransactionAsync(string transaction,
