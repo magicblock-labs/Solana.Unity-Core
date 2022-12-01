@@ -985,7 +985,7 @@ namespace Solana.Unity.Rpc
         public async Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false,
             Commitment commitment = Commitment.Finalized)
         {
-            return await SendRequestAsync<string>("sendTransaction",
+            var response = await SendRequestAsync<string>("sendTransaction",
                 Parameters.Create(
                     transaction,
                     ConfigObject.Create(
@@ -994,6 +994,11 @@ namespace Solana.Unity.Rpc
                             commitment == Commitment.Finalized ? null : commitment),
                         KeyValue.Create("encoding", BinaryEncoding.Base64),
                         HandleCommitment(commitment))));
+
+            if (response.WasSuccessful)
+                await BlockUntilTransactionComplete(response, commitment);
+                
+            return response;
         }
 
         /// <inheritdoc cref="IRpcClient.SendTransaction(string, bool, Commitment)"/>
@@ -1060,6 +1065,56 @@ namespace Solana.Unity.Rpc
             IList<string> accountsToReturn = null)
             => SimulateTransactionAsync(transaction, sigVerify, commitment, replaceRecentBlockhash, accountsToReturn)
                 .Result;
+
+
+        protected async Task<bool> BlockUntilTransactionComplete(RequestResult<string> response, Commitment commitment)
+        {
+            //if (StreamingUri != null)
+            //    return await BlockUntilReadyWs(response, commitment);
+
+            return await BlockUntilTransactionCompleteHttp(response, commitment);
+        }
+        protected async Task<bool> BlockUntilTransactionCompleteWs(RequestResult<string> response, Commitment commitment)
+        {
+            throw new System.NotImplementedException(); 
+        }
+        protected async Task<bool> BlockUntilTransactionCompleteHttp(RequestResult<string> response, Commitment commitment)
+        {
+            short numRetries = 0;
+            short maxRetries = 100;
+
+            //Commitment.Processed is meaningless here 
+            if (commitment == Commitment.Processed)
+                commitment = Commitment.Confirmed;
+                
+            if (response != null && response.WasSuccessful)
+            {
+                string txid = response.Result;
+
+                for (int n = 0; n < maxRetries; n++)
+                {
+                    //try to get completed transaction 
+                    var tx = await this.GetTransactionAsync(response.Result, commitment);
+                    if (tx.WasSuccessful)
+                    {
+                        await Task.Delay(100);
+                        return true;
+                    }
+                    
+                    //delay a bit before retrying 
+                    await Task.Delay(300);
+
+                    numRetries++;
+                    if (numRetries >= maxRetries)
+                    {
+                        //timed out 
+                        break;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         #endregion
 
