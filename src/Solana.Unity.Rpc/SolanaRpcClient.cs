@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Solana.Unity.Rpc
@@ -1066,32 +1067,62 @@ namespace Solana.Unity.Rpc
             => SimulateTransactionAsync(transaction, sigVerify, commitment, replaceRecentBlockhash, accountsToReturn)
                 .Result;
 
-
+        /// <summary>
+        /// Blocks execution of the thread until the transaction's status matches or exceeds the given 
+        /// commitment.
+        /// </summary>
+        /// <param name="response">The response from the target transaction's sending.</param>
+        /// <param name="commitment">The desired commitment level for the transaction.</param>
+        /// <returns>True if successfully blocks until successful completion of the target transaction 
+        /// up to the given commitment level, without timing out or failing.</returns>
         protected async Task<bool> BlockUntilTransactionComplete(RequestResult<string> response, Commitment commitment)
         {
             //if (StreamingUri != null)
-            //    return await BlockUntilReadyWs(response, commitment);
+            //    return await BlockUntilTransactionCompleteWs(response, commitment);
 
             return await BlockUntilTransactionCompleteHttp(response, commitment);
         }
+
+        /// <summary>
+        /// Uses the streaming url (websocket) to subscribe to updates for the given transaction, and 
+        /// block execution of the thread until the transaction's status matches or exceeds the given commitment.
+        /// </summary>
+        /// <param name="response">The response from the target transaction's sending.</param>
+        /// <param name="commitment">The desired commitment level for the transaction.</param>
+        /// <returns>True if successfully blocks until successful completion of the target transaction 
+        /// up to the given commitment level, without timing out or failing.</returns>
         protected async Task<bool> BlockUntilTransactionCompleteWs(RequestResult<string> response, Commitment commitment)
         {
-            throw new System.NotImplementedException(); 
+            throw new System.NotImplementedException();
         }
+
+        /// <summary>
+        /// Uses polling and http requests to listen for status changes to the given transaction, and 
+        /// block execution of the thread until the transaction's status matches or exceeds the given commitment.
+        /// </summary>
+        /// <param name="response">The response from the target transaction's sending.</param>
+        /// <param name="commitment">The desired commitment level for the transaction.</param>
+        /// <returns>True if successfully blocks until successful completion of the target transaction 
+        /// up to the given commitment level, without timing out or failing.</returns>
         protected async Task<bool> BlockUntilTransactionCompleteHttp(RequestResult<string> response, Commitment commitment)
         {
-            short numRetries = 0;
-            short maxRetries = 100;
+            //timeout in milliseconds, if commitment level not reached 
+            int timeoutMs = 7000;
+            CancellationTokenSource cancelSource = new CancellationTokenSource();
+            CancellationToken cancelToken = cancelSource.Token;
+            cancelSource.CancelAfter(timeoutMs);
 
             //Commitment.Processed is meaningless here 
             if (commitment == Commitment.Processed)
                 commitment = Commitment.Confirmed;
-                
+
+            //response must be valid, or else return false 
             if (response != null && response.WasSuccessful)
             {
                 string txid = response.Result;
 
-                for (int n = 0; n < maxRetries; n++)
+                //wait until timeout 
+                while (!cancelToken.IsCancellationRequested)
                 {
                     //try to get completed transaction 
                     var tx = await this.GetTransactionAsync(response.Result, commitment);
@@ -1100,16 +1131,9 @@ namespace Solana.Unity.Rpc
                         await Task.Delay(100);
                         return true;
                     }
-                    
+
                     //delay a bit before retrying 
                     await Task.Delay(300);
-
-                    numRetries++;
-                    if (numRetries >= maxRetries)
-                    {
-                        //timed out 
-                        break;
-                    }
                 }
             }
 
@@ -1123,6 +1147,5 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <returns>The id.</returns>
         int IRpcClient.GetNextIdForReq() => _idGenerator.GetNextId();
-
     }
 }
