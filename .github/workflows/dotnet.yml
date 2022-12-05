@@ -20,7 +20,7 @@ jobs:
           cake-bootstrap: true
           verbosity: Diagnostic
       - name: Publish coverage report to coveralls.io
-        uses: coverallsapp/github-action@v1.1.3
+        uses: coverallsapp/github-action@v1.1.2
         with:
           github-token: ${{ secrets.github_token }}
           path-to-lcov: code_coverage/results.info 
