@@ -8,17 +8,17 @@
   </p>
 
   <p>
-    <a href="https://github.com/garbles-dev/Solana.Unity/actions/workflows/dotnet.yml">
-        <img src="https://github.com/garbles-dev/Solana.Unity/actions/workflows/dotnet.yml/badge.svg"
+    <a href="https://github.com/garbles-labs/Solana.Unity-Core/actions/workflows/dotnet.yml">
+        <img src="https://github.com/garbles-labs/Solana.Unity-Core/actions/workflows/dotnet.yml/badge.svg"
             alt="Build" ></a>
-    <a href="https://github.com/garbles-dev/Solana.Unity/actions/workflows/publish.yml">
+    <a href="https://github.com/garbles-labs/Solana.Unity-Core/actions/workflows/publish.yml">
        <img src="https://github.com/garbles-dev/Solana.Unity/actions/workflows/publish.yml/badge.svg" 
             alt="Release"></a>
-    <a href="https://coveralls.io/garbles-dev/Solana.Unity/Solnet?branch=master">
-        <img src="https://coveralls.io/repos/github/garbles-dev/Solana.Unity/badge.svg?branch=master" 
+    <a href="https://coveralls.io/github/garbles-labs/Solana.Unity-Core?branch=master">
+        <img src="https://coveralls.io/repos/github/garbles-labs/Solana.Unity-Core/badge.svg?branch=master" 
             alt="Coverage Status" ></a>
     <a href="">
-        <img src="https://img.shields.io/github/license/garbles-dev/Solana.Unity?style=flat-square"
+        <img src="https://img.shields.io/github/license/garbles-labs/Solana.Unity-Core?style=flat-square"
             alt="Code License"></a>
     <a href="https://twitter.com/intent/follow?screen_name=garblesfun">
         <img src="https://img.shields.io/twitter/follow/garblesfun?style=flat-square&logo=twitter"

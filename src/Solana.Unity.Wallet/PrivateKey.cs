@@ -98,10 +98,13 @@ namespace Solana.Unity.Wallet
         /// <returns>The signature of the data.</returns>
         public byte[] Sign(byte[] message)
         {
-            ArraySegment<byte> signature = new ArraySegment<byte>(new byte[64]);
-            Ed25519.Sign(signature, 
-                new ArraySegment<byte>(message), 
-                new ArraySegment<byte>(KeyBytes));
+            ArraySegment<byte> signature = new(new byte[64]);
+            if (!string.IsNullOrEmpty(Key))
+            {
+                Ed25519.Sign(signature, 
+                    new ArraySegment<byte>(message), 
+                    new ArraySegment<byte>(KeyBytes));
+            }
             return signature.Array;
         }
 
