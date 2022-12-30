@@ -1,6 +1,5 @@
-#module nuget:?package=Cake.DotNetTool.Module&version=0.4.0
 #addin nuget:?package=Cake.Coverlet&version=2.5.4
-#tool dotnet:?package=dotnet-reportgenerator-globaltool&version=4.8.7
+#tool dotnet:?package=dotnet-reportgenerator-globaltool&version=5.1.13
 
 var testProjectsRelativePaths = new string[]
 {

@@ -16,7 +16,8 @@ jobs:
         uses: cake-build/cake-action@v1.4.1
         with:
           cake-version: 1.1.0
-          verbosity: Verbose
+          verbosity: Diagnostic
+          target: Report
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@v1.1.2
         with:
