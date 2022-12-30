@@ -131,6 +131,21 @@ namespace Solana.Unity.Rpc.Test
         }
 
         [TestMethod]
+        public void TestTransactionBuilderEmptyPrivateKey()
+        {
+            Account account = new Account(string.Empty, new PublicKey("2S1kjspXLPs6jpNVXQfNMqZzzSrKLbGdr9Fxap5h1DLN"));
+            byte[] tx = new TransactionBuilder()
+                .SetRecentBlockHash(Blockhash)
+                .SetFeePayer(account)
+                .AddInstruction(SystemProgram.Transfer(account, account.PublicKey, 10000000))
+                .AddInstruction(MemoProgram.NewMemo(account, "Hello from Sol.Net :)"))
+                .Build(account);
+            Transaction transaction = Transaction.Deserialize(tx);
+            Assert.IsTrue(transaction.Signatures.Count == 1);
+            CollectionAssert.AreEqual(transaction.Signatures[0].Signature, new byte[64]);
+        }
+
+        [TestMethod]
         public void CreateInitializeAndMintToTest()
         {
             var wallet = new Wallet.Wallet(MnemonicWords);
