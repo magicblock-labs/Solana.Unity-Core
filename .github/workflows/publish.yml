@@ -1,9 +1,9 @@
 name: Build, Pack & Publish
 
 on:
-  push:
-    branches:
-      - master # Default release branch
+  release:
+    types: [published]
+  # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 jobs:
   publish:
@@ -16,11 +16,14 @@ jobs:
         run: |
             git log --pretty=format:'%s' ${GITHUB_REF} | perl -pe 's| \(.*tag: v(\d+.\d+.\d+(-preview\d{3})?)(, .*?)*\)|\n## \1\n|g' > RELEASE-NOTES.txt
       - name: Run the build script
-        uses: cake-build/cake-action@v1
-        with:
-          script-path: build.cake
-          target: Pack
-          cake-bootstrap: true
+        shell : bash
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dotnet tool install Cake.Tool --version 1.1.0
+          dotnet tool restore
+          dotnet cake --target=Pack --verbosity=verbose
       - name: Publish Solana.Unity.Extensions on version change
         uses: rohith/publish-nuget@v2
         with:
