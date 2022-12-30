@@ -24,7 +24,6 @@ jobs:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          dotnet new tool-manifest
           dotnet tool install Cake.Tool --version 1.1.0
           dotnet tool restore
           dotnet cake --target=Report --verbosity=verbose
