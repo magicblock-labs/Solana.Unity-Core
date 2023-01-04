@@ -6,12 +6,10 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Solana.Unity.Rpc.Converters;
-using System.ComponentModel;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Solana.Unity.Rpc.Core.Http
@@ -318,27 +316,7 @@ namespace Solana.Unity.Rpc.Core.Http
             return result;
         }
         
-        /// <summary>
-        /// Return True if running on Unity, False otherwise
-        /// </summary>
-        /// <returns>Return True if running on Unity, False otherwise</returns>
-        private bool IsUnityPlayer()
-        {
-            #if NETSTANDARD2_0 && !DEBUG
-            try
-            {
-                if (Application.platform != null)
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            #endif
-            return false;
-        }
+        
         
         /// <summary>
         /// Send an async request using HttpClient or UnityWebRequest if running on Unity
@@ -348,7 +326,7 @@ namespace Solana.Unity.Rpc.Core.Http
         /// <returns></returns>
         private async Task<HttpResponseMessage> SendAsyncRequest(HttpClient httpClient, HttpRequestMessage httpReq)
         {
-            if (IsUnityPlayer())
+            if (RuntimePlatform.IsUnityPlayer())
             {
                 return await SendUnityWebRequest(httpClient.BaseAddress, httpReq);
             }
