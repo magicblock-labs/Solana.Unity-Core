@@ -1,5 +1,5 @@
 using NUnit.Framework;
-
+using Solana.Unity.Dex.Math;
 using System;
 using System.Linq;
 using System.Numerics;
@@ -9,15 +9,16 @@ using System.Collections.Generic;
 using Solana.Unity.Wallet;
 using Solana.Unity.Rpc.Models;
 using Solana.Unity.Dex.Orca.Math;
-using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Quotes.Swap;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Orca.Core.Errors; 
-using Solana.Unity.Dex.Orca.Core.Program; 
+using Solana.Unity.Dex.Orca.Core.Program;
+using Solana.Unity.Dex.Quotes;
 using BigDecimal = Solana.Unity.Dex.Orca.Math.BigDecimal;
 using Solana.Unity.Dex.Test.Orca.Utils;
+using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Rpc.Types;
 
 
@@ -52,7 +53,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
 
             //initialize tickarrays 
-            var tickArrays = await TickArrayTestUtils.InitializeTickArrayRangeAsync(
+            await TickArrayTestUtils.InitializeTickArrayRangeAsync(
                 ctx: _context,
                 whirlpool: whirlpoolPda,
                 startTickIndex: 22528, // to 33792
@@ -70,7 +71,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             };
 
             //fund positions 
-            IList<FundedPositionInfo> positions = await PositionTestUtils.FundPositionsAsync(
+            await PositionTestUtils.FundPositionsAsync(
                 _context,
                 poolInitResult: poolInitResult,
                 fundParams: fundParams

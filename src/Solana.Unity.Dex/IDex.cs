@@ -1,18 +1,15 @@
-using System;
 using System.Numerics;
 using System.Threading.Tasks;
 
 using Solana.Unity.Wallet;
 using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
+using Solana.Unity.Dex.Ticks;
+using Solana.Unity.Dex.Quotes;
+using Solana.Unity.Dex.Math;
+using Solana.Unity.Dex.Swap;
 
-using Solana.Unity.Dex.Orca.Swap;
-using Solana.Unity.Dex.Orca.Quotes;
-using Solana.Unity.Dex.Orca.Math;
-using Solana.Unity.Dex.Orca.Quotes.Swap;
-using Solana.Unity.Dex.Orca.Core.Accounts;
-
-namespace Solana.Unity.Dex.Orca.TxApi
+namespace Solana.Unity.Dex
 {
     /// <summary> 
     /// A repository of functions that create and return full unsigned transactions to execute specified 
@@ -43,7 +40,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
         Task<Transaction> Swap(
             PublicKey whirlpoolAddress,
             ulong amount,
-            bool aToB,
+            bool aToB = true,
             PublicKey tokenAuthority = null, 
             Commitment commitment = Commitment.Finalized
         );
@@ -325,25 +322,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
             PublicKey tokenMintA,
             PublicKey tokenMintB,
             PublicKey configAccountAddress = null,
-            ushort tickSpacing = Ticks.TickSpacing.Standard,
-            Commitment commitment = Commitment.Finalized
-        );
-
-        /// <summary>
-        /// Attempts to find an existing whirlpool with the specified properties, using address derivation 
-        /// and then checking for the existence of such an account. 
-        /// </summary> 
-        /// <param name="tokenMintA">Mint address of any token associated with the pool, preferably token A.</param> 
-        /// <param name="tokenMintB">Mint address of any token associated with the pool, preferably token B.</param> 
-        /// <param name="tickSpacing">Preferred tickSpacing associated with the pool; if not found, others will be queried.</param> 
-        /// <param name="configAccountAddress">Public key of the whirlpool config address account.</param>
-        /// <param name="commitment">Transaction commitment to use for chain queries.</param> 
-        /// <returns>A tuple of the whirlpool's address, and the Whirlpool instance.</returns>
-        Task<Tuple<PublicKey, Whirlpool>> FindWhirlpool(
-            PublicKey tokenMintA,
-            PublicKey tokenMintB,
-            ushort tickSpacing = 0,
-            PublicKey configAccountAddress = null,
+            ushort tickSpacing = TickSpacing.Standard,
             Commitment commitment = Commitment.Finalized
         );
 

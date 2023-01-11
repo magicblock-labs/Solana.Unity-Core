@@ -11,6 +11,7 @@ using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Core.Errors;
 using Solana.Unity.Dex.Test.Orca.Utils;
+using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Rpc.Types;
 using BigDecimal = Solana.Unity.Dex.Orca.Math.BigDecimal;
 

@@ -8,6 +8,7 @@ using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Address;
+using Solana.Unity.Dex.Ticks;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {

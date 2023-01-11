@@ -1,3 +1,4 @@
+using Solana.Unity.Dex.Math;
 using System;
 using System.Numerics;
 
@@ -5,6 +6,7 @@ using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Orca.Positions;
+using Solana.Unity.Dex.Quotes;
 
 namespace Solana.Unity.Dex.Orca.Quotes
 {
@@ -169,13 +171,5 @@ namespace Solana.Unity.Dex.Orca.Quotes
         public int TickUpperIndex { get; set; }
         public Percentage SlippageTolerance { get; set; }
     }
-
-    public class DecreaseLiquidityQuote
-    {
-        public BigInteger LiquidityAmount { get; set; }
-        public BigInteger TokenMinA { get; set; }
-        public BigInteger TokenMinB { get; set; }
-        public BigInteger TokenEstA { get; set; }
-        public BigInteger TokenEstB { get; set; }
-    }
+    
 }

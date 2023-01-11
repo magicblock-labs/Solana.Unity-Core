@@ -1,3 +1,4 @@
+using Solana.Unity.Dex.Math;
 using System;
 using System.Numerics;
 using System.Collections.Generic;
@@ -16,9 +17,10 @@ using Solana.Unity.Dex.Orca.Quotes;
 using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Orca.Quotes.Swap;
 using Solana.Unity.Dex.Orca.Core.Accounts;
-using Solana.Unity.Dex.Orca.Swap;
-using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Orca;
+using Solana.Unity.Dex.Quotes;
+using Solana.Unity.Dex.Swap;
+using Solana.Unity.Dex.Ticks;
 
 namespace Orca
 {

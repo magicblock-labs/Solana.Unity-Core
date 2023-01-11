@@ -1,14 +1,18 @@
 using System;
 
-namespace Solana.Unity.Dex.Orca.Math
+namespace Solana.Unity.Dex.Math
 {
+    /// <summary>
+    /// Percentage utility class
+    /// </summary>
     public class Percentage
     {
         /// <summary>
         /// Class attributes/members
         /// </summary>
-        long _numerator;
-        long _denominator;
+        private long _numerator;
+
+        private long _denominator;
 
         /// <summary>
         /// Constructors
@@ -51,7 +55,7 @@ namespace Solana.Unity.Dex.Orca.Math
         }
 
         /// <summary>
-        /// Properites
+        /// Properties
         /// </summary>
         public long Denominator
         {
@@ -414,9 +418,7 @@ namespace Solana.Unity.Dex.Orca.Math
             {
                 if (num1 < num2)
                 {
-                    long tmp = num1;  // swap the two operands
-                    num1 = num2;
-                    num2 = tmp;
+                    (num1, num2) = (num2, num1);
                 }
                 num1 = num1 % num2;
             } while (num1 != 0);

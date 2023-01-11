@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Orca;
+using Solana.Unity.Dex.Math;
 using System.Threading.Tasks;
 using Solana.Unity.Wallet;
 using Solana.Unity.Rpc.Models;
@@ -10,7 +11,9 @@ using Solana.Unity.Dex.Orca.Quotes.Swap;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Address;
+using Solana.Unity.Dex.Quotes;
 using Solana.Unity.Dex.Test.Orca.Utils;
+using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Rpc.Types;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
@@ -107,7 +110,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //initialize everything 
             PublicKey whirlpoolAddr = await InitializeTestPool(); 
             IWhirlpoolContext newContext = _context;
-            Dex.Orca.TxApi.Dex dex = new OrcaDex(newContext);
+            IDex dex = new OrcaDex(newContext);
             
             //transfer some of token A and B to account 
             await GetWhirlpoolTokens(whirlpoolAddr, walletAccount, 1_000_000); 
@@ -143,7 +146,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //initialize everything 
             PublicKey whirlpoolAddr = await InitializeTestPool();
             IWhirlpoolContext newContext = _context; //await InitializeContext(walletAccount);
-            OrcaDex dex = new (newContext);
+            IDex dex = new OrcaDex(newContext);
             
             //get whirlpool for quote 
             Whirlpool whirlpool = (

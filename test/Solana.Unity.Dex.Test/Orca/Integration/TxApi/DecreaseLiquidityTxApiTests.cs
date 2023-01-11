@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Orca;
+using Solana.Unity.Dex.Math;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using Solana.Unity.Dex.Orca.Quotes;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Address;
+using Solana.Unity.Dex.Quotes;
 using Solana.Unity.Dex.Test.Orca.Utils;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Solana.Unity.Dex.Math;
 using System.Threading.Tasks;
 using System.Numerics;
 
@@ -13,6 +14,7 @@ using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Utils;
 using Solana.Unity.Dex.Orca.Core.Errors;
+using Solana.Unity.Dex.Quotes;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration
 {

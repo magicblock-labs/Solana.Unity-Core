@@ -1,6 +1,6 @@
+using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Wallet;
 
-using Solana.Unity.Dex.Orca.Core.Accounts;
 
 namespace Solana.Unity.Dex.Orca.Ticks
 {

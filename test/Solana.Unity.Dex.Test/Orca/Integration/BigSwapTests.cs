@@ -17,6 +17,7 @@ using Solana.Unity.Dex.Orca.Core.Types;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Test.Orca.Utils;
+using Solana.Unity.Dex.Ticks;
 
 //TODO: (MID) handling for 'funder', 'feePayer', 'signer' is inconsistent. make it consistent
 

@@ -16,6 +16,7 @@ using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Test.Orca.Utils;
+using Solana.Unity.Dex.Ticks;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 {

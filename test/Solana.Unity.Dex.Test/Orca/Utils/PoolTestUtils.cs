@@ -13,6 +13,7 @@ using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.SolanaApi;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Core.Program;
+using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Programs;
 using Solana.Unity.Rpc.Models;
 using Decimal = Solana.Unity.Dex.Orca.Math.BigDecimal;

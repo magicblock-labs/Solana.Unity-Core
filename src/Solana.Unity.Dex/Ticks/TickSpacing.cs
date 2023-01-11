@@ -1,4 +1,4 @@
-namespace Solana.Unity.Dex.Orca.Ticks
+namespace Solana.Unity.Dex.Ticks
 {
     /// <summary>
     /// Enumeration of common tick spacings. 

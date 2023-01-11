@@ -17,7 +17,8 @@ using Solana.Unity.Dex.Orca.Quotes;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Utils;
-using Solana.Unity.Dex.Orca.Core.Errors; 
+using Solana.Unity.Dex.Orca.Core.Errors;
+using Solana.Unity.Dex.Ticks;
 using BigDecimal = Solana.Unity.Dex.Orca.Math.BigDecimal;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration

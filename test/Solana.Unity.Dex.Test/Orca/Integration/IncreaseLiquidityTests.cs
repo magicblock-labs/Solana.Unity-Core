@@ -15,6 +15,7 @@ using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Errors;
 using Solana.Unity.Dex.Orca.Core.Accounts;
+using Solana.Unity.Dex.Ticks;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration
 {

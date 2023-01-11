@@ -10,6 +10,7 @@ using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Test.Orca.Utils;
+using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Rpc.Types;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
