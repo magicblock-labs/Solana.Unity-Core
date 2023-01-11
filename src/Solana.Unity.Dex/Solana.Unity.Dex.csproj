@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <PackageId>Solana.Unity.Dex</PackageId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>Solana.Unity.Dex.Test</_Parameter1>
+        </AssemblyAttribute>
+        <PackageReference Include="Newtonsoft.Json" Version="13.*" />
+        <ProjectReference Include="..\Solana.Unity.Programs\Solana.Unity.Programs.csproj" />
+        <ProjectReference Include="..\Solana.Unity.Rpc\Solana.Unity.Rpc.csproj" />
+        <ProjectReference Include="..\Solana.Unity.Wallet\Solana.Unity.Wallet.csproj" />
+    </ItemGroup>
+
+    <Import Project="..\..\SharedBuildProperties.props" />
+</Project>
