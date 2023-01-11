@@ -1000,10 +1000,46 @@ namespace Solana.Unity.Rpc
             Commitment preFlightCommitment = Commitment.Finalized)
             => SendTransactionAsync(transaction, skipPreFlight, preFlightCommitment).Result;
 
-        /// <inheritdoc cref="IRpcClient.SendTransactionAsync(byte[], bool, Commitment)"/>
+        /// <inheritdoc cref="IRpcClient.SendTransaction(byte[], bool, Commitment)"/>
         public RequestResult<string> SendTransaction(byte[] transaction, bool skipPreFlight = false,
             Commitment preFlightCommitment = Commitment.Finalized)
             => SendTransactionAsync(transaction, skipPreFlight, preFlightCommitment).Result;
+        
+         /// <inheritdoc cref="IRpcClient.SendAndConfirmTransactionAsync(byte[], bool, Commitment, Commitment)"/>
+        public async Task<RequestResult<string>> SendAndConfirmTransactionAsync(byte[] transaction, bool skipPreflight = false,
+            Commitment preflightCommitment = Commitment.Finalized, Commitment confirmationCommitment = Commitment.Finalized)
+        {
+            RequestResult<string> res = await SendAndConfirmTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, preflightCommitment)
+                .ConfigureAwait(false);
+            return res;
+        }
+
+         /// <inheritdoc cref="IRpcClient.SendAndConfirmTransactionAsync(string, bool, Commitment, Commitment)"/>
+        public async Task<RequestResult<string>> SendAndConfirmTransactionAsync(string transaction, bool skipPreflight = false,
+            Commitment preflightCommitment = Commitment.Finalized, Commitment confirmationCommitment = Commitment.Finalized)
+        {
+            RequestResult<string> res = await SendRequestAsync<string>("sendTransaction",
+                Parameters.Create(
+                    transaction,
+                    ConfigObject.Create(
+                        KeyValue.Create("skipPreflight", skipPreflight ? skipPreflight : null),
+                        KeyValue.Create("preflightCommitment",
+                            preflightCommitment == Commitment.Finalized ? null : preflightCommitment),
+                        KeyValue.Create("encoding", BinaryEncoding.Base64))));
+            if (res.WasSuccessful)
+                await TransactionConfirmationUtils.ConfirmTransaction(this, res.Result, confirmationCommitment);
+            return res;
+        }
+
+        /// <inheritdoc cref="IRpcClient.SendAndConfirmTransaction(string, bool, Commitment, Commitment)"/>
+        public RequestResult<string> SendAndConfirmTransaction(string transaction, bool skipPreFlight = false,
+            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized)
+            => SendAndConfirmTransactionAsync(transaction, skipPreFlight, preFlightCommitment, commitment).Result;
+
+        /// <inheritdoc cref="IRpcClient.SendAndConfirmTransactionAsync(byte[], bool, Commitment, Commitment)"/>
+        public RequestResult<string> SendAndConfirmTransaction(byte[] transaction, bool skipPreFlight = false,
+            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized)
+            => SendAndConfirmTransactionAsync(transaction, skipPreFlight, preFlightCommitment, commitment).Result;
 
         /// <inheritdoc cref="IRpcClient.SimulateTransactionAsync(string, bool, Commitment, bool, IList{string})"/>
         public async Task<RequestResult<ResponseValue<SimulationLogs>>> SimulateTransactionAsync(string transaction,
@@ -1059,6 +1095,12 @@ namespace Solana.Unity.Rpc
             IList<string> accountsToReturn = null)
             => SimulateTransactionAsync(transaction, sigVerify, commitment, replaceRecentBlockhash, accountsToReturn)
                 .Result;
+
+        /// <inheritdoc cref="IRpcClient.ConfirmTransaction(string, Commitment)"/>
+        public Task<bool> ConfirmTransaction(string hash, Commitment commitment = Commitment.Finalized)
+        {
+            return TransactionConfirmationUtils.ConfirmTransaction(this, hash, commitment);
+        }
 
         #endregion
 

@@ -1135,7 +1135,7 @@ namespace Solana.Unity.Rpc
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
         /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false,
@@ -1145,7 +1145,7 @@ namespace Solana.Unity.Rpc
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
         /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         RequestResult<string> SendTransaction(string transaction, bool skipPreflight = false,
@@ -1155,7 +1155,7 @@ namespace Solana.Unity.Rpc
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as byte array.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
         /// <param name="commitment">The block commitment used to retrieve block hashes and verify success.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false,
@@ -1165,11 +1165,55 @@ namespace Solana.Unity.Rpc
         /// Sends a transaction.
         /// </summary>
         /// <param name="transaction">The signed transaction as byte array.</param>
-        /// <param name="skipPreflight">If true skip the prflight transaction checks (default false).</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
         /// <param name="commitment">The block commitment used to retrieve block hashes and verify success.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         RequestResult<string> SendTransaction(byte[] transaction, bool skipPreflight = false,
             Commitment commitment = Commitment.Finalized);
+        
+        /// <summary>
+        /// Sends and confirm transaction.
+        /// </summary>
+        /// <param name="transaction">The signed transaction as byte array.</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
+        /// <param name="commitment">The block commitment used for confirmation.</param>
+        /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
+        Task<RequestResult<string>> SendAndConfirmTransactionAsync(byte[] transaction, bool skipPreflight = false,
+            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized);
+        
+        /// <summary>
+        /// Sends and confirm a transaction.
+        /// </summary>
+        /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
+        /// <param name="commitment">The block commitment used for confirmation.</param>
+        /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
+        Task<RequestResult<string>> SendAndConfirmTransactionAsync(string transaction, bool skipPreflight = false,
+            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized);
+        
+        /// <summary>
+        /// Sends and confirm a transaction.
+        /// </summary>
+        /// <param name="transaction">The signed transaction as base-64 encoded string.</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
+        /// <param name="commitment">The block commitment used for confirmation.</param>
+        /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
+        RequestResult<string> SendAndConfirmTransaction(string transaction, bool skipPreflight = false,
+            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized);
+
+        /// <summary>
+        /// Sends and confirm a transaction.
+        /// </summary>
+        /// <param name="transaction">The signed transaction as byte array.</param>
+        /// <param name="skipPreflight">If true skip the preflight transaction checks (default false).</param>
+        /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
+        /// <param name="commitment">The block commitment used for confirmation.</param>
+        /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
+        RequestResult<string> SendAndConfirmTransaction(byte[] transaction, bool skipPreflight = false,
+            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized);
 
         /// <summary>
         /// Simulate sending a transaction.
@@ -1226,6 +1270,14 @@ namespace Solana.Unity.Rpc
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         RequestResult<ResponseValue<SimulationLogs>> SimulateTransaction(byte[] transaction, bool sigVerify = false,
             Commitment commitment = Commitment.Finalized, bool replaceRecentBlockhash = false, IList<string> accountsToReturn = null);
+
+        /// <summary>
+        /// Confirms a transaction - using polling and constant timeout based on commitment parameter.
+        /// </summary>
+        /// <param name="hash">The hash of the transaction.</param>
+        /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
+        /// <returns>Returns null if the transaction wasn't confirmed, otherwise returns the confirmation slot and possible transaction error.</returns>
+        Task<bool> ConfirmTransaction(string hash, Commitment commitment = Commitment.Finalized);
 
         /// <summary>
         /// Low-level method to send a batch of JSON RPC requests
