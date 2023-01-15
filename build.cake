@@ -7,7 +7,11 @@ var testProjectsRelativePaths = new string[]
     "./test/Solana.Unity.Wallet.Test/Solana.Unity.Wallet.Test.csproj",
     "./test/Solana.Unity.KeyStore.Test/Solana.Unity.KeyStore.Test.csproj",
     "./test/Solana.Unity.Programs.Test/Solana.Unity.Programs.Test.csproj",
-    "./test/Solana.Unity.Extensions.Test/Solana.Unity.Extensions.Test.csproj",
+    "./test/Solana.Unity.Extensions.Test/Solana.Unity.Extensions.Test.csproj"
+};
+
+var testNoCovProjectsRelativePaths = new string[]
+{
     "./test/Solana.Unity.Dex.Test/Solana.Unity.Dex.Test.csproj"
 };
 
@@ -18,6 +22,7 @@ var artifactsDir = MakeAbsolute(Directory("artifacts"));
 
 var reportTypes = "HtmlInline";
 var coverageFolder = "./code_coverage";
+var coverageFolderIntegration = "./code_coverage_integration";
 
 var coberturaFileName = "results";
 var coverageFilePath = Directory(coverageFolder) + File(coberturaFileName + ".info");
@@ -72,10 +77,32 @@ Task("Test")
         {
             if (i == testProjectsRelativePaths.Length - 1)
             {
-                coverletSettings.CoverletOutputFormat  = CoverletOutputFormat.lcov;
+                coverletSettings.CoverletOutputFormat = CoverletOutputFormat.lcov;
             }
             DotNetCoreTest(testProjectsRelativePaths[i], testSettings, coverletSettings);
         }
+    });
+    
+
+Task("TestIntegration")
+    .IsDependentOn("Build")
+    .Does(() => {
+    
+        var coverletSettings = new CoverletSettings {
+            CollectCoverage = true,
+            CoverletOutputDirectory = coverageFolderIntegration,
+            CoverletOutputName = coberturaFileName
+        };
+
+        var testSettings = new DotNetCoreTestSettings
+        {
+            NoRestore = false,
+            Configuration = configuration,
+            NoBuild = false,
+            ArgumentCustomization = args => args.Append($"--logger trx")
+        };
+
+        DotNetCoreTest(testNoCovProjectsRelativePaths[0], testSettings, coverletSettings);
     });
 
 
