@@ -108,6 +108,7 @@ Task("TestIntegration")
 
 Task("Report")
     .IsDependentOn("Test")
+    .IsDependentOn("TestIntegration")
     .Does(() =>
 {
     var reportSettings = new ReportGeneratorSettings
