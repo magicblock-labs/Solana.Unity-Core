@@ -16,4 +16,9 @@
     </ItemGroup>
 
     <Import Project="..\..\SharedBuildProperties.props" />
+    
+    <PropertyGroup>
+    <Product>Solana.Unity.Dex</Product>
+    <Version>0.1</Version>
+    </PropertyGroup>
 </Project>
