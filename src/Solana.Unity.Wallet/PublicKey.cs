@@ -326,6 +326,28 @@ namespace Solana.Unity.Wallet
             bump = 0;
             return false;
         }
+        
+        /// <summary>
+        /// Derives the address of and associated token account.
+        /// </summary>
+        /// <param name="mint"></param>
+        /// <param name="tokenProgramKey"></param>
+        /// <param name="sharedMemoryProgramKey"></param>
+        /// <returns></returns>
+        public PublicKey DeriveAssociatedTokenAccount(
+            PublicKey mint, 
+            PublicKey tokenProgramKey = null, 
+            PublicKey sharedMemoryProgramKey = null)
+        {
+            if (tokenProgramKey == null)
+                tokenProgramKey = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+            if (sharedMemoryProgramKey == null)
+                sharedMemoryProgramKey = new PublicKey("ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL");
+            TryFindProgramAddress(
+                new List<byte[]> { KeyBytes, tokenProgramKey.KeyBytes, mint.KeyBytes },
+                sharedMemoryProgramKey, out PublicKey derivedAssociatedTokenAddress, out _);
+            return derivedAssociatedTokenAddress;
+        }
 
         /// <summary>
         /// Derives a new public key from an existing public key and seed
