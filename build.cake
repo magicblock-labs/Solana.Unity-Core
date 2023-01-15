@@ -8,6 +8,7 @@ var testProjectsRelativePaths = new string[]
     "./test/Solana.Unity.KeyStore.Test/Solana.Unity.KeyStore.Test.csproj",
     "./test/Solana.Unity.Programs.Test/Solana.Unity.Programs.Test.csproj",
     "./test/Solana.Unity.Extensions.Test/Solana.Unity.Extensions.Test.csproj"
+    "./test/Solana.Unity.Dex.Test/Solana.Unity.Dex.Test.csproj"
 };
 
 var target = Argument("target", "Pack");
