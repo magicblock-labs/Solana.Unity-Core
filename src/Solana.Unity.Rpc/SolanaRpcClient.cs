@@ -4,6 +4,7 @@ using Solana.Unity.Rpc.Messages;
 using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
 using Solana.Unity.Rpc.Utilities;
+using Solana.Unity.Wallet;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -858,6 +859,20 @@ namespace Solana.Unity.Rpc
         public RequestResult<ResponseValue<List<TokenAccount>>> GetTokenAccountsByDelegate(string ownerPubKey,
             string tokenMintPubKey = null, string tokenProgramId = null, Commitment commitment = Commitment.Finalized)
             => GetTokenAccountsByDelegateAsync(ownerPubKey, tokenMintPubKey, tokenProgramId, commitment).Result;
+        
+        /// <inheritdoc cref="IRpcClient.GetTokenBalanceByOwnerAsync"/>
+        public async Task<RequestResult<ResponseValue<TokenBalance>>> GetTokenBalanceByOwnerAsync(
+            string ownerPubKey, string tokenMintPubKey, Commitment commitment = Commitment.Finalized)
+        {
+            var ata =new PublicKey(ownerPubKey)
+                .DeriveAssociatedTokenAccount(new PublicKey(tokenMintPubKey));
+            return await GetTokenAccountBalanceAsync(ata, commitment);
+        }
+
+        /// <inheritdoc cref="IRpcClient.GetTokenBalanceByOwner"/>
+        public RequestResult<ResponseValue<TokenBalance>> GetTokenBalanceByOwner(
+            string ownerPubKey, string tokenMintPubKey = null, Commitment commitment = Commitment.Finalized)
+            => GetTokenBalanceByOwnerAsync(ownerPubKey, tokenMintPubKey, commitment).Result;
 
         /// <inheritdoc cref="IRpcClient.GetTokenAccountsByOwnerAsync"/>
         public async Task<RequestResult<ResponseValue<List<TokenAccount>>>> GetTokenAccountsByOwnerAsync(

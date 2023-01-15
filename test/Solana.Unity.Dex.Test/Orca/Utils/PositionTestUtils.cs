@@ -13,6 +13,7 @@ using Solana.Unity.Dex.Orca.SolanaApi;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Types;
+using Solana.Unity.Rpc.Types;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {
@@ -234,7 +235,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             TestWhirlpoolContext ctx,
             PoolInitResult poolInitResult,
             IEnumerable<FundedPositionParams> fundParams,
-            Account feePayer = null
+            Account feePayer = null,
+            Commitment commitment = Commitment.Finalized
         )
         {
             return await FundPositionsAsync(
@@ -309,7 +311,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             //open the position 
             var positionResult = await OpenPositionAsync(ctx, openPositionParams);
             Assert.IsTrue(positionResult.WasSuccessful, $"Failed to open position: {positionResult.Reason}"); 
-            Assert.IsTrue(await ctx.RpcClient.ConfirmTransaction(positionResult.Result, ctx.WhirlpoolClient.DefaultCommitment)); 
+            Assert.IsTrue(await ctx.RpcClient.ConfirmTransaction(positionResult.Result)); 
 
             //get lower tick array 
             Pda tickArrayLowerPda = PdaUtils.GetTickArray(
@@ -369,7 +371,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 );
                 
                 Assert.IsTrue(increaseResult.WasSuccessful, $"Failed to IncreaseLiquidity: {increaseResult.Reason}");
-                Assert.IsTrue(await ctx.RpcClient.ConfirmTransaction(increaseResult.Result, ctx.WhirlpoolClient.DefaultCommitment)); 
+                Assert.IsTrue(await ctx.RpcClient.ConfirmTransaction(increaseResult.Result)); 
 
             }
 

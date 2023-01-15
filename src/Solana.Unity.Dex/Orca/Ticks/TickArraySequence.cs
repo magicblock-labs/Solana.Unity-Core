@@ -59,11 +59,11 @@ namespace Solana.Unity.Dex.Orca.Ticks
         /// <exception cref="WhirlpoolsException">Throws if the given index is out of bounds</exception>
         public Tuple<int, Tick> FindNextInitializedTickIndex(int currentIndex)
         {
-            int searchIndex = this._aToB ? currentIndex : currentIndex + this._tickSpacing;
+            int searchIndex = _aToB ? currentIndex : currentIndex + _tickSpacing;
             TickArrayIndex currTickArrayIndex = TickArrayIndex.FromTickIndex(searchIndex, this._tickSpacing);
             
             // Throw error if the search attempted to search for an index out of bounds
-            if (!this.IsArrayIndexInBounds(currTickArrayIndex, this._aToB))
+            if (!IsArrayIndexInBounds(currTickArrayIndex, _aToB))
             {
                 throw new WhirlpoolsException(
                     $"Swap input value traversed too many arrays. Out of bounds at attempt to traverse tick index - ${currTickArrayIndex.ToTickIndex()}.",
@@ -71,22 +71,22 @@ namespace Solana.Unity.Dex.Orca.Ticks
                 );
             }
 
-            while (this.IsArrayIndexInBounds(currTickArrayIndex, this._aToB))
+            while (IsArrayIndexInBounds(currTickArrayIndex, _aToB))
             {
-                Tick currTickData = this.GetTick(currTickArrayIndex.ToTickIndex());
+                Tick currTickData = GetTick(currTickArrayIndex.ToTickIndex());
                 if (currTickData.Initialized)
                 {
-                    return Tuple.Create<int, Tick>(currTickArrayIndex.ToTickIndex(), currTickData);
+                    return Tuple.Create(currTickArrayIndex.ToTickIndex(), currTickData);
                 }
 
-                currTickArrayIndex = this._aToB
+                currTickArrayIndex = _aToB
                     ? currTickArrayIndex.ToPrevInitializableTickIndex()
                     : currTickArrayIndex.ToNextInitializableTickIndex();
             }
 
             int lastIndexInArray = System.Math.Max(
                 System.Math.Min(
-                    this._aToB ? currTickArrayIndex.ToTickIndex() + this._tickSpacing : currTickArrayIndex.ToTickIndex() - 1, 
+                    _aToB ? currTickArrayIndex.ToTickIndex() + _tickSpacing : currTickArrayIndex.ToTickIndex() - 1, 
                     TickConstants.MAX_TICK_INDEX),
                 TickConstants.MIN_TICK_INDEX); 
                 
@@ -95,15 +95,15 @@ namespace Solana.Unity.Dex.Orca.Ticks
 
         public Tick GetTick(int index)
         {
-            TickArrayIndex targetTaIndex = TickArrayIndex.FromTickIndex(index, this._tickSpacing);
-            if (!this.IsArrayIndexInBounds(targetTaIndex, this._aToB))
+            TickArrayIndex targetTaIndex = TickArrayIndex.FromTickIndex(index, _tickSpacing);
+            if (!IsArrayIndexInBounds(targetTaIndex, _aToB))
             {
                 throw new WhirlpoolsException("Provided tick index is out of bounds for this sequence.");
             }
 
-            int localArrayIndex = this.GetLocalArrayIndex(targetTaIndex.ArrayIndex, this._aToB);
-            TickArray tickArrayData = this._tickArrays[localArrayIndex].Data;
-            this._touchedArrays[localArrayIndex] = true;
+            int localArrayIndex = GetLocalArrayIndex(targetTaIndex.ArrayIndex, _aToB);
+            TickArray tickArrayData = _tickArrays[localArrayIndex].Data;
+            _touchedArrays[localArrayIndex] = true;
 
             if (tickArrayData == null)
             {
@@ -113,7 +113,7 @@ namespace Solana.Unity.Dex.Orca.Ticks
                 );
             }
 
-            if (!this.CheckIfIndexIsInTickArrayRange(tickArrayData.StartTickIndex, index))
+            if (!CheckIfIndexIsInTickArrayRange(tickArrayData.StartTickIndex, index))
             {
                 throw new WhirlpoolsException(
                     $"TickArray at index ${localArrayIndex} is unexpected for this sequence.",

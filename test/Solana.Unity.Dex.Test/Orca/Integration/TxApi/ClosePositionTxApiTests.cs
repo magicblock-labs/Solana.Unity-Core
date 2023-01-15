@@ -12,6 +12,7 @@ using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Test.Orca.Utils;
 using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Rpc.Types;
+using TokenUtils = Solana.Unity.Dex.Test.Orca.Utils.TokenUtils;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 {
@@ -70,7 +71,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             IWhirlpoolContext context, 
             Account walletAccount, 
             PublicKey whirlpoolAddr,
-            OrcaDex dex,
+            IDex dex,
             ulong liquidityAmount = 0
         )
         {
@@ -141,7 +142,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //initialize everything 
             PublicKey whirlpoolAddr = await InitializeTestPool();
             IWhirlpoolContext newContext = await InitializeContext(walletAccount);
-            OrcaDex dex = new(newContext);
+            IDex dex = new OrcaDex(newContext);
             
             //open a position 
             var (positionAddr, position) = await OpenPosition(newContext, walletAccount, whirlpoolAddr, dex);
@@ -200,7 +201,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             
             //initialize everything 
             WhirlpoolsTestFixture fixture = await InitializeTestFixture();
-            OrcaDex dex = new(_context);
+            IDex dex = new OrcaDex(_context);
             var testInfo = fixture.GetTestInfo(); 
             Pda whirlpolPda = testInfo.InitPoolParams.WhirlpoolPda;
 

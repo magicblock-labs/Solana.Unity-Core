@@ -35,24 +35,24 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
 
             while (amountRemaining > BigInteger.Zero && sqrtPriceLimit != currSqrtPrice)
             {
-                var (nextTickIndex, nextInitializedTick) = tickSequence.FindNextInitializedTickIndex(currTickIndex);
+                var (nextTickIndex, _) = tickSequence.FindNextInitializedTickIndex(currTickIndex);
                 NextSqrtPrice _a = GetNextSqrtPrices(nextTickIndex, sqrtPriceLimit, aToB);
                 BigInteger nextTickPrice = _a.NextTickPrice;
                 BigInteger targetSqrtPrice = _a.NextSqrtPriceLimit;
                 
                 SwapMath.SwapStep swapComputation = SwapMath.ComputeSwapStep(amountRemaining, feeRate, currLiquidity, currSqrtPrice, targetSqrtPrice, amountSpecifiedIsInput, aToB);
-                totalFeeAmount = totalFeeAmount + swapComputation.FeeAmount;
+                totalFeeAmount += swapComputation.FeeAmount;
                 if (amountSpecifiedIsInput)
                 {
-                    amountRemaining = amountRemaining - swapComputation.AmountIn;
-                    amountRemaining = amountRemaining - swapComputation.FeeAmount;
-                    amountCalculated = amountCalculated + swapComputation.AmountOut;
+                    amountRemaining -= swapComputation.AmountIn;
+                    amountRemaining -= swapComputation.FeeAmount;
+                    amountCalculated += swapComputation.AmountOut;
                 }
                 else
                 {
-                    amountRemaining = amountRemaining - swapComputation.AmountOut;
-                    amountCalculated = amountCalculated + swapComputation.AmountIn;
-                    amountCalculated = amountCalculated + swapComputation.FeeAmount;
+                    amountRemaining -= swapComputation.AmountOut;
+                    amountCalculated += swapComputation.AmountIn;
+                    amountCalculated += swapComputation.FeeAmount;
                 }
                 
                 CalculatedFee _b = CalculateFees(swapComputation.FeeAmount, protocolFeeRate, currLiquidity, currProtocolFee, currFeeGrowthGlobalInput); 

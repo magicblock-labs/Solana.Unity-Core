@@ -1,14 +1,11 @@
 using NUnit.Framework;
 using Orca;
 using Solana.Unity.Dex.Math;
-using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 
 using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
-
-using Solana.Unity.Dex.Orca;
 using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Quotes;
 using Solana.Unity.Dex.Orca.Core.Accounts;
@@ -58,7 +55,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         {
             //initialize pool, positions, and liquidity 
             WhirlpoolsTestFixture testFixture = await InitializeTestPool();
-            OrcaDex dex = new(_context);
+            IDex dex = new OrcaDex(_context);
             var testInfo = testFixture.GetTestInfo(); 
             
             Pda whirlpoolPda = testInfo.InitPoolParams.WhirlpoolPda;

@@ -78,7 +78,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //initialize everything 
             PublicKey whirlpoolAddr = await InitializeTestPool();
             IWhirlpoolContext newContext = await InitializeContext(walletAccount);
-            OrcaDex dex = new(newContext);
+            IDex dex = new OrcaDex(walletAccount, newContext.RpcClient);
             
             int tickLowerIndex = 0;
             int tickUpperIndex = 128;
@@ -145,7 +145,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                 whirlpoolPda.PublicKey.ToString()
             )).ParsedResult;
             
-            OrcaDex dex = new (_context);
+            IDex dex = new OrcaDex(_context.WalletAccount, _context.RpcClient);
             Account positionMintAccount = new Account(); 
 
             //get the transaction to open the position 

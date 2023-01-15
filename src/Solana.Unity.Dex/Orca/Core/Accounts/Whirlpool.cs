@@ -51,6 +51,7 @@ namespace Solana.Unity.Dex.Orca.Core.Accounts
         public ulong RewardLastUpdatedTimestamp { get; set; }
 
         public WhirlpoolRewardInfo[] RewardInfos { get; set; }
+        public PublicKey Address { get; set; }
 
         public static Whirlpool Deserialize(System.ReadOnlySpan<byte> _data)
         {

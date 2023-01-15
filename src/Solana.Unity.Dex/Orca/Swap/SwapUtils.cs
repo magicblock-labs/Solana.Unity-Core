@@ -166,14 +166,14 @@ namespace Solana.Unity.Dex.Orca.Swap
         {
             if (amountSpecifiedIsInput)
             {
-                return Tuple.Create<BigInteger, BigInteger>(
+                return Tuple.Create(
                     amount,
                     TokenMath.AdjustForSlippage(estAmountOut, slippageTolerance, false)
                 );
             }
             else
             {
-                return Tuple.Create<BigInteger, BigInteger>(
+                return Tuple.Create(
                     amount,
                     TokenMath.AdjustForSlippage(estAmountIn, slippageTolerance, true)
                 );

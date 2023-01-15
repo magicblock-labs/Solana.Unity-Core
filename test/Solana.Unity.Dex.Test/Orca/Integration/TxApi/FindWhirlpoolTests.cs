@@ -96,7 +96,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         [Description("finds whirlpool with tokens specified in correct order, with correct tickspacing")]
         public static async Task Find_WhirlpoolsCorrectOrderCorrectTickSpacing()
         {
-            OrcaDex dex = new(_context);
+            OrcaDex dex = new OrcaDex(_context);
 
             var (address, wp) = await dex.FindWhirlpool(
                 _tokenPairs[0].Item1,
@@ -109,6 +109,23 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
             Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.Address, Is.EqualTo(address));
+        }
+        
+        [Test]
+        [Description("finds whirlpool with tokens specified in correct order, with correct tickspacing")]
+        public static async Task Find_WhirlpoolsAddressCorrectOrderCorrectTickSpacing()
+        {
+            IDex dex = new OrcaDex(_context);
+
+            var address = await dex.FindWhirlpoolAddress(
+                _tokenPairs[0].Item1,
+                _tokenPairs[0].Item2,
+                TickSpacing.Standard,
+                _whirlpoolConfigAddress,
+                TestConfiguration.DefaultCommitment
+            );
+            Assert.IsNotNull(address);
         }
 
         [Test]
@@ -128,6 +145,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
             Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.Address, Is.EqualTo(address));
         }
 
         [Test]
@@ -147,6 +165,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
             Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.Address, Is.EqualTo(address));
         }
 
         [Test]
@@ -166,6 +185,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
             Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.Address, Is.EqualTo(address));
         }
 
         [Test]

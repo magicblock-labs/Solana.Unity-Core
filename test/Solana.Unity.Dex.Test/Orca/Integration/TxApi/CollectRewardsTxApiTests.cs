@@ -11,6 +11,7 @@ using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Test.Orca.Utils;
 using Solana.Unity.Rpc.Types;
+using TokenUtils = Solana.Unity.Dex.Test.Orca.Utils.TokenUtils;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 {
@@ -67,7 +68,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         }
 
         private static async Task UpdateFeesAndRewards(
-            OrcaDex dex,
+            IDex dex,
             PublicKey positionAddress,
             PublicKey tickArrayLower,
             PublicKey tickArrayUpper
@@ -93,7 +94,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         }
         
         private static async Task TestCollectRewards(
-            OrcaDex dex,
+            IDex dex,
             WhirlpoolsTestFixture.TestFixtureInfo testInfo,
             BigInteger vaultStartBalance,
             byte rewardIndex
@@ -155,7 +156,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         {
             //initialize pool, positions, and liquidity 
             WhirlpoolsTestFixture testFixture = await InitializeTestPool();
-            OrcaDex dex = new(_context);
+            IDex dex = new OrcaDex(_context);
 
             //get data from test pool fixture 
             var testInfo = testFixture.GetTestInfo();

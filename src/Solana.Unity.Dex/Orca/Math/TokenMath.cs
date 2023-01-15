@@ -119,7 +119,7 @@ namespace Solana.Unity.Dex.Orca.Math
                     TokenErrorCode.TokenMinSubceeded
                 );
             }
-            else if (price > BigInteger.Parse(MathConstants.MIN_SQRT_PRICE))
+            else if (price > BigInteger.Parse(MathConstants.MAX_SQRT_PRICE))
             {
                 throw new WhirlpoolsException(
                     "getNextSqrtPriceFromARoundUp - price less than max sqrt price",

@@ -235,7 +235,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             ushort defaultFeeRate = 3000,
             BigInteger? initSqrtPrice = null,
             BigInteger? mintAmount = null,
-            bool tokenAIsNative = false
+            bool tokenAIsNative = false,
+            bool aToB = false
         )
         {
             if (initConfigParams == null)
@@ -262,8 +263,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 aToB: false
             );
 
-            FundedPositionParams[] fundParams = new FundedPositionParams[]{
-                new FundedPositionParams
+            FundedPositionParams[] fundParams = {
+                new()
                 {
                     LiquidityAmount = 100_000,
                     TickLowerIndex = 27904,

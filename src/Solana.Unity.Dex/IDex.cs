@@ -1,3 +1,4 @@
+using Solana.Unity.Dex.Models;
 using System.Numerics;
 using System.Threading.Tasks;
 
@@ -6,8 +7,8 @@ using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
 using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Dex.Quotes;
-using Solana.Unity.Dex.Math;
 using Solana.Unity.Dex.Swap;
+using System.Collections.Generic;
 
 namespace Solana.Unity.Dex
 {
@@ -32,6 +33,7 @@ namespace Solana.Unity.Dex
         /// </remarks>
         /// <param name="whirlpoolAddress"></param> 
         /// <param name="amount"></param> 
+        /// <param name="slippage"></param> 
         /// <param name="aToB"></param> 
         /// <param name="tokenAuthority"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
@@ -40,8 +42,28 @@ namespace Solana.Unity.Dex
         Task<Transaction> Swap(
             PublicKey whirlpoolAddress,
             ulong amount,
+            double slippage = 0.1,
             bool aToB = true,
             PublicKey tokenAuthority = null, 
+            Commitment commitment = Commitment.Finalized
+        );
+        
+        /// <summary> 
+        /// Constructs a transaction to perform a swap involving the two tokens managed by the specified 
+        /// whirlpool. 
+        /// </summary> 
+        /// <remarks> 
+        /// Signers: 
+        /// - tokenAuthority
+        /// </remarks>
+        /// <param name="whirlpoolAddress"></param> 
+        /// <param name="swapQuote"></param> 
+        /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
+        /// any chain queries.</param> 
+        /// <returns>The generated Transaction instance</returns>
+        Task<Transaction> SwapWithQuote(
+            PublicKey whirlpoolAddress,
+            SwapQuote swapQuote,
             Commitment commitment = Commitment.Finalized
         );
 
@@ -124,7 +146,7 @@ namespace Solana.Unity.Dex
         /// <param name="tokenMaxA"></param> 
         /// <param name="tokenMaxB"></param> 
         /// <param name="withMetadata"></param> 
-        /// <param name="funderAddress"></param> 
+        /// <param name="funderAccount"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
@@ -135,8 +157,8 @@ namespace Solana.Unity.Dex
             int tickUpperIndex,
             BigInteger tokenMaxA,
             BigInteger tokenMaxB,
-            bool withMetadata,
-            PublicKey funderAddress,
+            bool withMetadata = false,
+            PublicKey funderAccount = null,
             Commitment commitment = Commitment.Finalized
         );
 
@@ -158,7 +180,7 @@ namespace Solana.Unity.Dex
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> ClosePosition(
             PublicKey positionAddress,
-            PublicKey receiverAddress,
+            PublicKey receiverAddress = null,
             PublicKey positionAuthority = null, 
             Commitment commitment = Commitment.Finalized
         );
@@ -325,6 +347,45 @@ namespace Solana.Unity.Dex
             ushort tickSpacing = TickSpacing.Standard,
             Commitment commitment = Commitment.Finalized
         );
+        
+        /// <summary>
+        /// Determines whether or not a whirlpool with the given (or similar) characteristics can be found.
+        /// </summary> 
+        /// <param name="tokenMintA">Mint address of any token associated with the pool, preferably token A.</param> 
+        /// <param name="tokenMintB">Mint address of any token associated with the pool, preferably token B.</param> 
+        /// <param name="tickSpacing">Preferred tickSpacing associated with the pool; if not found, others will be queried.</param> 
+        /// <param name="configAccountAddress">Public key of the whirlpool config address account.</param>
+        /// <param name="commitment">Transaction commitment to use for chain queries.</param> 
+        /// <returns>A boolean value, true if the whirlpool was found.</returns>
+        public abstract Task<PublicKey> FindWhirlpoolAddress(
+            PublicKey tokenMintA,
+            PublicKey tokenMintB,
+            ushort tickSpacing = TickSpacing.Standard,
+            PublicKey configAccountAddress = null,
+            Commitment commitment = Commitment.Finalized
+        );
+        
+        /// <summary> 
+        /// Creates a quote for a swap within a specific whirlpool. 
+        /// </summary> 
+        /// <param name="inputTokenMintAddress">The mint address of the input token (the token to swap).</param> 
+        /// <param name="outputTokenMintAddress">The mint address of the output token (the token to swap for).</param> 
+        /// <param name="tokenAmount">The amount to swap (could be of the input token or output token).</param> 
+        /// <param name="slippageTolerance"></param> 
+        /// <param name="amountSpecifiedTokenType"></param> 
+        /// <param name="amountSpecifiedIsInput">True if the <paramref name="tokenAmount">tokenAmount</paramref> 
+        /// refers to the input token.</param> 
+        /// <param name="commitment">Transaction commitment on which to use for any chain queries.</param> 
+        /// <returns>A SwapQuote instance containing information about the swap amounts.</returns>
+        Task<SwapQuote> GetSwapQuote(
+            PublicKey inputTokenMintAddress,
+            PublicKey outputTokenMintAddress,
+            BigInteger tokenAmount,
+            double slippageTolerance = 0.01,
+            TokenType amountSpecifiedTokenType = TokenType.TokenA,
+            bool amountSpecifiedIsInput = true,
+            Commitment commitment = Commitment.Finalized
+        );
 
         /// <summary> 
         /// Creates a quote for a swap within a specific whirlpool. 
@@ -338,13 +399,13 @@ namespace Solana.Unity.Dex
         /// refers to the input token.</param> 
         /// <param name="commitment">Transaction commitment on which to use for any chain queries.</param> 
         /// <returns>A SwapQuote instance containing information about the swap amounts.</returns>
-        Task<SwapQuote> GetSwapQuote(
+        Task<SwapQuote> GetSwapQuoteFromWhirlpool(
             PublicKey whirlpoolAddress,
-            PublicKey inputTokenMintAddress,
             BigInteger tokenAmount,
-            Percentage slippageTolerance,
-            TokenType amountSpecifiedTokenType,
-            bool amountSpecifiedIsInput,
+            PublicKey inputTokenMintAddress,
+            double slippageTolerance = 0.01,
+            TokenType amountSpecifiedTokenType = TokenType.TokenA,
+            bool amountSpecifiedIsInput = true,
             Commitment commitment = Commitment.Finalized
         );
 
@@ -385,5 +446,18 @@ namespace Solana.Unity.Dex
             double slippageTolerance,
             Commitment commitment
         );
+        
+        /// <summary>
+        /// Get the list of tokens that are supported by the dex
+        /// </summary>
+        /// <returns></returns>
+        Task<IList<TokenData>> GetTokens();
+        
+        /// <summary>
+        /// Get a token details given the symbol
+        /// </summary>
+        /// <param name="symbol">the token symbol</param>
+        /// <returns></returns>
+        Task<TokenData> GetTokenBySymbol(string symbol);
     }
 }

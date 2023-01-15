@@ -88,7 +88,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         }
         
         private static async Task UpdateFeesAndRewards(
-            OrcaDex dex,
+            IDex dex,
             PublicKey positionAddress,
             PublicKey tickArrayLower, 
             PublicKey tickArrayUpper
@@ -119,7 +119,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         {
             //initialize pool, positions, and liquidity 
             WhirlpoolsTestFixture testFixture = await InitializeTestPool();
-            OrcaDex dex = new(_context);
+            IDex dex = new OrcaDex(_context);
             
             //get data from test pool fixture 
             var testInfo = testFixture.GetTestInfo();

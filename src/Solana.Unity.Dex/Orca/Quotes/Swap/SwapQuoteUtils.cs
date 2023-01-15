@@ -46,16 +46,17 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
             Percentage slippageTolerance
         )
         {
-            CheckIfAllTickArraysInitialized(swapQuoteParam.TickArrays);
-
+            //CheckIfAllTickArraysInitialized(swapQuoteParam.TickArrays);
             SwapQuote quote = SimulateSwap(swapQuoteParam);
-            var (amount, otherAmount) = SwapUtils.CalculateSwapAmountsFromQuote(
+            var (amount, otherAmountThreshold) = SwapUtils.CalculateSwapAmountsFromQuote(
                 swapQuoteParam.TokenAmount,
                 quote.EstimatedAmountIn,
                 quote.EstimatedAmountOut, 
                 slippageTolerance,
                 swapQuoteParam.AmountSpecifiedIsInput
             );
+            quote.Amount = amount;
+            quote.OtherAmountThreshold = otherAmountThreshold;
             
             return quote;
         }
@@ -178,7 +179,7 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
                 );
             }
             
-            TickArraySequence tickSequence = new TickArraySequence(
+            TickArraySequence tickSequence = new(
                 quoteParam.TickArrays,
                 quoteParam.Whirlpool.TickSpacing,
                 quoteParam.AtoB

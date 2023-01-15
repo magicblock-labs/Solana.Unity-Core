@@ -56,7 +56,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         {
             //initialize everything 
             var testFixture = await InitializeTestPool();
-            OrcaDex dex = new (_context);
+            IDex dex = new OrcaDex(_context);
 
             var testInfo = testFixture.GetTestInfo();
             FundedPositionInfo position = testInfo.Positions[0];

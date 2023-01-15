@@ -906,6 +906,32 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         RequestResult<ResponseValue<Supply>> GetSupply(Commitment commitment = Commitment.Finalized);
+        
+        /// <summary>
+        /// Gets the token balance for an account, given the token mint.
+        /// </summary>
+        /// <param name="ownerPubKey">Public key of account owner query, as base-58 encoded string.</param>
+        /// <param name="tokenMintPubKey">Public key of the specific token Mint to limit accounts to, as base-58 encoded string.</param>
+        /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
+        /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
+        Task<RequestResult<ResponseValue<TokenBalance>>> GetTokenBalanceByOwnerAsync(
+            string ownerPubKey,
+            string tokenMintPubKey,
+            Commitment commitment = Commitment.Finalized);
+        
+        
+        /// <summary>
+        /// Gets the token balance for an account, given the token mint.
+        /// </summary>
+        /// <param name="ownerPubKey">Public key of account owner query, as base-58 encoded string.</param>
+        /// <param name="tokenMintPubKey">Public key of the specific token Mint to limit accounts to, as base-58 encoded string.</param>
+        /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
+        /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
+        RequestResult<ResponseValue<TokenBalance>> GetTokenBalanceByOwner(
+            string ownerPubKey,
+            string tokenMintPubKey,
+            Commitment commitment = Commitment.Finalized);
+
 
         /// <summary>
         /// Gets the token balance of an SPL Token account.

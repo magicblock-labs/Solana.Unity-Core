@@ -9,6 +9,7 @@ using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Ticks;
+using Solana.Unity.Rpc.Types;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {
@@ -105,7 +106,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 );
                 
                 Assert.IsTrue(initResult.WasSuccessful, $"Failed to InitializeTickArray: {initResult.Reason}"); 
-                Assert.IsTrue(await ctx.RpcClient.ConfirmTransaction(initResult.Result, ctx.WhirlpoolClient.DefaultCommitment)); 
+                Assert.IsTrue(await ctx.RpcClient.ConfirmTransaction(initResult.Result)); 
                 output.Add(tickArrayParams.TickArrayPda);
             }
             

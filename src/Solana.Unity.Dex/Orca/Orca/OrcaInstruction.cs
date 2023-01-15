@@ -1,4 +1,5 @@
 using Orca;
+using Solana.Unity.Dex.Math;
 using System;
 using System.Linq;
 using System.Numerics;
@@ -13,8 +14,11 @@ using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Types;
+using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Swap;
 using Solana.Unity.Dex.Orca.Ticks;
+using Solana.Unity.Dex.Quotes;
+using System.Collections.Generic;
 
 namespace Solana.Unity.Dex.Orca.Orca 
 {
@@ -31,8 +35,8 @@ namespace Solana.Unity.Dex.Orca.Orca
         /// <param name="whirlpoolAddress">Address of the pool on which to swap.</param>
         /// <param name="tokenAuthority">Optional; if null, the context wallet public key is used.</param>
         /// <param name="amount">Amount of input token to swap.</param>
+        /// <param name="slippage">The slippage tolerance</param>
         /// <param name="aToB">The swap direction.</param>
-        /// <param name="commitment">Commitment to be used for any queries necessary to build the transaction.</param>
         /// <returns>A TransactionInstruction object.</returns>
         public static async Task<TransactionInstruction> GenerateSwapInstruction(
             IWhirlpoolContext context,
@@ -40,29 +44,12 @@ namespace Solana.Unity.Dex.Orca.Orca
             PublicKey whirlpoolAddress,
             PublicKey tokenAuthority,
             ulong amount,
-            bool aToB,
-            Commitment commitment
+            Percentage slippage,
+            bool aToB
         )
         {
-            if (tokenAuthority == null)
-                tokenAuthority = context.WalletPubKey; 
-                
-            //derive associated token account addresses 
-            var tokenOwnerAcctA =
-                AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(
-                    context.WalletPubKey, whirlpool.TokenMintA
-                );
-
-            var tokenOwnerAcctB =
-                AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(
-                    context.WalletPubKey, whirlpool.TokenMintB
-                );
-
-            //oracle Pda 
-            var oraclePda = PdaUtils.GetOracle(AddressConstants.WHIRLPOOLS_PUBKEY, whirlpoolAddress);
-
             //get tick arrays 
-            var tickArrays = await SwapUtils.GetTickArrays(
+            IList<TickArrayContainer> tickArrays = await SwapUtils.GetTickArrays(
                 context,
                 whirlpool.TickCurrentIndex,
                 whirlpool.TickSpacing,
@@ -85,31 +72,80 @@ namespace Solana.Unity.Dex.Orca.Orca
             }
 
             //calculate sqrt price 
-            var sqrtPriceLimit = SwapUtils.GetDefaultSqrtPriceLimit(aToB);
+            BigInteger sqrtPriceLimit = SwapUtils.GetDefaultSqrtPriceLimit(aToB);
+
+            ulong otherAmountThreshold = (ulong)TokenMath.AdjustForSlippage(amount, slippage, true);
+            
+            var swapQuote = new SwapQuote()
+            {
+                Amount = amount,
+                OtherAmountThreshold = otherAmountThreshold,
+                SqrtPriceLimit = sqrtPriceLimit,
+                AmountSpecifiedIsInput = true,
+                TickArray0 = tickArrays[0].Address,
+                TickArray1 = tickArrays[1].Address,
+                TickArray2 = tickArrays[2].Address,
+                AtoB = aToB,
+            };
+
+            return await GenerateSwapInstruction(context, whirlpool, swapQuote, tokenAuthority);
+        }
+
+        /// <summary>
+        /// Generates an instruction for a swap. 
+        /// </summary>
+        /// <param name="context">Whirlpool context object.</param>
+        /// <param name="whirlpool">Whirlpool object representing the pool on which to swap.</param>
+        /// <param name="swapQuote">The swap quote</param>
+        /// <param name="tokenAuthority">The token authority</param>
+        /// <returns>A TransactionInstruction object.</returns>
+        public static Task<TransactionInstruction> GenerateSwapInstruction(
+            IWhirlpoolContext context,
+            Whirlpool whirlpool,
+            SwapQuote swapQuote,
+            PublicKey tokenAuthority = null
+        )
+        {
+            if(tokenAuthority == null)
+                tokenAuthority = context.WalletPubKey; 
+                
+            //derive associated token account addresses 
+            PublicKey tokenOwnerAcctA =
+                AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(
+                    context.WalletPubKey, whirlpool.TokenMintA
+                );
+
+            PublicKey tokenOwnerAcctB =
+                AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(
+                    context.WalletPubKey, whirlpool.TokenMintB
+                );
+
+            //oracle Pda 
+            var oraclePda = PdaUtils.GetOracle(AddressConstants.WHIRLPOOLS_PUBKEY, whirlpool.Address);
 
             //add swap instruction 
-            return WhirlpoolProgram.Swap(
+            return Task.FromResult(WhirlpoolProgram.Swap(
                 new SwapAccounts
                 {
-                    Whirlpool = whirlpoolAddress,
+                    Whirlpool = whirlpool.Address,
                     TokenAuthority = tokenAuthority,
                     TokenOwnerAccountA = tokenOwnerAcctA,
                     TokenVaultA = whirlpool.TokenVaultA,
                     TokenOwnerAccountB = tokenOwnerAcctB,
                     TokenVaultB = whirlpool.TokenVaultB,
-                    TickArray0 = tickArrays[0].Address,
-                    TickArray1 = tickArrays[1].Address,
-                    TickArray2 = tickArrays[2].Address,
+                    TickArray0 = swapQuote.TickArray0,
+                    TickArray1 = swapQuote.TickArray1,
+                    TickArray2 = swapQuote.TickArray2,
                     Oracle = oraclePda,
                     TokenProgram = AddressConstants.TOKEN_PROGRAM_PUBKEY
                 },
-                amount,
-                otherAmountThreshold: 0,
-                sqrtPriceLimit: sqrtPriceLimit,
-                amountSpecifiedIsInput: true,
-                aToB: aToB,
+                (ulong)swapQuote.Amount,
+                otherAmountThreshold: (ulong)swapQuote.OtherAmountThreshold,
+                sqrtPriceLimit: swapQuote.SqrtPriceLimit,
+                amountSpecifiedIsInput: swapQuote.AmountSpecifiedIsInput,
+                aToB: swapQuote.AtoB,
                 programId: AddressConstants.WHIRLPOOLS_PUBKEY
-            );
+            ));
         }
 
         /// <summary>

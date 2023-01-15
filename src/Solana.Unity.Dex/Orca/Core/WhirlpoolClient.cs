@@ -173,6 +173,7 @@ namespace Solana.Unity.Dex.Orca.Core
             if (res.Result != null && res?.Result?.Value?.Data != null && res.Result.Value.Data.Count > 0)
             {
                 resultingAccount = Whirlpool.Deserialize(Convert.FromBase64String(res.Result.Value.Data[0]));
+                resultingAccount.Address = new PublicKey(accountAddress);
             }
             return new Programs.Models.AccountResultWrapper<Whirlpool>(res, resultingAccount);
         }

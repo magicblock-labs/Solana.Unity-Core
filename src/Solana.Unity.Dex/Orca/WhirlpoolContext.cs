@@ -5,8 +5,6 @@ using Solana.Unity.Rpc.Types;
 using Solana.Unity.Dex.Orca.Core;
 
 
-//TODO: (HIGH) consistency issue: names of constants vs. names of readonly statics. Standardize throughout (snake or Pascal)
-
 namespace Solana.Unity.Dex.Orca
 {
     public class WhirlpoolContext : IWhirlpoolContext
@@ -24,8 +22,8 @@ namespace Solana.Unity.Dex.Orca
         /// <summary>
         /// Gets an objects that can make raw RPC calls to any Solana program. 
         /// </summary>
-        public virtual IRpcClient RpcClient => this.WhirlpoolClient.RpcClient;
-        public virtual IStreamingRpcClient StreamingRpcClient => this.WhirlpoolClient.StreamingRpcClient;
+        public virtual IRpcClient RpcClient => WhirlpoolClient.RpcClient;
+        public virtual IStreamingRpcClient StreamingRpcClient => WhirlpoolClient.StreamingRpcClient;
 
         /// <summary>
         /// Gets the public key of the Wallet.
@@ -64,10 +62,10 @@ namespace Solana.Unity.Dex.Orca
             Commitment defaultCommitment = Commitment.Finalized
         )
         {
-            this.ProgramId = programId;
-            this.WalletPubKey = walletPubKey;
-            this.WhirlpoolClient = new WhirlpoolClient(rpcClient, streamingClient, programId);
-            this.WhirlpoolClient.DefaultCommitment = defaultCommitment;
+            ProgramId = programId;
+            WalletPubKey = walletPubKey;
+            WhirlpoolClient = new WhirlpoolClient(rpcClient, streamingClient, programId);
+            WhirlpoolClient.DefaultCommitment = defaultCommitment;
         }
     }
 }

@@ -35,11 +35,34 @@ namespace Orca
         /// <param name="context">Whirlpool context object.</param>
         public OrcaDex(IWhirlpoolContext context) : base(context) { }
 
+        /// <summary>
+        /// Public constructor; Create the IWhirlpoolContext. 
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="rpcClient"></param>
+        /// <param name="programId"></param>
+        /// <param name="streamingRpcClient"></param>
+        /// <param name="commitment"></param>
+        public OrcaDex(
+            PublicKey account, 
+            IRpcClient rpcClient, 
+            IStreamingRpcClient streamingRpcClient = null, 
+            PublicKey programId = null,
+            Commitment commitment = Commitment.Finalized) : this(
+            new WhirlpoolContext(
+                programId != null ? programId : AddressConstants.WHIRLPOOLS_PUBKEY,
+                rpcClient, 
+                streamingRpcClient, 
+                account, 
+                commitment)
+            ) { }
+
         /// <inheritdoc />
         /// <exception cref="System.Exception">Thrown if the specified whirlpool doesn't exist.</exception>
         public override async Task<Transaction> Swap(
             PublicKey whirlpoolAddress,
             ulong amount,
+            double slippage = 0.1,
             bool aToB = true,
             PublicKey tokenAuthority = null,
             Commitment commitment = Commitment.Finalized
@@ -51,13 +74,6 @@ namespace Orca
             Whirlpool whirlpool = await InstructionUtil.TryGetWhirlpoolAsync(
                 _context, whirlpoolAddress, commitment
             );
-
-            //get associated token account addresses 
-            var tokenOwnerAcctA =
-                AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(account, whirlpool.TokenMintA);
-
-            var tokenOwnerAcctB =
-                AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(account, whirlpool.TokenMintB);
 
             var tb = new TransactionBuilder();
 
@@ -79,13 +95,53 @@ namespace Orca
                     whirlpoolAddress,
                     tokenAuthority: tokenAuthority,
                     amount,
-                    aToB: aToB,
-                    commitment
+                    slippage,
+                    aToB: aToB
                 )
             );
 
             //set fee payer and recent blockhash 
-            return await PrepareTransaction(tb, account, this.RpcClient, commitment);
+            return await PrepareTransaction(tb, account, RpcClient, commitment);
+        }
+        
+        /// <inheritdoc />
+        /// <exception cref="System.Exception">Thrown if the specified whirlpool doesn't exist.</exception>
+        public override async Task<Transaction> SwapWithQuote(
+            PublicKey whirlpoolAddress,
+            SwapQuote swapQuote,
+            Commitment commitment = Commitment.Finalized
+        )
+        {
+            PublicKey account = _context.WalletPubKey; 
+            
+            //get the specified whirlpool
+            Whirlpool whirlpool = await InstructionUtil.TryGetWhirlpoolAsync(
+                _context, whirlpoolAddress, commitment
+            );
+
+            var tb = new TransactionBuilder();
+
+            //instruction to create token account A 
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintA, tb, commitment
+            );
+
+            //instruction to create token account B
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintB, tb, commitment
+            );
+            
+            //generate the transaction 
+            tb.AddInstruction(
+                await OrcaInstruction.GenerateSwapInstruction(
+                    _context,
+                    whirlpool,
+                    swapQuote
+                )
+            );
+
+            //set fee payer and recent blockhash 
+            return await PrepareTransaction(tb, account, RpcClient, commitment);
         }
 
         /// <inheritdoc />
@@ -599,27 +655,29 @@ namespace Orca
             
             return result;
         }
-        
+
+        /// <inheritdoc />
+        public override async Task<Whirlpool> GetWhirlpool(PublicKey whirlpoolAddress, Commitment commitment = Commitment.Finalized)
+        {
+            return await InstructionUtil.TryGetWhirlpoolAsync(_context, whirlpoolAddress, commitment);
+        }
+
         /// <inheritdoc />
         /// <exception cref="System.Exception">Thrown if the specified whirlpool doesn't exist.</exception>
-        public override async Task<SwapQuote> GetSwapQuote(
-            PublicKey whirlpoolAddress,
-            PublicKey inputTokenMintAddress,
+        public override async Task<SwapQuote> GetSwapQuoteFromWhirlpool(
+            Whirlpool whirlpool,
             BigInteger tokenAmount,
-            Percentage slippageTolerance,
+            PublicKey inputTokenMintAddress,
+            double slippageTolerance = 0.01,
             TokenType amountSpecifiedTokenType = TokenType.TokenA,
-            bool amountSpecifiedIsInput = true,
-            Commitment commitment = Commitment.Finalized
+            bool amountSpecifiedIsInput = true
         )
         {
-            //throws if whirlpool doesn't exist
-            Whirlpool whirlpool = await InstructionUtil.TryGetWhirlpoolAsync(_context, whirlpoolAddress, commitment);
-
             return SwapQuoteUtils.SwapQuoteWithParams(
                 await SwapQuoteUtils.SwapQuoteByToken(
                     _context,
                     whirlpool,
-                    whirlpoolAddress,
+                    whirlpool.Address,
                     inputTokenMintAddress,
                     tokenAmount,
                     amountSpecifiedTokenType,
