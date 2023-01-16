@@ -2,7 +2,7 @@
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Product>Solana.Unity</Product>
-    <Version>2.6.0.9</Version>
+    <Version>2.6.0.10</Version>
     <Copyright>Copyright 2022 &#169; Garbles Labs</Copyright>
     <Authors>Garbles Labs</Authors>
     <PublisherName>Garbles Labs</PublisherName>
