@@ -5,10 +5,8 @@ using System.Collections.Generic;
 
 using Solana.Unity.Wallet;
 using Solana.Unity.Rpc.Core.Http;
-using Solana.Unity.Rpc.Types; 
 using NUnit.Framework;
 using Solana.Unity.Dex.Orca.Math;
-using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.SolanaApi;
 using Solana.Unity.Dex.Test.Orca.Params;

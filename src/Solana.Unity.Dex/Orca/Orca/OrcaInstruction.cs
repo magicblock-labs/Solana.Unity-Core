@@ -1,7 +1,4 @@
 using Orca;
-using Solana.Unity.Dex.Math;
-using System;
-using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
 
@@ -14,11 +11,9 @@ using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Types;
-using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Swap;
 using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Quotes;
-using System.Collections.Generic;
 
 namespace Solana.Unity.Dex.Orca.Orca 
 {
@@ -27,69 +22,6 @@ namespace Solana.Unity.Dex.Orca.Orca
     /// </summary>
     internal static class OrcaInstruction
     {
-        /// <summary>
-        /// Generates an instruction for a swap. 
-        /// </summary>
-        /// <param name="context">Whirlpool context object.</param>
-        /// <param name="whirlpool">Whirlpool object representing the pool on which to swap.</param>
-        /// <param name="whirlpoolAddress">Address of the pool on which to swap.</param>
-        /// <param name="tokenAuthority">Optional; if null, the context wallet public key is used.</param>
-        /// <param name="amount">Amount of input token to swap.</param>
-        /// <param name="slippage">The slippage tolerance</param>
-        /// <param name="aToB">The swap direction.</param>
-        /// <returns>A TransactionInstruction object.</returns>
-        public static async Task<TransactionInstruction> GenerateSwapInstruction(
-            IWhirlpoolContext context,
-            Whirlpool whirlpool,
-            PublicKey whirlpoolAddress,
-            PublicKey tokenAuthority,
-            ulong amount,
-            Percentage slippage,
-            bool aToB
-        )
-        {
-            //get tick arrays 
-            IList<TickArrayContainer> tickArrays = await SwapUtils.GetTickArrays(
-                context,
-                whirlpool.TickCurrentIndex,
-                whirlpool.TickSpacing,
-                aToB,
-                AddressConstants.WHIRLPOOLS_PUBKEY,
-                whirlpoolAddress
-            );
-
-            //prune tick arrays that are empty 
-            tickArrays = tickArrays.Where(t => t.Data != null).ToList();
-
-            //there must be tick arrays initialized 
-            if (tickArrays.Count == 0)
-                throw new Exception("No tickarrays are initialized for the specified whirlpool");
-
-            //duplicate if count < 3
-            while (tickArrays.Count > 0 && tickArrays.Count < 3)
-            {
-                tickArrays.Add(tickArrays[tickArrays.Count - 1]);
-            }
-
-            //calculate sqrt price 
-            BigInteger sqrtPriceLimit = SwapUtils.GetDefaultSqrtPriceLimit(aToB);
-
-            ulong otherAmountThreshold = (ulong)TokenMath.AdjustForSlippage(amount, slippage, true);
-            
-            var swapQuote = new SwapQuote()
-            {
-                Amount = amount,
-                OtherAmountThreshold = otherAmountThreshold,
-                SqrtPriceLimit = sqrtPriceLimit,
-                AmountSpecifiedIsInput = true,
-                TickArray0 = tickArrays[0].Address,
-                TickArray1 = tickArrays[1].Address,
-                TickArray2 = tickArrays[2].Address,
-                AtoB = aToB,
-            };
-
-            return await GenerateSwapInstruction(context, whirlpool, swapQuote, tokenAuthority);
-        }
 
         /// <summary>
         /// Generates an instruction for a swap. 

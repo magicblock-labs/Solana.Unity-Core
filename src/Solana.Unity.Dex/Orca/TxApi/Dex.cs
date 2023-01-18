@@ -39,9 +39,10 @@ namespace Solana.Unity.Dex.Orca.TxApi
         /// <inheritdoc />
         public abstract Task<Transaction> Swap(
             PublicKey whirlpoolAddress,
-            ulong amount,
-            double slippage = 0.1,
-            bool aToB = true,
+            BigInteger amount,
+            PublicKey inputTokenMintAddress,
+            double slippage = 0.01,
+            TokenType amountSpecifiedTokenType = TokenType.TokenA,
             PublicKey tokenAuthority = null,
             Commitment commitment = Commitment.Finalized
         );
@@ -290,7 +291,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
         /// <inheritdoc />
         public abstract Task<DecreaseLiquidityQuote> GetDecreaseLiquidityQuote(
             PublicKey positionAddress,
-            ulong liquidityAmount,
+            BigInteger liquidityAmount,
             double slippageTolerance,
             Commitment commitment
         );

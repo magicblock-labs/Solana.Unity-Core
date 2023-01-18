@@ -146,7 +146,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             )).ParsedResult;
             
             IDex dex = new OrcaDex(_context.WalletAccount, _context.RpcClient);
-            Account positionMintAccount = new Account(); 
+            Account positionMintAccount = new(); 
 
             //get the transaction to open the position 
             Transaction tx = await dex.OpenPositionWithLiquidity(

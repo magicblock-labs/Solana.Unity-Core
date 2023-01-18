@@ -1,11 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using Solana.Unity.Extensions.TokenMint;
+using Solana.Unity.Rpc.Core.Http;
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Solana.Unity.Extensions
@@ -88,9 +88,10 @@ namespace Solana.Unity.Extensions
         /// <returns>A task that will result in an instance of the TokenMintResolver populated with Solana token list definitions.</returns>
         public static async Task<TokenMintResolver> LoadAsync(string url)
         {
-            using (var wc = new WebClient())
+            using (var client = new HttpClient())
             {
-                var json = await wc.DownloadStringTaskAsync(url);
+                using var httpReq = new HttpRequestMessage(HttpMethod.Get, url);
+                string json = await CrossHttpClient.SendAsyncRequest(client, httpReq).Result.Content.ReadAsStringAsync();
                 return ParseTokenList(json);
             }
         }

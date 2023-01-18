@@ -32,19 +32,21 @@ namespace Solana.Unity.Dex
         /// - tokenAuthority
         /// </remarks>
         /// <param name="whirlpoolAddress"></param> 
-        /// <param name="amount"></param> 
-        /// <param name="slippage"></param> 
-        /// <param name="aToB"></param> 
+        /// <param name="amount"></param>
+        /// <param name="inputTokenMintAddress"></param> 
+        /// <param name="slippage"></param>
+        /// <param name="amountSpecifiedTokenType"></param>
         /// <param name="tokenAuthority"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> Swap(
             PublicKey whirlpoolAddress,
-            ulong amount,
-            double slippage = 0.1,
-            bool aToB = true,
-            PublicKey tokenAuthority = null, 
+            BigInteger amount,
+            PublicKey inputTokenMintAddress,
+            double slippage = 0.01,
+            TokenType amountSpecifiedTokenType = TokenType.TokenA,
+            PublicKey tokenAuthority = null,
             Commitment commitment = Commitment.Finalized
         );
         
@@ -81,8 +83,7 @@ namespace Solana.Unity.Dex
         /// <param name="tickLowerIndex"></param> 
         /// <param name="tickUpperIndex"></param> 
         /// <param name="withMetadata">True if position metadata is to be added to the position token.</param> 
-        /// <param name="funderAddress">Position liquidity funder (optional, if different from 
-        /// <paramref name="account">account</paramref>)</param> 
+        /// <param name="funderAddress">Position liquidity funder (optional, if different from the wallet).</param>
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
@@ -442,7 +443,7 @@ namespace Solana.Unity.Dex
         /// <returns>A quote to decrease liquidity.</returns>
         Task<DecreaseLiquidityQuote> GetDecreaseLiquidityQuote(
             PublicKey positionAddress,
-            ulong liquidityAmount,
+            BigInteger liquidityAmount,
             double slippageTolerance,
             Commitment commitment
         );

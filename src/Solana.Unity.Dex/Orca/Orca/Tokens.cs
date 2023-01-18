@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Solana.Unity.Dex.Models;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Core.Http;
-using Solana.Unity.Wallet;
 using System;
 
 namespace Orca
@@ -40,11 +39,9 @@ namespace Orca
             string url = cluster == Cluster.DevNet ? DevnetUrl : MainnetUrl;
             if (_tokens == null || forceRefresh)
             {
-                HttpClient client = new();
+                using var client = new HttpClient();
                 using var httpReq = new HttpRequestMessage(HttpMethod.Get, url);
-
                 string response = await CrossHttpClient.SendAsyncRequest(client, httpReq).Result.Content.ReadAsStringAsync();
-
                 TokensDocument tokensDocument = new JsonSerializer().Deserialize<TokensDocument>(
                     new JsonTextReader(
                         new StringReader(response)

@@ -136,7 +136,8 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //get the swap transaction 
             Transaction tx = await dex.Swap(
                 whirlpoolAddr,
-                swapAmount
+                swapAmount,
+                whirlpool.TokenMintA
             );
 
             // sign and execute the transaction 

@@ -1,5 +1,6 @@
 using Solana.Unity.Rpc.Utilities;
 using System;
+using System.Collections;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -21,7 +22,7 @@ public static class CrossHttpClient
     /// <returns></returns>
     public static async Task<HttpResponseMessage> SendAsyncRequest(HttpClient httpClient, HttpRequestMessage httpReq)
     {
-        if (RuntimePlatform.IsUnityPlayer())
+        if (RuntimePlatforms.IsWebGL())
         {
             return await SendUnityWebRequest(httpClient.BaseAddress != null ? 
                 httpClient.BaseAddress: httpReq.RequestUri, httpReq);
@@ -38,24 +39,42 @@ public static class CrossHttpClient
     /// <exception cref="HttpRequestException"></exception>
     private static async Task<HttpResponseMessage> SendUnityWebRequest(Uri uri, HttpRequestMessage httpReq)
     {
-        Byte[] buffer = await httpReq.Content.ReadAsByteArrayAsync();
         using (var request = new UnityWebRequest(uri, httpReq.Method.ToString()))
         {
-            request.uploadHandler = new UploadHandlerRaw(buffer);
+            if (httpReq.Content != null)
+            {
+                request.uploadHandler = new UploadHandlerRaw(await httpReq.Content.ReadAsByteArrayAsync());
+                request.SetRequestHeader("Content-Type", "application/json");
+            }
             request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-            request.SendWebRequest();
+            var response = new HttpResponseMessage();
+            var e = SendRequest(request, response);
+            while (e.MoveNext()) { }
             if (request.result == UnityWebRequest.Result.ConnectionError)
             {
                 throw new HttpRequestException("Error While Sending: " + request.error);
             }
-            while (!request.isDone)
-            {
-                await Task.Yield();
-            }
-            var response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(request.downloadHandler.text));
             return response;
         }
+    }
+
+    /// <summary>
+    /// Send a request using UnityWebRequest and wait for the response
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="res"></param>
+    /// <returns></returns>
+    /// <exception cref="HttpRequestException"></exception>
+    private static IEnumerator SendRequest(UnityWebRequest request, HttpResponseMessage res)
+    {
+        yield return request.SendWebRequest();
+        while (!request.isDone)
+            yield return true;
+        if (request.result == UnityWebRequest.Result.ConnectionError)
+        {
+            throw new HttpRequestException("Error While Sending: " + request.error);
+        }
+        res.StatusCode = HttpStatusCode.OK;
+        res.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(request.downloadHandler.text));
     }
 }
