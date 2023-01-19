@@ -64,7 +64,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
 
             //get position before
             Position positionBefore = (
-                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey)
+                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey, _defaultCommitment)
             ).ParsedResult;
 
             Assert.That(positionBefore.FeeGrowthCheckpointA, Is.EqualTo(BigInteger.Zero));
@@ -91,6 +91,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             ); 
             
             Assert.IsTrue(swapResult.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swapResult.Result, _defaultCommitment));
             
             //update fees & rewards 
             var updateResult = await FeesAndRewardsTestUtils.UpdateFeesAndRewardsAsync(
@@ -105,11 +106,11 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             ); 
             
             Assert.IsTrue(updateResult.WasSuccessful);
-            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(updateResult.Result));
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(updateResult.Result, _defaultCommitment));
 
             //get position after
             Position positionAfter = (
-                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey, Commitment.Finalized)
+                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey, _defaultCommitment)
             ).ParsedResult;
             
             Assert.That(positionAfter.FeeOwedA, Is.GreaterThan(positionBefore.FeeOwedA));
