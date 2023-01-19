@@ -45,5 +45,10 @@ public class TokenData
     /// If token is whitelisted
     /// </summary>
     public bool Whitelisted { get; set; }
+    
+    /// <summary>
+    /// If token is a pool token
+    /// </summary>
+    public bool PoolToken { get; set; }
 
 }

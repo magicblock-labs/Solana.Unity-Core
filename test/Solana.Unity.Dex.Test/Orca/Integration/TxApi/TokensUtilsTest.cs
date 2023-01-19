@@ -23,7 +23,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         [Test]
         public static async Task GetTokensList()
         {
-            IList<TokenData> tokens = await Tokens.GetTokens(); 
+            IList<TokenData> tokens = await OrcaTokens.GetTokens(); 
             
             Assert.That(tokens.Count, Is.GreaterThan(0));
             Assert.That(tokens.Count(t => t.Symbol == "ORCA"), Is.GreaterThan(0));
@@ -32,7 +32,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         [Test]
         public static async Task GetTokenBySymbol()
         {  
-            TokenData token = await Tokens.GetTokenBySymbol("ORCA"); 
+            TokenData token = await OrcaTokens.GetTokenBySymbol("ORCA"); 
             
             Assert.IsNotNull(token);
             Assert.IsNotNull(token.Mint);

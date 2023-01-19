@@ -20,7 +20,7 @@ namespace Orca
     /// mainnet url: https://api.mainnet.orca.so/v1/token/list
     /// not supported for localnet or testnet    
     /// </summary>
-    public static class Tokens
+    public static class OrcaTokens
     {
         private const string MainnetUrl = "https://api.mainnet.orca.so/v1/token/list"; 
         private const string DevnetUrl = "https://api.devnet.orca.so/v1/token/list"; 

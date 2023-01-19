@@ -299,7 +299,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
         /// <inheritdoc />
         public async Task<IList<TokenData>> GetTokens()
         {
-            return await Tokens.GetTokens(_context.RpcClient.NodeAddress.ToString().Contains("devnet") ? 
+            return await OrcaTokens.GetTokens(_context.RpcClient.NodeAddress.ToString().Contains("devnet") ? 
                 Cluster.DevNet : Cluster.MainNet );
         }
 
