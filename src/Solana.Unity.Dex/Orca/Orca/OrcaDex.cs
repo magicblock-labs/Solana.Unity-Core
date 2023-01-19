@@ -61,47 +61,21 @@ namespace Orca
         /// <exception cref="System.Exception">Thrown if the specified whirlpool doesn't exist.</exception>
         public override async Task<Transaction> Swap(
             PublicKey whirlpoolAddress,
-            ulong amount,
-            double slippage = 0.1,
-            bool aToB = true,
+            BigInteger amount,
+            PublicKey inputTokenMintAddress,
+            double slippage = 0.01,
+            TokenType amountSpecifiedTokenType = TokenType.TokenA,
             PublicKey tokenAuthority = null,
             Commitment commitment = Commitment.Finalized
         )
         {
-            PublicKey account = _context.WalletPubKey; 
-            
-            //get the specified whirlpool
-            Whirlpool whirlpool = await InstructionUtil.TryGetWhirlpoolAsync(
-                _context, whirlpoolAddress, commitment
-            );
-
-            var tb = new TransactionBuilder();
-
-            //instruction to create token account A 
-            await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                account, whirlpool.TokenMintA, tb, commitment
-            );
-
-            //instruction to create token account B
-            await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                account, whirlpool.TokenMintB, tb, commitment
-            );
-            
-            //generate the transaction 
-            tb.AddInstruction(
-                await OrcaInstruction.GenerateSwapInstruction(
-                    _context,
-                    whirlpool,
-                    whirlpoolAddress,
-                    tokenAuthority: tokenAuthority,
-                    amount,
-                    slippage,
-                    aToB: aToB
-                )
-            );
-
-            //set fee payer and recent blockhash 
-            return await PrepareTransaction(tb, account, RpcClient, commitment);
+            SwapQuote swapQuote = await GetSwapQuoteFromWhirlpool(
+                whirlpoolAddress, 
+                amount, 
+                inputTokenMintAddress, 
+                slippage,
+                commitment: commitment);
+            return await SwapWithQuote(whirlpoolAddress, swapQuote);
         }
         
         /// <inheritdoc />
@@ -114,23 +88,34 @@ namespace Orca
         {
             PublicKey account = _context.WalletPubKey; 
             
-            //get the specified whirlpool
+            // get the specified whirlpool
             Whirlpool whirlpool = await InstructionUtil.TryGetWhirlpoolAsync(
                 _context, whirlpoolAddress, commitment
             );
 
             var tb = new TransactionBuilder();
 
-            //instruction to create token account A 
-            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+            // instruction to create token account A 
+            var ataA = await CreateAssociatedTokenAccountInstructionIfNotExtant(
                 account, whirlpool.TokenMintA, tb, commitment
             );
 
-            //instruction to create token account B
-            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+            // instruction to create token account B
+            var ataB = await CreateAssociatedTokenAccountInstructionIfNotExtant(
                 account, whirlpool.TokenMintB, tb, commitment
             );
+
+            // Wrap to wSOL if necessary
+            if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY) && swapQuote.AtoB)
+            {
+                SyncIfNative(account, whirlpool.TokenMintA, swapQuote.Amount, tb);
+            }
             
+            if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY) && swapQuote.AtoB)
+            {
+                SyncIfNative(account, whirlpool.TokenMintB, swapQuote.Amount, tb);
+            }
+
             //generate the transaction 
             tb.AddInstruction(
                 await OrcaInstruction.GenerateSwapInstruction(
@@ -139,6 +124,28 @@ namespace Orca
                     swapQuote
                 )
             );
+            
+            // Close wrapped sol account
+            if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+            {
+                tb.AddInstruction(TokenProgram.CloseAccount(
+                    ataA,
+                    account,
+                    account,
+                    TokenProgram.ProgramIdKey)
+                );
+            }
+            
+            // Close wrapped sol account
+            if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+            {
+                tb.AddInstruction(TokenProgram.CloseAccount(
+                    ataB,
+                    account,
+                    account,
+                    TokenProgram.ProgramIdKey)
+                );
+            }
 
             //set fee payer and recent blockhash 
             return await PrepareTransaction(tb, account, RpcClient, commitment);
@@ -690,7 +697,7 @@ namespace Orca
 
         /// <inheritdoc />
         /// <exception cref="System.Exception">Thrown if the specified whirlpool doesn't exist.</exception>
-        public async override Task<IncreaseLiquidityQuote> GetIncreaseLiquidityQuote(
+        public override async Task<IncreaseLiquidityQuote> GetIncreaseLiquidityQuote(
             PublicKey whirlpoolAddress,
             PublicKey inputTokenMintAddress,
             double inputTokenAmount,
@@ -717,7 +724,7 @@ namespace Orca
         /// <exception cref="System.Exception">Thrown if the specified position doesn't exist.</exception>
         public override async Task<DecreaseLiquidityQuote> GetDecreaseLiquidityQuote(
             PublicKey positionAddress,
-            ulong liquidityAmount,
+            BigInteger liquidityAmount,
             double slippageTolerance,
             Commitment commitment = Commitment.Finalized
         )
@@ -775,8 +782,27 @@ namespace Orca
                     )
                 );
             }
-
             return AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(ownerAddress, mintAddress);
+        }
+
+        private void SyncIfNative(
+            PublicKey ownerAddress,
+            PublicKey mintAddress,
+            BigInteger amount,
+            TransactionBuilder builder)
+        {
+            if (mintAddress.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+            {
+                var ata = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(ownerAddress, mintAddress);
+                var transfer = SystemProgram.Transfer(
+                    ownerAddress, 
+                    ata,
+                    (ulong)(amount));
+                var nativeSync = TokenProgram.SyncNative(ata);
+
+                builder.AddInstruction(transfer);
+                builder.AddInstruction(nativeSync);
+            }
         }
 
         /// <summary> 

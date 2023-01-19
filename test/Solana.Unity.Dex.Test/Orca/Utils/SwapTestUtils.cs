@@ -1,11 +1,7 @@
 using System.Numerics;
 using System.Threading.Tasks;
-
-using Solana.Unity.Programs;
 using Solana.Unity.Wallet;
 using Solana.Unity.Rpc.Core.Http;
-
-using Solana.Unity.Dex.Orca;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Test.Orca.Params;

@@ -447,13 +447,13 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             PublicKey walletAddress, 
             BigInteger amountIn, 
             ulong rentExemptLamports,
-            out PublicKey tokenAddress,
-            Commitment commitment = Commitment.Finalized
+            out PublicKey tokenAddress 
         )
         {
             //create new account 
-            Account tempAccount = new Account(); 
+            Account tempAccount = new(); 
             tokenAddress = tempAccount.PublicKey;
+            
 
             return new TransactionBuilder()    
                 .AddInstruction(SystemProgram.CreateAccount(
