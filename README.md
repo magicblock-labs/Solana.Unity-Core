@@ -1,5 +1,5 @@
 <div align="center">
-  <img height="170x" src="https://i.imgur.com/UvulxS0.png" />
+  <img height="170x" src="https://i.imgur.com/WtzPSsI.png" />
 
   <h1>Solana.Unity Core</h1>
 
