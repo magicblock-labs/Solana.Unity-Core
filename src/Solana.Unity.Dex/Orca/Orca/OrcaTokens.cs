@@ -41,7 +41,8 @@ namespace Orca
             {
                 using var client = new HttpClient();
                 using var httpReq = new HttpRequestMessage(HttpMethod.Get, url);
-                string response = await CrossHttpClient.SendAsyncRequest(client, httpReq).Result.Content.ReadAsStringAsync();
+                HttpResponseMessage result = await CrossHttpClient.SendAsyncRequest(client, httpReq);
+                string response = await result.Content.ReadAsStringAsync();
                 TokensDocument tokensDocument = new JsonSerializer().Deserialize<TokensDocument>(
                     new JsonTextReader(
                         new StringReader(response)

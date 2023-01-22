@@ -64,7 +64,7 @@ namespace Solana.Unity.Extensions
         }
 
         /// <summary>
-        /// Return an instance of the TokenMintResolver loaded dererialised token list JSON from the specified URL.
+        /// Return an instance of the TokenMintResolver loaded deserialised token list JSON from the specified URL.
         /// </summary>
         /// <param name="url"></param>
         /// <returns>An instance of the TokenMintResolver populated with Solana token list definitions.</returns>
@@ -91,7 +91,12 @@ namespace Solana.Unity.Extensions
             using (var client = new HttpClient())
             {
                 using var httpReq = new HttpRequestMessage(HttpMethod.Get, url);
-                string json = await CrossHttpClient.SendAsyncRequest(client, httpReq).Result.Content.ReadAsStringAsync();
+                var httpResp = await CrossHttpClient.SendAsyncRequest(client, httpReq);
+                string json = null;
+                if (httpResp.IsSuccessStatusCode && httpResp.Content != null)
+                {
+                    json = await httpResp.Content.ReadAsStringAsync();
+                }
                 return ParseTokenList(json);
             }
         }

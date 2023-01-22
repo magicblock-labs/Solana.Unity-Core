@@ -39,7 +39,8 @@ public static class RuntimePlatforms
         {
             return false;
         }
-        return GetRuntimePlatform() == WebGLPlayer;
+        string platform = GetRuntimePlatform();
+        return platform == WebGLPlayer || string.IsNullOrEmpty(platform);
     }
     
     /// <summary>

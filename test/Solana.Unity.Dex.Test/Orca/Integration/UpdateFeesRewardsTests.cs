@@ -13,6 +13,7 @@ using Solana.Unity.Dex.Orca.Core.Errors;
 using Solana.Unity.Dex.Test.Orca.Utils;
 using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Rpc.Types;
+using System;
 using BigDecimal = Solana.Unity.Dex.Orca.Math.BigDecimal;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration
@@ -107,6 +108,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             
             Assert.IsTrue(updateResult.WasSuccessful);
             Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(updateResult.Result, _defaultCommitment));
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
             //get position after
             Position positionAfter = (
