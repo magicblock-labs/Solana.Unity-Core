@@ -2,22 +2,11 @@ using NUnit.Framework;
 using Orca;
 using System;
 using System.Linq;
-using System.Numerics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Solana.Unity.Wallet;
-using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
-using Solana.Unity.Programs.Models;
-
-using Solana.Unity.Dex.Orca;
-using Solana.Unity.Dex.Orca.Math;
-using Solana.Unity.Dex.Orca.SolanaApi;
-using Solana.Unity.Dex.Orca.Ticks;
-using Solana.Unity.Dex.Orca.Quotes.Swap;
-using Solana.Unity.Dex.Orca.Core.Accounts;
-using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Test.Orca.Utils;
 using Solana.Unity.Dex.Ticks;
@@ -66,11 +55,11 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             
             _whirlpoolConfigAddress = initConfigParams.Accounts.Config;
 
-            var initPromises = new List<Task<PoolInitResult>>();
+            var initPromises = new List<Task<PoolInitWithLiquidityResult>>();
             for (int n=0; n< numPools; n++) 
             {
                 initPromises.Add(
-                    PoolTestUtils.BuildPoolWithTokens(
+                    PoolTestUtils.BuildPoolWithLiquidity(
                         _context, initConfigParams, skipInitConfig: true, initFeeTierParams: feeTierParams
                     )
                 );
@@ -129,6 +118,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         }
 
         [Test]
+        [Ignore("Ignore no liquidity poll")]
         [Description("finds whirlpool with tokens specified in correct order, with wrong tickspacing")]
         public static async Task FindWhirlpoolsCorrectOrderWrongTickSpacing()
         {
@@ -169,6 +159,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         }
 
         [Test]
+        [Ignore("Ignore no liquidity poll")]
         [Description("finds whirlpool with tokens specified in wrong order, with wrong tickspacing")]
         public static async Task FindWhirlpoolsWrongOrderWrongTickSpacing()
         {

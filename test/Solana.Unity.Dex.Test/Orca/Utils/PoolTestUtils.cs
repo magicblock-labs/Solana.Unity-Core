@@ -234,7 +234,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             BigInteger? initSqrtPrice = null,
             BigInteger? mintAmount = null,
             bool tokenAIsNative = false,
-            bool aToB = false
+            bool aToB = false,
+            bool skipInitConfig = false
         )
         {
             if (initConfigParams == null)
@@ -248,8 +249,9 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 tickSpacing, 
                 defaultFeeRate,
                 initSqrtPrice, 
-                mintAmount, 
-                tokenAIsNative
+                mintAmount,
+                tokenAIsNative,
+                skipInitConfig
             );
             
             IList<Pda> tickArrays = await TickArrayTestUtils.InitializeTickArrayRangeAsync(
