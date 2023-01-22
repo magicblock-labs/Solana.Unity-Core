@@ -94,7 +94,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         
         [Test]
         [Description("finds whirlpool with tokens specified in correct order, with correct tickspacing")]
-        public static async Task Find_WhirlpoolsCorrectOrderCorrectTickSpacing()
+        public static async Task FindWhirlpoolsCorrectOrderCorrectTickSpacing()
         {
             OrcaDex dex = new OrcaDex(_context);
 
@@ -114,7 +114,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         
         [Test]
         [Description("finds whirlpool with tokens specified in correct order, with correct tickspacing")]
-        public static async Task Find_WhirlpoolsAddressCorrectOrderCorrectTickSpacing()
+        public static async Task FindWhirlpoolsAddressCorrectOrderCorrectTickSpacing()
         {
             IDex dex = new OrcaDex(_context);
 
