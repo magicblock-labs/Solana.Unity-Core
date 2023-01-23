@@ -652,7 +652,7 @@ namespace Orca
                 await Task.WhenAll(promises);
                 foreach(var p in promises) 
                 {
-                    if (p.Result != null && p.Result.Item2 != null) 
+                    if (p.Result != null && p.Result.Item2 != null && p.Result.Item2.Liquidity > 0) 
                     {
                         result = p.Result;
                         break;

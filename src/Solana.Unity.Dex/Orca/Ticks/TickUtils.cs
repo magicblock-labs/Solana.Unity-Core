@@ -1,6 +1,7 @@
 using System;
 
 using Solana.Unity.Dex.Orca.Core.Accounts;
+using Solana.Unity.Dex.Orca.Exceptions;
 
 namespace Solana.Unity.Dex.Orca.Ticks
 {
@@ -13,8 +14,10 @@ namespace Solana.Unity.Dex.Orca.Ticks
             
             int ticksInArray = TickConstants.TICK_ARRAY_SIZE * tickSpacing;
             int minTickIndex = TickConstants.MIN_TICK_INDEX - ((TickConstants.MIN_TICK_INDEX % ticksInArray) + ticksInArray);
-            System.Diagnostics.Debug.Assert(startTickIndex >= minTickIndex, $"startTickIndex (${startTickIndex}) >= minTickIndex ({minTickIndex})");
-            System.Diagnostics.Debug.Assert(startTickIndex <= TickConstants.MAX_TICK_INDEX, $"startTickIndex (${startTickIndex}) <= TickConstants.MAX_TICK_INDEX ({TickConstants.MAX_TICK_INDEX})");
+            if (startTickIndex < minTickIndex)
+                throw new WhirlpoolsException($"startTickIndex (${startTickIndex}) >= minTickIndex ({minTickIndex})");
+            if (startTickIndex > TickConstants.MAX_TICK_INDEX)
+                throw new WhirlpoolsException($"startTickIndex (${startTickIndex}) <= TickConstants.MAX_TICK_INDEX ({TickConstants.MAX_TICK_INDEX})");
             return (int)startTickIndex;
         }
 

@@ -155,8 +155,8 @@ namespace Solana.Unity.Dex.Orca.Ticks
         /// <returns>True if the given index is in bounds of the array.</returns>
         private bool IsArrayIndexInBounds(TickArrayIndex index, bool aToB)
         {
-            long localArrayIndex = this.GetLocalArrayIndex(index.ArrayIndex, aToB);
-            int seqLength = this._tickArrays.Count;
+            long localArrayIndex = GetLocalArrayIndex(index.ArrayIndex, aToB);
+            int seqLength = _tickArrays.Count;
             return localArrayIndex >= 0 && localArrayIndex < seqLength;
         }
 

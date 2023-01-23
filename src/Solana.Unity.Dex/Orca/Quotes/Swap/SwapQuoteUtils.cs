@@ -127,7 +127,11 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
         )
         {
             TokenType swapTokenType = PoolUtils.GetTokenType(whirlpool, inputTokenMint);
-            System.Diagnostics.Debug.Assert(swapTokenType != TokenType.None, "swapTokenMint does not match any tokens on this pool");
+            if(swapTokenType == TokenType.None)
+                throw new WhirlpoolsException(
+                    "swapTokenMint does not match any tokens on this pool",
+                    SwapErrorCode.SqrtPriceOutOfBounds            
+                );
             bool aToB = swapTokenType == amountSpecifiedTokenType;
 
             IList<TickArrayContainer> tickArrays = await SwapUtils.GetTickArrays(

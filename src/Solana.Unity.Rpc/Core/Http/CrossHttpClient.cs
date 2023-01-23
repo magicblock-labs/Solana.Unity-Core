@@ -1,9 +1,9 @@
 using Solana.Unity.Rpc.Utilities;
 using System;
-using System.Collections;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine.Networking;
 
@@ -14,6 +14,8 @@ namespace Solana.Unity.Rpc.Core.Http;
 /// </summary>
 public static class CrossHttpClient
 {
+    private static TaskCompletionSource<UnityWebRequest.Result> _currentRequestTask;
+
     /// <summary>
     /// Send an async request using HttpClient or UnityWebRequest if running on Unity
     /// </summary>
@@ -29,6 +31,8 @@ public static class CrossHttpClient
         }
         return await httpClient.SendAsync(httpReq).ConfigureAwait(false);
     }
+    
+    
         
     /// <summary>
     /// Convert a httReq to a Unity Web request
@@ -39,42 +43,48 @@ public static class CrossHttpClient
     /// <exception cref="HttpRequestException"></exception>
     private static async Task<HttpResponseMessage> SendUnityWebRequest(Uri uri, HttpRequestMessage httpReq)
     {
-        using (var request = new UnityWebRequest(uri, httpReq.Method.ToString()))
+        using UnityWebRequest request = new(uri, httpReq.Method.ToString());
+        if (httpReq.Content != null)
         {
-            if (httpReq.Content != null)
-            {
-                request.uploadHandler = new UploadHandlerRaw(await httpReq.Content.ReadAsByteArrayAsync());
-                request.SetRequestHeader("Content-Type", "application/json");
-            }
-            request.downloadHandler = new DownloadHandlerBuffer();
-            var response = new HttpResponseMessage();
-            var e = SendRequest(request, response);
-            while (e.MoveNext()) { }
-            if (request.result == UnityWebRequest.Result.ConnectionError)
-            {
-                throw new HttpRequestException("Error While Sending: " + request.error);
-            }
-            return response;
+            request.uploadHandler = new UploadHandlerRaw(await httpReq.Content.ReadAsByteArrayAsync());
+            request.SetRequestHeader("Content-Type", "application/json");
         }
+        request.downloadHandler = new DownloadHandlerBuffer();
+        if (_currentRequestTask != null)
+        {
+            await _currentRequestTask.Task;
+        }
+        UnityWebRequest.Result result = await SendRequest(request);
+        HttpResponseMessage response = new();
+        if (result == UnityWebRequest.Result.Success)
+        {
+            response.StatusCode = HttpStatusCode.OK;
+            response.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(request.downloadHandler.text));
+        }
+        else
+        {
+            response.StatusCode = HttpStatusCode.ExpectationFailed;
+        }
+        return response;
     }
 
-    /// <summary>
-    /// Send a request using UnityWebRequest and wait for the response
-    /// </summary>
-    /// <param name="request"></param>
-    /// <param name="res"></param>
-    /// <returns></returns>
-    /// <exception cref="HttpRequestException"></exception>
-    private static IEnumerator SendRequest(UnityWebRequest request, HttpResponseMessage res)
+    private static Task<UnityWebRequest.Result> SendRequest(UnityWebRequest request)
     {
-        yield return request.SendWebRequest();
-        while (!request.isDone)
-            yield return true;
-        if (request.result == UnityWebRequest.Result.ConnectionError)
+        TaskCompletionSource<UnityWebRequest.Result> sendRequestTask = new();
+        _currentRequestTask = sendRequestTask;
+        UnityWebRequestAsyncOperation op = request.SendWebRequest();
+
+        if (request.isDone)
         {
-            throw new HttpRequestException("Error While Sending: " + request.error);
+            sendRequestTask.SetResult(request.result);
         }
-        res.StatusCode = HttpStatusCode.OK;
-        res.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(request.downloadHandler.text));
+        else
+        {
+            op.completed += asyncOp =>
+            {
+                sendRequestTask.SetResult(((UnityWebRequestAsyncOperation)asyncOp).webRequest.result);
+            };
+        }
+        return sendRequestTask.Task;
     }
 }
