@@ -55,11 +55,11 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             
             _whirlpoolConfigAddress = initConfigParams.Accounts.Config;
 
-            var initPromises = new List<Task<PoolInitWithLiquidityResult>>();
+            var initPromises = new List<Task<PoolInitResult>>();
             for (int n=0; n< numPools; n++) 
             {
                 initPromises.Add(
-                    PoolTestUtils.BuildPoolWithLiquidity(
+                    PoolTestUtils.BuildPoolWithTokens(
                         _context, initConfigParams, skipInitConfig: true, initFeeTierParams: feeTierParams
                     )
                 );
