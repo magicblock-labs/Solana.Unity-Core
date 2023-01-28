@@ -52,7 +52,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
         protected StreamingRpcClient(string url, object logger, IWebSocket socket = default, ClientWebSocket clientWebSocket = default)
         {
             NodeAddress = new Uri(url);
-            ClientSocket = socket ?? new WebSocketWrapper(clientWebSocket ?? new ClientWebSocket());
+            ClientSocket = socket ?? new WebSocketWrapper();
             _logger = logger;
             _sem = new SemaphoreSlim(1, 1);
             _connectionStats = new ConnectionStats();
@@ -95,7 +95,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
 
                     // handle disconnection cleanup
                     ClientSocket.Dispose();
-                    ClientSocket = new WebSocketWrapper(new ClientWebSocket());
+                    ClientSocket = new WebSocketWrapper();
                     CleanupSubscriptions();
                 }
             }
