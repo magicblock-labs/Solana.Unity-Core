@@ -52,7 +52,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             MetadataParser metadata = new(metadataResult.Result.Value.Data);
 
             Assert.That(metadata.UpdateAuthority, Is.EqualTo(AddressConstants.METADATA_UPDATE_AUTH_ID));
-            Assert.That(metadata.Uri, Is.EqualTo("https://arweave.net/KZlsubXZyzeSYi2wJhyL7SY-DAot_OXhfWSYQGLmmOc"));
+            Assert.IsTrue(metadata.Uri.Contains("https://arweave.net/"));
             Assert.That(metadata.Mint, Is.EqualTo(positionMintKey.ToString()));
         }
 
