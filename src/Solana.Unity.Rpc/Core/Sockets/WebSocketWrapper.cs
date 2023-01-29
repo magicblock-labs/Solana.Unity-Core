@@ -1,8 +1,10 @@
-﻿using System;
+﻿using NativeWebSocket;
+using System;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using WebSocket = NativeWebSocket.WebSocket;
+using WebSocketState = System.Net.WebSockets.WebSocketState;
 
 namespace Solana.Unity.Rpc.Core.Sockets
 {
@@ -45,14 +47,17 @@ namespace Solana.Unity.Rpc.Core.Sockets
 
         public Task<WebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, CancellationToken cancellationToken)
         {
-            var receiveMessageTask = new TaskCompletionSource<WebSocketReceiveResult>();
+            TaskCompletionSource<WebSocketReceiveResult> receiveMessageTask = new();
 
-            webSocket.OnMessage += bytes =>
+            void WebSocketOnOnMessage(byte[] bytes)
             {
-                buffer = bytes;
+                bytes.CopyTo(buffer);
                 WebSocketReceiveResult webSocketReceiveResult = new(bytes.Length, WebSocketMessageType.Text, true);
                 receiveMessageTask.SetResult(webSocketReceiveResult);
-            };
+                webSocket.OnMessage -= WebSocketOnOnMessage;
+            }
+
+            webSocket.OnMessage += WebSocketOnOnMessage;
             return receiveMessageTask.Task;
         }
 
