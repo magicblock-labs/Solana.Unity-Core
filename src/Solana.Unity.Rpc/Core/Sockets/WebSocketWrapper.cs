@@ -53,10 +53,10 @@ namespace Solana.Unity.Rpc.Core.Sockets
             {
                 bytes.CopyTo(buffer);
                 WebSocketReceiveResult webSocketReceiveResult = new(bytes.Length, WebSocketMessageType.Text, true);
-                receiveMessageTask.SetResult(webSocketReceiveResult);
+                MainThreadUtil.Run(() => receiveMessageTask.SetResult(webSocketReceiveResult));
                 webSocket.OnMessage -= WebSocketOnOnMessage;
+                Console.WriteLine("Message received");
             }
-
             webSocket.OnMessage += WebSocketOnOnMessage;
             return receiveMessageTask.Task;
         }

@@ -16,7 +16,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="6.*" />
     <PackageReference Include="IsExternalInit" Version="1.0.*" PrivateAssets="all" />
     <PackageReference Include="Unity3D.SDK" Version="2021.*" PrivateAssets="all" />
-    <PackageReference Include="native-websocket" Version="0.0.1" />
+    <PackageReference Include="native-websocket" Version="0.0.2-rc1" />
     <ProjectReference Include="..\Solana.Unity.Wallet\Solana.Unity.Wallet.csproj" />
   </ItemGroup>
 

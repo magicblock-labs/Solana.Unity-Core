@@ -1,4 +1,4 @@
-﻿using Solana.Unity.Rpc.Types;
+using Solana.Unity.Rpc.Types;
 using System;
 using System.IO;
 using System.Net.WebSockets;
@@ -69,8 +69,8 @@ namespace Solana.Unity.Rpc.Core.Sockets
             {
                 if (ClientSocket.State != WebSocketState.Open)
                 {
-                    await ClientSocket.ConnectAsync(NodeAddress, CancellationToken.None).ConfigureAwait(false);
-                    _ = Task.Run(StartListening);
+                    await ClientSocket.ConnectAsync(NodeAddress, CancellationToken.None);
+                    _ = StartListening();
                     ConnectionStateChangedEvent?.Invoke(this, State);
                 }
             }
@@ -111,11 +111,11 @@ namespace Solana.Unity.Rpc.Core.Sockets
         /// <returns>Returns the task representing the asynchronous task.</returns>
         private async Task StartListening()
         {
-            while (ClientSocket.State == WebSocketState.Open)
+            while (ClientSocket.State is WebSocketState.Open or WebSocketState.Connecting)
             {
                 try
                 {
-                    await ReadNextMessage().ConfigureAwait(false);
+                    await ReadNextMessage();
                 }
                 catch (Exception e)
                 {
@@ -142,7 +142,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
         {
             var buffer = new byte[32768];
             Memory<byte> mem = new(buffer);
-            WebSocketReceiveResult result = await ClientSocket.ReceiveAsync(mem, cancellationToken).ConfigureAwait(false);
+            WebSocketReceiveResult result = await ClientSocket.ReceiveAsync(mem, cancellationToken);
             int count = result.Count;
 
             if (result.MessageType == WebSocketMessageType.Close)
