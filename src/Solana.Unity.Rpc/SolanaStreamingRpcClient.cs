@@ -452,7 +452,6 @@ namespace Solana.Unity.Rpc
         /// <returns>A task representing the state of the asynchronous operation-</returns>
         private async Task<SubscriptionState> Subscribe(SubscriptionState sub, JsonRpcRequest msg)
         {
-
             var opts = new JsonSerializerSettings()
             {
                 Formatting = Formatting.None,

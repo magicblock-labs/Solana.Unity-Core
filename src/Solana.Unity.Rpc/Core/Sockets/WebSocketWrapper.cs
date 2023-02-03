@@ -1,42 +1,74 @@
-﻿using System;
+﻿using NativeWebSocket;
+using System;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using WebSocket = NativeWebSocket.WebSocket;
+using WebSocketState = System.Net.WebSockets.WebSocketState;
 
 namespace Solana.Unity.Rpc.Core.Sockets
 {
     internal class WebSocketWrapper : IWebSocket
     {
-        private readonly ClientWebSocket webSocket;
+        private NativeWebSocket.IWebSocket webSocket;
 
-        internal WebSocketWrapper(ClientWebSocket webSocket)
+        public WebSocketCloseStatus? CloseStatus => WebSocketCloseStatus.NormalClosure;
+
+        public string CloseStatusDescription => "Not implemented";
+
+        public WebSocketState State
         {
-            this.webSocket = webSocket;
+            get
+            {
+                if(webSocket == null)
+                    return WebSocketState.None;
+                return webSocket.State switch
+                {
+                    NativeWebSocket.WebSocketState.Open => WebSocketState.Open,
+                    NativeWebSocket.WebSocketState.Closed => WebSocketState.Closed,
+                    NativeWebSocket.WebSocketState.Connecting => WebSocketState.Connecting,
+                    NativeWebSocket.WebSocketState.Closing => WebSocketState.CloseReceived,
+                    _ => WebSocketState.None
+                };
+            }
         }
 
-        public WebSocketCloseStatus? CloseStatus => webSocket.CloseStatus;
-
-        public string CloseStatusDescription => webSocket.CloseStatusDescription;
-
-        public WebSocketState State => webSocket.State;
-
         public Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription, CancellationToken cancellationToken)
-            => webSocket.CloseAsync(closeStatus, statusDescription, cancellationToken);
+            => webSocket.Close();
 
         public Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
-            => webSocket.ConnectAsync(uri, cancellationToken);
+        {
+            webSocket = WebSocket.Create(uri.AbsoluteUri);
+            return webSocket.Connect();
+        }
 
         public Task CloseAsync(CancellationToken cancellationToken)
-            => webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, null, cancellationToken);
+            => webSocket.Close();
 
         public Task<WebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, CancellationToken cancellationToken)
-            => webSocket.ReceiveAsync(new ArraySegment<byte>(buffer.ToArray()), cancellationToken);
+        {
+            TaskCompletionSource<WebSocketReceiveResult> receiveMessageTask = new();
 
-        public Task SendAsync(ReadOnlyMemory<byte> buffer, WebSocketMessageType messageType, bool endOfMessage, CancellationToken cancellationToken)
-            => webSocket.SendAsync(new ArraySegment<byte>(buffer.ToArray()), messageType, endOfMessage, cancellationToken);
+            void WebSocketOnOnMessage(byte[] bytes)
+            {
+                bytes.CopyTo(buffer);
+                WebSocketReceiveResult webSocketReceiveResult = new(bytes.Length, WebSocketMessageType.Text, true);
+                MainThreadUtil.Run(() => receiveMessageTask.SetResult(webSocketReceiveResult));
+                webSocket.OnMessage -= WebSocketOnOnMessage;
+                Console.WriteLine("Message received");
+            }
+            webSocket.OnMessage += WebSocketOnOnMessage;
+            return receiveMessageTask.Task;
+        }
+
+        public Task SendAsync(ReadOnlyMemory<byte> buffer, WebSocketMessageType messageType, bool endOfMessage,
+            CancellationToken cancellationToken)
+        {
+            return webSocket.Send(buffer.ToArray());
+        }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool disposedValue; // To detect redundant calls
 
         private void Dispose(bool disposing)
         {
@@ -44,7 +76,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
             {
                 if (disposing)
                 {
-                    webSocket.Dispose();
+                    webSocket.Close();
                 }
 
                 disposedValue = true;
