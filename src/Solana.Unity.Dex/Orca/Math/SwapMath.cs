@@ -127,8 +127,8 @@ namespace Solana.Unity.Dex.Orca.Math
         )
         {
             return (aToB == amountSpecifiedIsInput)
-                ? TokenMath.GetAmountDeltaB(currentSqrtPrice, targetSqrtPrice, currentLiquidity, amountSpecifiedIsInput)
-                : TokenMath.GetAmountDeltaA(currentSqrtPrice, targetSqrtPrice, currentLiquidity, amountSpecifiedIsInput);
+                ? TokenMath.GetAmountDeltaB(currentSqrtPrice, targetSqrtPrice, currentLiquidity, !amountSpecifiedIsInput)
+                : TokenMath.GetAmountDeltaA(currentSqrtPrice, targetSqrtPrice, currentLiquidity, !amountSpecifiedIsInput);
         }
     }
 }

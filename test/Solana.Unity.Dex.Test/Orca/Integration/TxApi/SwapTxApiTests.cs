@@ -235,8 +235,82 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                     whirlpool.TokenMintB,
                     commitment: _defaultCommitment
                 )).Result.Value;
+            Assert.AreEqual(swapAmount, (ulong)swapQuote.EstimatedAmountIn);
             Assert.AreEqual(tokenA.AmountUlong, tokenAPost.AmountUlong + swapAmount);
             Assert.AreEqual(tokenB.AmountUlong, tokenBPost.AmountUlong - (ulong)swapQuote.EstimatedAmountOut);
+        }
+        
+        [Test]
+        [Description("successful swap across one tick array with a quote")]
+        public static async Task SwapWithQuoteOutputAmountUsingApi()
+        {
+            //initialize everything 
+            PublicKey whirlpoolAddr = await InitializeTestPool();
+            Whirlpool whirlpool = (await _context.WhirlpoolClient.GetWhirlpoolAsync(whirlpoolAddr, Commitment.Finalized)).ParsedResult;
+            await GetWhirlpoolTokens(whirlpoolAddr, _context.WalletAccount, 1_000_000);
+            
+            //transfer some of token B for A
+            ulong swapAmount = 24912; 
+            
+            IDex dex = new OrcaDex(_context.WalletAccount, _context.RpcClient);
+            
+            //get the balance
+            var tokenA =
+                (await _context.RpcClient.GetTokenBalanceByOwnerAsync(
+                    _context.WalletAccount.PublicKey, 
+                    whirlpool.TokenMintA,
+                    commitment: _defaultCommitment
+                )).Result.Value;
+            var tokenB =
+                (await _context.RpcClient.GetTokenBalanceByOwnerAsync(
+                    _context.WalletAccount.PublicKey, 
+                    whirlpool.TokenMintB,
+                    commitment: _defaultCommitment
+                )).Result.Value;
+
+            //get the swap quote 
+            SwapQuote swapQuote = await dex.GetSwapQuoteFromWhirlpool(
+                whirlpoolAddr, 
+                swapAmount,
+                whirlpool.TokenMintA,
+                slippageTolerance: 0.1,
+                amountSpecifiedIsInput: false,
+                commitment: _defaultCommitment
+            );
+
+            //get the swap transaction 
+            Transaction tx = await dex.SwapWithQuote(
+                whirlpoolAddr,
+                swapQuote
+            );
+
+            // sign and execute the transaction 
+            tx.Sign(_context.WalletAccount);
+            var swapResult = await _context.RpcClient.SendTransactionAsync(
+                tx.Serialize(),
+                commitment: TestConfiguration.DefaultCommitment
+            ); 
+            
+            //assertions 
+            Assert.IsTrue(swapResult.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swapResult.Result, _defaultCommitment));
+            
+            //get the post balance
+            var tokenAPost =
+                (await _context.RpcClient.GetTokenBalanceByOwnerAsync(
+                    _context.WalletAccount.PublicKey, 
+                    whirlpool.TokenMintA,
+                    _defaultCommitment
+                )).Result.Value;
+            var tokenBPost =
+                (await _context.RpcClient.GetTokenBalanceByOwnerAsync(
+                    _context.WalletAccount.PublicKey, 
+                    whirlpool.TokenMintB,
+                    commitment: _defaultCommitment
+                )).Result.Value;
+            Assert.AreEqual(swapAmount, (ulong)swapQuote.EstimatedAmountOut);
+            Assert.AreEqual(tokenA.AmountUlong, tokenAPost.AmountUlong + (ulong)swapQuote.EstimatedAmountIn);
+            Assert.AreEqual(tokenB.AmountUlong, tokenBPost.AmountUlong - swapAmount);
         }
     }
 }

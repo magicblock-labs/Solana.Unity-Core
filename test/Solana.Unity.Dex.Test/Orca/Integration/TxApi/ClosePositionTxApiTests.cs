@@ -82,7 +82,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Account positionMintAccount = new Account();
             Pda positionPda = PdaUtils.GetPosition(_context.ProgramId, positionMintAccount.PublicKey);
 
-            //get the transaction toopen the position 
+            //get the transaction to open the position 
             Transaction tx;
             if (liquidityAmount > 0)
             {

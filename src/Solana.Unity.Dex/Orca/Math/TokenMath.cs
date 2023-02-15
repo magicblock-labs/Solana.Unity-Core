@@ -21,8 +21,8 @@ namespace Solana.Unity.Dex.Orca.Math
             BigInteger numerator = currentLiquidity * sqrtPriceDiff << 64;
             BigInteger denominator = sqrtPriceLower * sqrtPriceUpper;
 
-            BigInteger quotient = numerator / (denominator);
-            BigInteger remainder = numerator % (denominator);
+            BigInteger quotient = numerator / denominator;
+            BigInteger remainder = numerator % denominator;
 
             var result = roundUp && remainder != 0 ? quotient + BigInteger.One : quotient;
 
@@ -59,8 +59,8 @@ namespace Solana.Unity.Dex.Orca.Math
         )
         {
             return (sqrtPrice0 > sqrtPrice1) ? 
-                Tuple.Create<BigInteger, BigInteger>(sqrtPrice1, sqrtPrice0) : 
-                Tuple.Create<BigInteger, BigInteger>(sqrtPrice0, sqrtPrice1);
+                Tuple.Create(sqrtPrice1, sqrtPrice0) : 
+                Tuple.Create(sqrtPrice0, sqrtPrice1);
         }
 
         public static BigInteger GetNextSqrtPrice(
@@ -108,7 +108,7 @@ namespace Solana.Unity.Dex.Orca.Math
 
             BigInteger denominator = amountSpecifiedIsInput
                 ? currLiquidityShiftLeft + p
-                : currLiquidityShiftLeft + p;
+                : currLiquidityShiftLeft - p;
 
             BigInteger price = BitMath.DivRoundUp(numerator, denominator);
 

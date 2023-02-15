@@ -77,8 +77,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //get transaction 
             Transaction tx = await dex.UpdateFeesAndRewards(
                 positionAddress,
-                tickArrayLower,
-                tickArrayUpper,
                 commitment: TestConfiguration.DefaultCommitment
             );
 
@@ -105,8 +103,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //generate a transaction 
             Transaction tx = await dex.CollectRewards(
                 testInfo.Positions[0].PublicKey,
-                testInfo.Rewards[rewardIndex].RewardMint,
-                testInfo.Rewards[rewardIndex].RewardVaultKeyPair.PublicKey, 
                 rewardIndex,
                 commitment: TestConfiguration.DefaultCommitment
             );

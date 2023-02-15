@@ -81,9 +81,9 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 RewardEmissionsSuperAuthorityKeyPair = new Account()
             };
 
-            Account configKeypair = new Account(); 
+            Account configKeypair = new(); 
             
-            InitializeConfigParams configInitInfo = new InitializeConfigParams
+            InitializeConfigParams configInitInfo = new()
             {
                 Accounts = new InitializeConfigAccounts
                 {

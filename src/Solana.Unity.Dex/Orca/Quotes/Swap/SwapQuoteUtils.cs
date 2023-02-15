@@ -17,8 +17,18 @@ using Solana.Unity.Dex.Swap;
 
 namespace Solana.Unity.Dex.Orca.Quotes.Swap
 {
+    /// <summary>
+    /// Utility class for SwapQuote.
+    /// </summary>
     public static class SwapQuoteUtils
     {
+        /// <summary>
+        /// Checks if all the tick arrays have been initialized.
+        /// </summary>
+        /// <param name="tickArrays"></param>
+        /// <param name="throwException"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static bool CheckIfAllTickArraysInitialized(IList<TickArrayContainer> tickArrays, bool throwException = true)
         {
             // Check if all the tick arrays have been initialized.
@@ -61,6 +71,17 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
             return quote;
         }
         
+        /// <summary>
+        /// Returns a SwapQuote using the input token mint.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="whirlpool"></param>
+        /// <param name="whirlpoolAddress"></param>
+        /// <param name="inputTokenMint"></param>
+        /// <param name="tokenAmount"></param>
+        /// <param name="slippageTolerance"></param>
+        /// <param name="programId"></param>
+        /// <returns></returns>
         public static async Task<SwapQuote> SwapQuoteByInputToken(
             IWhirlpoolContext ctx,
             Whirlpool whirlpool,
@@ -77,7 +98,6 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
                 whirlpoolAddress,
                 inputTokenMint,
                 tokenAmount,
-                amountSpecifiedTokenType: TokenType.TokenA,
                 amountSpecifiedIsInput: true,
                 programId
             );
@@ -88,6 +108,17 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
             );
         }
 
+        /// <summary>
+        /// Returns a SwapQuote using the output token mint.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="whirlpool"></param>
+        /// <param name="whirlpoolAddress"></param>
+        /// <param name="outputTokenMint"></param>
+        /// <param name="tokenAmount"></param>
+        /// <param name="slippageTolerance"></param>
+        /// <param name="programId"></param>
+        /// <returns></returns>
         public static async Task<SwapQuote> SwapQuoteByOutputToken(
             IWhirlpoolContext ctx,
             Whirlpool whirlpool,
@@ -104,7 +135,6 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
                     whirlpoolAddress,
                     outputTokenMint,
                     tokenAmount,
-                    amountSpecifiedTokenType: TokenType.TokenB,
                     amountSpecifiedIsInput: false,
                     programId
                 );
@@ -115,13 +145,24 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
             );
         }
 
+        /// <summary>
+        /// Returns a SwapQuoteParam object that can be used to calculate a swap quote.
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="whirlpool"></param>
+        /// <param name="whirlpoolAddress"></param>
+        /// <param name="inputTokenMint"></param>
+        /// <param name="tokenAmount"></param>
+        /// <param name="amountSpecifiedIsInput"></param>
+        /// <param name="programId"></param>
+        /// <returns></returns>
+        /// <exception cref="WhirlpoolsException"></exception>
         public static async Task<SwapQuoteParam> SwapQuoteByToken(
             IWhirlpoolContext ctx,
             Whirlpool whirlpool,
             PublicKey whirlpoolAddress,
             PublicKey inputTokenMint,
             BigInteger tokenAmount,
-            TokenType amountSpecifiedTokenType,
             bool amountSpecifiedIsInput,
             PublicKey programId
         )
@@ -132,7 +173,7 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
                     "swapTokenMint does not match any tokens on this pool",
                     SwapErrorCode.SqrtPriceOutOfBounds            
                 );
-            bool aToB = swapTokenType == amountSpecifiedTokenType;
+            bool aToB = inputTokenMint == whirlpool.TokenMintA;
 
             IList<TickArrayContainer> tickArrays = await SwapUtils.GetTickArrays(
                 ctx,
@@ -189,7 +230,7 @@ namespace Solana.Unity.Dex.Orca.Quotes.Swap
                 quoteParam.AtoB
             );
 
-            if (!tickSequence.CheckArrayContainsTickIndex(0, quoteParam.Whirlpool.TickCurrentIndex))
+            if (!tickSequence.IsValidTickArray0(quoteParam.Whirlpool.TickCurrentIndex))
             {
                 throw new WhirlpoolsException(
                     "TickArray at index 0 does not contain the Whirlpool current tick index.",

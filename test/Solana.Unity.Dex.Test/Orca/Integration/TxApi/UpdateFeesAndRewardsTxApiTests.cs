@@ -107,8 +107,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             //generate the transaction to update fees and rewards 
             Transaction tx = await dex.UpdateFeesAndRewards(
                 position.PublicKey,
-                tickArrayPda.PublicKey,
-                tickArrayPda.PublicKey,
                 commitment: TestConfiguration.DefaultCommitment
             );
 

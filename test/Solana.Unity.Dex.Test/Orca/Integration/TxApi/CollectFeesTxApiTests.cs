@@ -89,16 +89,12 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         
         private static async Task UpdateFeesAndRewards(
             IDex dex,
-            PublicKey positionAddress,
-            PublicKey tickArrayLower, 
-            PublicKey tickArrayUpper
+            PublicKey positionAddress
         ) 
         {
             //get transaction 
             Transaction tx = await dex.UpdateFeesAndRewards(
-                positionAddress, 
-                tickArrayLower, 
-                tickArrayUpper,
+                positionAddress,
                 commitment: TestConfiguration.DefaultCommitment
             );
 
@@ -142,7 +138,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 
             //update fees and rewards 
             await UpdateFeesAndRewards(
-                dex, position.PublicKey, tickArrayPda, tickArrayPda
+                dex, position.PublicKey
             );
 
             //get position before fee collection
