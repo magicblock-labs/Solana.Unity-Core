@@ -13,7 +13,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
     public static class FeeTierTestUtils
     {
         private const ushort DefaultFeeRate = 3000; 
-        private const ushort DefaultTickSpacing = TickSpacing.Standard;
+        private const ushort DefaultTickSpacing = TickSpacing.HundredTwentyEight;
         
         public static TransactionInstruction InitializeFeeTierInstruction(
             TestWhirlpoolContext ctx,
@@ -67,7 +67,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
 
         public static InitializeFeeTierParams GenerateDefaultParams(
             TestWhirlpoolContext ctx,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             ushort defaultFeeRate = 3000
         )
         {

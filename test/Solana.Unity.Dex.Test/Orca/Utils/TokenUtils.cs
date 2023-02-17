@@ -1,6 +1,6 @@
 using NUnit.Framework;
+using Orca;
 using Solana.Unity.Dex.Orca;
-using System;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -12,6 +12,8 @@ using Solana.Unity.Rpc.Core.Http;
 using Solana.Unity.Rpc.Types;
 
 using Solana.Unity.Dex.Orca.Address;
+using Solana.Unity.Dex.Orca.SolanaApi;
+using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Models;
 
 //TODO: (MID) standardize these methods: parameter names, usage, ordering, formatting, calling, everything 
@@ -226,61 +228,6 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
         }
 
         //TODO: should return tuple with result 
-        /// <summary>
-        /// Creates an associated token account and mints a given number of tokens to it.
-        /// </summary>
-        /// <param name="ctx">Application context object.</param>
-        /// <param name="mint">Address of the token mint.</param>
-        /// <param name="amount">Number of tokens to mint.</param>
-        /// <param name="feePayer">Account to pay transaction fees.</param>
-        /// <param name="destination">Account to which to mint.</param>
-        /// <param name="commitment">The preflight and transaction commitment to use.</param>
-        /// <returns>Address of the token account.</returns>
-        public static async Task CreateAndMintToAssociatedTokenAccountAsync(IWhirlpoolContext ctx,
-            PublicKey mint,
-            BigInteger amount,
-            Account feePayer,
-            PublicKey destination = null,
-            Commitment commitment = Commitment.Finalized)
-        {
-            if (destination == null)
-                destination = ctx.WalletPubKey;
-                
-            PublicKey associatedTokenAddress; 
-            
-            //special handling for native mint 
-            if (mint.Equals(AddressConstants.NATIVE_MINT_PUBKEY)) 
-            {
-                ulong rentExemptionMin =
-                    (await ctx.RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
-                
-                byte[] tx = CreateWSolAccountInstructions(destination, BigInteger.Zero, rentExemptionMin, out associatedTokenAddress);
-                RequestResult<string> response = await ctx.RpcClient.SendTransactionAsync(tx, commitment:commitment);                
-            }
-            else
-            {
-                associatedTokenAddress = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(destination, mint);
-
-                var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
-                byte[] tx = new TransactionBuilder()
-                    .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
-                    .SetFeePayer(feePayer.PublicKey)
-                    .AddInstruction(
-                        AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
-                            feePayer, destination, mint
-                        )
-                    )
-                    .AddInstruction(TokenProgram.MintTo(
-                        mint,
-                        associatedTokenAddress,
-                        (ulong)amount,
-                        feePayer
-                    ))
-                    .Build(feePayer);
-
-                var result = await ctx.RpcClient.SendAndConfirmTransactionAsync(tx, preFlightCommitment: commitment, commitment: commitment);
-            }
-        }
 
         /// <summary>
         /// Mint tokens to an owner account. 
@@ -313,44 +260,6 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 .Build(feePayer);
 
             return await ctx.RpcClient.SendAndConfirmTransactionAsync(tx, preFlightCommitment: commitment, commitment: commitment);
-        }
-
-        /// <summary>
-        /// Create an associated token account for the given mint and owner. 
-        /// </summary>
-        /// <param name="ctx">Application context object.</param>
-        /// <param name="feePayer">Account to pay fees for the transaction.</param>
-        /// <param name="mint">Address of token mint.</param>
-        /// <param name="owner">Address of token owner.</param>
-        /// <param name="commitment">The preflight and transaction commitment to use.</param>
-        /// <returns></returns>
-        public static async Task<Tuple<RequestResult<string>, PublicKey>> CreateAssociatedTokenAccountAsync(
-            IWhirlpoolContext ctx,
-            Account feePayer,
-            PublicKey mint,
-            PublicKey owner = null,
-            Commitment commitment = Commitment.Finalized
-        )
-        {
-            if (owner == null)
-                owner = ctx.WalletPubKey;
-
-            //derive the address 
-            PublicKey associatedTokenAddress = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(owner, mint);
-
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
-            byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
-                .SetFeePayer(feePayer.PublicKey)
-                .AddInstruction(
-                    AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
-                        feePayer, owner, mint
-                    )
-                )
-                .Build(feePayer);
-
-            var result = await ctx.RpcClient.SendAndConfirmTransactionAsync(tx, preFlightCommitment: commitment, commitment: commitment);
-            return Tuple.Create<RequestResult<string>, PublicKey>(result, associatedTokenAddress); 
         }
 
         /// <summary>
@@ -432,41 +341,44 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 associatedProgramId
             ).PublicKey;
         }
-
-        /// <summary>
-        /// Creates and returns a transaction to create an account and initialize it with the native
-        /// mint address. 
-        /// </summary>
-        /// <param name="walletAddress"></param>
-        /// <param name="amountIn"></param>
-        /// <param name="rentExemptLamports">Minimum balance to avoid rent payment for account.</param>
-        /// <param name="tokenAddress">Returns the address of the new account as an output parameter.</param>
-        /// <param name="commitment">The preflight and transaction commitment to use.</param>
-        /// <returns>Raw bytes of the new transaction. </returns>
-        private static byte[] CreateWSolAccountInstructions(
-            PublicKey walletAddress, 
-            BigInteger amountIn, 
-            ulong rentExemptLamports,
-            out PublicKey tokenAddress 
-        )
+        
+        public static async Task CloseAta(IRpcClient rpc, PublicKey mint, Account authority, PublicKey destination)
         {
-            //create new account 
-            Account tempAccount = new(); 
-            tokenAddress = tempAccount.PublicKey;
-            
-
-            return new TransactionBuilder()    
-                .AddInstruction(SystemProgram.CreateAccount(
-                    walletAddress,
-                    tempAccount.PublicKey,
-                    (ulong)(amountIn + rentExemptLamports),
-                    TokenProgram.MintAccountDataSize,   
-                    TokenProgram.ProgramIdKey))
-                .AddInstruction(TokenProgram.InitializeAccount(
-                    tempAccount.PublicKey,
-                    AddressConstants.NATIVE_MINT_PUBKEY,
-                    walletAddress)
-                ).Build(new List<Account>());
-        }   
+            var ata =  AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(authority, mint);
+            bool exists = await TokenUtilsTransaction.TokenAccountExists(rpc, ata, Commitment.Finalized);
+            if(!exists) return;
+            ulong balance = 0;
+            if (!mint.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+            {
+                balance = (await rpc.GetTokenBalanceByOwnerAsync(
+                    authority.PublicKey, mint)).Result.Value.AmountUlong;
+            }
+            var blockHash = await rpc.GetRecentBlockHashAsync(commitment: Commitment.Finalized);
+            TransactionBuilder txb = new();
+            txb
+                .SetFeePayer(authority)
+                .SetRecentBlockHash(blockHash.Result.Value.Blockhash);
+            if (balance > 0)
+            {
+                // Send the balance to a random ATA, close fails if balance is not 0 for not native tokens
+                Account randomAccount = new();
+                var ataR =  AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(randomAccount, mint);
+                txb.AddInstruction(AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
+                    authority, 
+                    randomAccount, 
+                    mint));
+                txb.AddInstruction(TokenProgram.Transfer(ata, ataR, balance, authority));
+            }
+            txb
+                .AddInstruction(TokenProgram.CloseAccount(
+                    ata,
+                    destination,
+                    authority,
+                    TokenProgram.ProgramIdKey)
+                );
+            var closeRes = await rpc.SendTransactionAsync(txb.Build(authority), commitment: Commitment.Finalized);
+            Assert.IsTrue(closeRes.WasSuccessful);
+            Assert.IsTrue(await rpc.ConfirmTransaction(closeRes.Result));
+        }
     }
 }

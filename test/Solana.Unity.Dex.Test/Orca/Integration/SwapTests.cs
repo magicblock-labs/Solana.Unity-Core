@@ -45,7 +45,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
             
             Assert.IsTrue(poolInitResult.WasSuccessful);
@@ -163,7 +163,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Stable,
+                TickSpacing.Eight,
                 initSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(27500)
             );
             
@@ -175,7 +175,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
                 whirlpool: whirlpoolPda,
                 startTickIndex: 27456,
                 arrayCount: 5, 
-                tickSpacing: TickSpacing.Stable
+                tickSpacing: TickSpacing.Eight
             );
 
             //generate fund params 
@@ -270,14 +270,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context, 
                 ConfigTestUtils.GenerateParams( _context),
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
 
             //initialize another test pool 
             PoolInitResult anotherPoolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
             
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -323,14 +323,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
 
             //initialize another test pool 
             PoolInitResult anotherPoolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -376,14 +376,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
 
             //initialize another test pool 
             PoolInitResult anotherPoolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Stable
+                TickSpacing.Eight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -429,14 +429,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
 
             //initialize another test pool 
             PoolInitResult anotherPoolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Stable
+                TickSpacing.Eight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -482,7 +482,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -536,7 +536,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard,
+                tickSpacing: TickSpacing.HundredTwentyEight,
                 initSqrtPrice: ArithmeticUtils.DecimalToX64BigInt(new BigDecimal(0.0242).Sqrt())
             );
 
@@ -581,14 +581,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
             
             //initialize test pool 
             PoolInitResult anotherPoolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -633,14 +633,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             //initialize test pool 
             PoolInitResult anotherPoolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -685,7 +685,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -724,14 +724,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             //initialize test pool 
             PoolInitResult anotherPoolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -775,7 +775,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -926,7 +926,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -990,7 +990,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -1051,7 +1051,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;
@@ -1110,7 +1110,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
 
             Pda whirlpoolPda = poolInitResult.InitPoolParams.WhirlpoolPda;

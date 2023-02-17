@@ -43,7 +43,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             BigInteger vaultStartBalance = 1_000_000;
             int lowerTickIndex = -1280;
             int upperTickIndex = 1280;
-            ushort tickSpacing = TickSpacing.Standard;
+            ushort tickSpacing = TickSpacing.HundredTwentyEight;
 
             WhirlpoolsTestFixture fixture = await WhirlpoolsTestFixture.CreateInstance(
                 _context,

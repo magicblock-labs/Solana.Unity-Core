@@ -171,7 +171,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             int tickLowerIndex = 29440;
             int tickUpperIndex = 33536;
 
-            ushort tickSpacing = TickSpacing.Standard;
+            ushort tickSpacing = TickSpacing.HundredTwentyEight;
             
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPool(
                 _context, 

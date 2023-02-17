@@ -90,14 +90,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             var (address, wp) = await dex.FindWhirlpool(
                 _tokenPairs[0].Item1,
                 _tokenPairs[0].Item2,
-                TickSpacing.Standard,
+                TickSpacing.HundredTwentyEight,
                 _whirlpoolConfigAddress,
                 TestConfiguration.DefaultCommitment
             );
             Assert.IsNotNull(wp);
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
-            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.HundredTwentyEight));
             Assert.That(wp.Address, Is.EqualTo(address));
         }
         
@@ -110,11 +110,15 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             var address = await dex.FindWhirlpoolAddress(
                 _tokenPairs[0].Item1,
                 _tokenPairs[0].Item2,
-                TickSpacing.Standard,
+                TickSpacing.HundredTwentyEight,
                 _whirlpoolConfigAddress,
                 TestConfiguration.DefaultCommitment
             );
             Assert.IsNotNull(address);
+            Assert.IsNotNull(address.TokenMintA);
+            Assert.IsNotNull(address.TokenMintB);
+            Assert.IsNotNull(address.Liquidity);
+            Assert.IsNotNull(address.Fee);
         }
 
         [Test]
@@ -127,14 +131,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             var (address, wp) = await dex.FindWhirlpool(
                 _tokenPairs[0].Item1,
                 _tokenPairs[0].Item2,
-                TickSpacing.Stable,
+                TickSpacing.Eight,
                 _whirlpoolConfigAddress,
                 TestConfiguration.DefaultCommitment
             );
             Assert.IsNotNull(wp);
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
-            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.HundredTwentyEight));
             Assert.That(wp.Address, Is.EqualTo(address));
         }
 
@@ -147,14 +151,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             var (address, wp) = await dex.FindWhirlpool(
                 _tokenPairs[0].Item2,
                 _tokenPairs[0].Item1,
-                TickSpacing.Standard,
+                TickSpacing.HundredTwentyEight,
                 _whirlpoolConfigAddress,
                 TestConfiguration.DefaultCommitment
             );
             Assert.IsNotNull(wp);
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
-            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.HundredTwentyEight));
             Assert.That(wp.Address, Is.EqualTo(address));
         }
 
@@ -168,14 +172,14 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             var (address, wp) = await dex.FindWhirlpool(
                 _tokenPairs[0].Item2,
                 _tokenPairs[0].Item1,
-                TickSpacing.Stable,
+                TickSpacing.Eight,
                 _whirlpoolConfigAddress,
                 TestConfiguration.DefaultCommitment
             );
             Assert.IsNotNull(wp);
             Assert.That(wp.TokenMintA, Is.EqualTo(_tokenPairs[0].Item1));
             Assert.That(wp.TokenMintB, Is.EqualTo(_tokenPairs[0].Item2));
-            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.Standard));
+            Assert.That(wp.TickSpacing, Is.EqualTo(TickSpacing.HundredTwentyEight));
             Assert.That(wp.Address, Is.EqualTo(address));
         }
 
@@ -190,7 +194,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             var (address, wp) = await dex.FindWhirlpool(
                 fakeToken,
                 _tokenPairs[0].Item2,
-                TickSpacing.Standard,
+                TickSpacing.HundredTwentyEight,
                 _whirlpoolConfigAddress,
                 TestConfiguration.DefaultCommitment
             );
@@ -199,7 +203,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             (address, wp) = await dex.FindWhirlpool(
                 _tokenPairs[0].Item1,
                 fakeToken,
-                TickSpacing.Standard,
+                TickSpacing.HundredTwentyEight,
                 _whirlpoolConfigAddress,
                 TestConfiguration.DefaultCommitment
             );

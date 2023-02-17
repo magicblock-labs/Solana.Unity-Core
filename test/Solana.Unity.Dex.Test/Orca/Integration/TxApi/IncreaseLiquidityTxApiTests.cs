@@ -32,7 +32,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             _defaultCommitment = _context.WhirlpoolClient.DefaultCommitment;
         }
 
-        private static async Task<WhirlpoolsTestFixture> InitializeTestPool()
+        private static async Task<WhirlpoolsTestFixture> InitializeTestPool(bool tokenAIsNative = false)
         {
             WhirlpoolsTestFixture fixture = await WhirlpoolsTestFixture.CreateInstance(
                 _context,
@@ -42,7 +42,8 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                     {
                         TickLowerIndex = LowerTickIndex, TickUpperIndex = UpperTickIndex, LiquidityAmount = 0
                     }
-                }
+                },
+                tokenAIsNative: tokenAIsNative
             );
             
             return fixture;

@@ -37,7 +37,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
         {
             int tickLowerIndex = 29440;
             int tickUpperIndex = 33536;
-            ushort tickSpacing = (ushort)TickSpacing.Standard;
+            ushort tickSpacing = (ushort)TickSpacing.HundredTwentyEight;
 
             WhirlpoolsTestFixture fixture = await WhirlpoolsTestFixture.CreateInstance(
                 _context,

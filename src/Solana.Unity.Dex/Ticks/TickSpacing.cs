@@ -6,9 +6,9 @@ namespace Solana.Unity.Dex.Ticks
     public struct TickSpacing
     {
         public const ushort One = 1;
-        public const ushort Stable = 8;
+        public const ushort Eight = 8;
         public const ushort ThirtyTwo = 32;
         public const ushort SixtyFour = 64;
-        public const ushort Standard = 128;
+        public const ushort HundredTwentyEight = 128;
     }
 }

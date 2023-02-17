@@ -82,7 +82,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             PublicKey whirlpool,
             int startTickIndex, 
             int arrayCount, 
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             bool aToB = false,
             Account funder = null
         )

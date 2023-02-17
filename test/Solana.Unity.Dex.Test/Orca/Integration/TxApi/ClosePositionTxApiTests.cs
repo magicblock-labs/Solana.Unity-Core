@@ -43,7 +43,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         private static async Task<WhirlpoolsTestFixture> InitializeTestFixture()
         {
             int currentTick = 500;
-            ushort tickSpacing = TickSpacing.Standard;
+            ushort tickSpacing = TickSpacing.HundredTwentyEight;
 
             WhirlpoolsTestFixture fixture = await WhirlpoolsTestFixture.CreateInstance(
                 _context,
@@ -207,6 +207,75 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 
             //open a position 
             var (positionAddr, position) = await OpenPosition(_context, walletAccount, whirlpolPda, dex, 100000);
+            
+            //get the transaction to close the position 
+            Transaction tx = await dex.ClosePosition(
+                positionAddr,
+                commitment: TestConfiguration.DefaultCommitment
+            );
+
+            //sign and execute the transaction 
+            tx.Sign(walletAccount);
+            var closeResult = await _context.RpcClient.SendTransactionAsync(
+                tx.Serialize(),
+                commitment: TestConfiguration.DefaultCommitment
+            );
+
+            Assert.IsTrue(closeResult.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(closeResult.Result, _defaultCommitment));
+
+            //get token supply
+            var tokenResult = await _context.RpcClient.GetTokenSupplyAsync(position.PositionMint, _defaultCommitment);
+
+            PublicKey positionTokenAddr = TokenUtils.GetAssociatedTokenAddress(
+                position.PositionMint,
+                walletAccount
+            );
+
+            //position after closing 
+            var positionAccount = (await _context.RpcClient.GetAccountInfoAsync(positionAddr, _defaultCommitment)).Result.Value;
+            var positionTokenAccount = (await _context.RpcClient.GetAccountInfoAsync(positionTokenAddr, _defaultCommitment)).Result.Value;
+            var receiverAccount = (await _context.RpcClient.GetAccountInfoAsync(walletAccount.PublicKey, _defaultCommitment)).Result.Value;
+
+            Assert.That(tokenResult.Result.Value.AmountUlong, Is.EqualTo(0));
+
+            Assert.IsNull(positionAccount);
+            Assert.IsNull(positionTokenAccount);
+            Assert.IsNotNull(receiverAccount);
+            Assert.That(receiverAccount.Lamports, Is.GreaterThan(0));
+
+            var closedPosition = await _context.WhirlpoolClient.GetPositionAsync(
+                positionAddr
+            );
+
+            Assert.IsFalse(closedPosition.WasSuccessful);
+            Assert.IsNull(closedPosition.ParsedResult);
+        }
+        
+        [Test]
+        [Description("close a position that has liquidity and closed atas")]
+        public static async Task ClosePositionWithLiquidityAndClosedAtas()
+        {
+            Account walletAccount = _context.WalletAccount; 
+            
+            //initialize everything 
+            WhirlpoolsTestFixture fixture = await InitializeTestFixture();
+            IDex dex = new OrcaDex(_context);
+            var testInfo = fixture.GetTestInfo(); 
+            Pda whirlpolPda = testInfo.InitPoolParams.WhirlpoolPda;
+
+            //open a position 
+            var (positionAddr, position) = await OpenPosition(_context, walletAccount, whirlpolPda, dex, 100000);
+            
+            // get the specified whirlpool
+            Whirlpool whirlpool = (await _context.WhirlpoolClient.GetWhirlpoolAsync(
+                testInfo.InitPoolParams.WhirlpoolPda.PublicKey
+            )).ParsedResult;
+            
+            //close Atas
+            await TokenUtils.CloseAta(_context.RpcClient, whirlpool.TokenMintA, _context.WalletAccount, _context.WalletAccount);
+            await TokenUtils.CloseAta(_context.RpcClient, whirlpool.TokenMintB, _context.WalletAccount, _context.WalletAccount);
+
             
             //get the transaction to close the position 
             Transaction tx = await dex.ClosePosition(

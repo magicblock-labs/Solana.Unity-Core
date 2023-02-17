@@ -389,26 +389,24 @@ namespace Solana.Unity.Dex
             PublicKey tokenMintA,
             PublicKey tokenMintB,
             PublicKey configAccountAddress = null,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             Commitment? commitment = Commitment.Finalized
         );
-        
+
         /// <summary>
         /// Determines whether or not a whirlpool with the given (or similar) characteristics can be found.
-        /// </summary> 
-        /// <param name="tokenMintA">Mint address of any token associated with the pool, preferably token A.</param> 
-        /// <param name="tokenMintB">Mint address of any token associated with the pool, preferably token B.</param> 
-        /// <param name="tickSpacing">Preferred tickSpacing associated with the pool; if not found, others will be queried.</param> 
+        /// </summary>
+        /// <param name="tokenMintA">Mint address of any token associated with the pool, preferably token A.</param>
+        /// <param name="tokenMintB">Mint address of any token associated with the pool, preferably token B.</param>
+        /// <param name="tickSpacing">Preferred tickSpacing associated with the pool; if not found, others will be queried.</param>
         /// <param name="configAccountAddress">Public key of the whirlpool config address account.</param>
-        /// <param name="commitment">Transaction commitment to use for chain queries.</param> 
-        /// <returns>A boolean value, true if the whirlpool was found.</returns>
-        public abstract Task<PublicKey> FindWhirlpoolAddress(
-            PublicKey tokenMintA,
+        /// <param name="commitment">Transaction commitment to use for chain queries.</param>
+        /// <returns>The pool if found</returns>
+        public Task<Pool> FindWhirlpoolAddress(PublicKey tokenMintA,
             PublicKey tokenMintB,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             PublicKey configAccountAddress = null,
-            Commitment? commitment = Commitment.Finalized
-        );
+            Commitment? commitment = Commitment.Finalized);
         
         /// <summary> 
         /// Creates a quote for a swap for a specified pair of input/output token mint. 

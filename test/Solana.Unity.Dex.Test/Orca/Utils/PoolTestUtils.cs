@@ -110,7 +110,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
         public static async Task<PoolInitResult> BuildPool(
             TestWhirlpoolContext ctx,
             InitializeConfigParams initConfigParams = null,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             ushort defaultFeeRate = 3000,
             BigInteger? initSqrtPrice = null,
             bool tokenAIsNative = false, 
@@ -190,7 +190,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
         public static async Task<PoolInitResult> BuildPoolWithTokens(
             TestWhirlpoolContext ctx,
             InitializeConfigParams initConfigParams,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             ushort defaultFeeRate = 3000,
             BigInteger? initSqrtPrice = null,
             BigInteger? mintAmount = null,
@@ -229,7 +229,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             TestWhirlpoolContext ctx,
             InitializeConfigParams initConfigParams = null,
             InitializeFeeTierParams initFeeTierParams = null,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             ushort defaultFeeRate = 3000,
             BigInteger? initSqrtPrice = null,
             BigInteger? mintAmount = null,

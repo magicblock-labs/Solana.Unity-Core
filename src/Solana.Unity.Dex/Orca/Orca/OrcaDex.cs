@@ -17,7 +17,6 @@ using Solana.Unity.Dex.Orca.Quotes;
 using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Orca.Quotes.Swap;
 using Solana.Unity.Dex.Orca.Core.Accounts;
-using Solana.Unity.Dex.Orca.Core.Types;
 using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Orca;
 using Solana.Unity.Dex.Quotes;
@@ -285,23 +284,25 @@ namespace Orca
                 tokenAmountB, slippageTolerance, true
             );
 
-            //instruction to add liquidity 
-            tb.AddInstruction(
-                await OrcaInstruction.GenerateIncreaseLiquidityInstruction(
-                    Context,
-                    ownerAccount: account,
-                    whirlpoolAddress: whirlpoolAddress,
-                    positionAddress: positionPda,
-                    positionMintAddress: positionMintAddress,
-                    positionAuthority: account,
-                    tickLowerIndex: tickLowerIndex,
-                    tickUpperIndex: tickUpperIndex,
-                    tokenAmountA: tokenAmountA,
-                    tokenAmountB: tokenAmountB,
-                    tokenMaxA: tokenMaxA,
-                    tokenMaxB: tokenMaxB,
-                    commitment: commitment.GetValueOrDefault(DefaultCommitment)
-                )
+            IncreaseLiquidityQuote quote = new()
+            {
+                TokenEstA = tokenAmountA,
+                TokenEstB = tokenAmountB,
+                TokenMaxA = tokenMaxA,
+                TokenMaxB = tokenMaxB
+            };
+
+            await IncreaseLiquidityInstructions(
+                tb,
+                whirlpool: whirlpool,
+                quote: quote,
+                account: account,
+                positionMintAddress: positionMintAddress,
+                tickLowerIndex: tickLowerIndex,
+                tickUpperIndex: tickUpperIndex,
+                positionAddress: positionPda,
+                positionAuthority: account,
+                commitment: commitment.GetValueOrDefault(DefaultCommitment)
             );
 
             return await PrepareTransaction(tb, account, RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
@@ -363,23 +364,17 @@ namespace Orca
             //get position address 
             Pda positionPda = PdaUtils.GetPosition(Context.ProgramId, positionMintAddress);
 
-            //instruction to add liquidity 
-            tb.AddInstruction(
-                await OrcaInstruction.GenerateIncreaseLiquidityInstruction(
-                    Context,
-                    ownerAccount: account,
-                    whirlpoolAddress: whirlpoolAddress,
-                    positionAddress: positionPda,
-                    positionMintAddress: positionMintAddress,
-                    positionAuthority: account,
-                    tickLowerIndex: tickLowerIndex,
-                    tickUpperIndex: tickUpperIndex,
-                    tokenAmountA: increaseLiquidityQuote.TokenEstA,
-                    tokenAmountB: increaseLiquidityQuote.TokenEstB,
-                    tokenMaxA: increaseLiquidityQuote.TokenMaxA,
-                    tokenMaxB: increaseLiquidityQuote.TokenMaxB,
-                    commitment: commitment.GetValueOrDefault(DefaultCommitment)
-                )
+            await IncreaseLiquidityInstructions(
+                tb,
+                whirlpool: whirlpool,
+                quote: increaseLiquidityQuote,
+                account: account,
+                positionMintAddress: positionMintAddress,
+                tickLowerIndex: tickLowerIndex,
+                tickUpperIndex: tickUpperIndex,
+                positionAddress: positionPda,
+                positionAuthority: account,
+                commitment: commitment.GetValueOrDefault(DefaultCommitment)
             );
 
             return await PrepareTransaction(tb, account, RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
@@ -416,6 +411,13 @@ namespace Orca
             //add instruction to collect fees, if available
             if (position.FeeOwedA > 0 || position.FeeOwedB > 0)
             {
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
+                ); 
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
+                ); 
+                
                 tb.AddInstruction(
                     await OrcaInstruction.GenerateCollectFeesInstruction(
                         Context,
@@ -460,6 +462,13 @@ namespace Orca
             //add instruction to remove liquidity, if position has liquidity 
             if (position.Liquidity > 0) 
             {
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
+                );
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
+                );
+                
                 tb.AddInstruction(
                     await OrcaInstruction.GenerateDecreaseLiquidityInstruction(
                         Context, 
@@ -505,6 +514,10 @@ namespace Orca
             
             //throw if position doesn't exist 
             Position position = await InstructionUtil.TryGetPositionAsync(Context, positionAddress, commitment.GetValueOrDefault(DefaultCommitment));
+           
+            //retrieve the whirlpool
+            Whirlpool whirlpool = (await Context.WhirlpoolClient.GetWhirlpoolAsync(
+                position.Whirlpool)).ParsedResult;
             
             BigInteger tokenMaxA = TokenMath.AdjustForSlippage(
                 tokenAmountA, slippageTolerance, true
@@ -513,21 +526,25 @@ namespace Orca
                 tokenAmountB, slippageTolerance, true
             );
 
-            TransactionBuilder tb = new TransactionBuilder().AddInstruction(
-                await OrcaInstruction.GenerateIncreaseLiquidityInstruction(
-                    Context,
-                    account,
-                    position,
-                    positionAddress,
-                    positionAuthority,
-                    tokenAmountA,
-                    tokenAmountB,
-                    tokenMaxA,
-                    tokenMaxB,
-                    commitment.GetValueOrDefault(DefaultCommitment)
-                )
-            );
+            TransactionBuilder tb = new();
+            IncreaseLiquidityQuote increaseLiquidityQuote = new()
+            {
+                TokenEstA = tokenAmountA,
+                TokenEstB = tokenAmountB,
+                TokenMaxA = tokenMaxA,
+                TokenMaxB = tokenMaxB
+            };
             
+            await IncreaseLiquidityInstructions(tb, 
+                whirlpool, 
+                increaseLiquidityQuote, 
+                account, 
+                position, 
+                positionAddress, 
+                positionAuthority,
+                commitment.GetValueOrDefault(DefaultCommitment)
+            );
+
             return await PrepareTransaction(tb, account, RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
         }
         
@@ -545,21 +562,22 @@ namespace Orca
             //throw if position doesn't exist 
             Position position = await InstructionUtil.TryGetPositionAsync(Context, positionAddress, commitment.GetValueOrDefault(DefaultCommitment));
 
-            TransactionBuilder tb = new TransactionBuilder().AddInstruction(
-                await OrcaInstruction.GenerateIncreaseLiquidityInstruction(
-                    Context,
-                    account,
-                    position,
-                    positionAddress,
-                    positionAuthority,
-                    increaseLiquidityQuote.TokenEstA,
-                    increaseLiquidityQuote.TokenEstB,
-                    increaseLiquidityQuote.TokenMaxA,
-                    increaseLiquidityQuote.TokenMaxB,
-                    commitment.GetValueOrDefault(DefaultCommitment)
-                )
-            );
+            //retrieve the whirlpool
+            Whirlpool whirlpool = (await Context.WhirlpoolClient.GetWhirlpoolAsync(
+                position.Whirlpool)).ParsedResult;
             
+            TransactionBuilder tb = new();
+            
+            await IncreaseLiquidityInstructions(tb, 
+                whirlpool, 
+                increaseLiquidityQuote, 
+                account, 
+                position, 
+                positionAddress, 
+                positionAuthority,
+                commitment.GetValueOrDefault(DefaultCommitment)
+            );
+
             return await PrepareTransaction(tb, account, RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
         }
         
@@ -579,7 +597,30 @@ namespace Orca
             //throws if position doesn't exist 
             Position position = await InstructionUtil.TryGetPositionAsync(Context, positionAddress, commitment.GetValueOrDefault(DefaultCommitment));
             
-            TransactionBuilder tb = new TransactionBuilder().AddInstruction(
+            // get the specified whirlpool
+            Whirlpool whirlpool = await InstructionUtil.TryGetWhirlpoolAsync(
+                Context, position.Whirlpool, commitment.GetValueOrDefault(DefaultCommitment)
+            );
+
+            TransactionBuilder tb = new();
+            
+            if(tokenMinA > 0)
+            {
+                // instruction to create token account A 
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
+                );
+            }
+
+            if (tokenMinB > 0)
+            {
+                // instruction to create token account B
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
+                );
+            }
+            
+            tb.AddInstruction(
                 await OrcaInstruction.GenerateDecreaseLiquidityInstruction(
                     Context,
                     account,
@@ -593,7 +634,7 @@ namespace Orca
                 )
             );
 
-            return await PrepareTransaction(tb, account, this.RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
+            return await PrepareTransaction(tb, account, RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
         }
 
         /// <inheritdoc />
@@ -653,7 +694,21 @@ namespace Orca
             //throws if whirlpool doesn't exist 
             Position position = await InstructionUtil.TryGetPositionAsync(Context, positionAddress, commitment.GetValueOrDefault(DefaultCommitment));
             
-            TransactionBuilder tb = new TransactionBuilder().AddInstruction(
+            // get the specified whirlpool
+            Whirlpool whirlpool = await InstructionUtil.TryGetWhirlpoolAsync(
+                Context, position.Whirlpool, commitment.GetValueOrDefault(DefaultCommitment)
+            );
+
+            TransactionBuilder tb = new();
+            
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
+            ); 
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
+            ); 
+            
+            tb.AddInstruction(
                 await OrcaInstruction.GenerateCollectFeesInstruction(
                     Context,
                     account,
@@ -664,7 +719,7 @@ namespace Orca
                 )
             );
 
-            return await PrepareTransaction(tb, account, this.RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
+            return await PrepareTransaction(tb, account, RpcClient, commitment.GetValueOrDefault(DefaultCommitment));
         }
 
         /// <inheritdoc />
@@ -752,9 +807,18 @@ namespace Orca
                     tickArrayUpper,
                     commitment.GetValueOrDefault(DefaultCommitment)
                 )
+
+                //instruction to collect fees 
+            );
+            
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
+            ); 
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
+            ); 
                 
-            //instruction to collect fees 
-            ).AddInstruction(
+            tb.AddInstruction(
                 await OrcaInstruction.GenerateCollectFeesInstruction(
                     Context,
                     account,
@@ -841,7 +905,7 @@ namespace Orca
             PublicKey tokenMintA, 
             PublicKey tokenMintB,
             PublicKey configAccountAddress = null,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             Commitment? commitment = null
         )
         {
@@ -1154,6 +1218,120 @@ namespace Orca
             }
 
             return Tuple.Create<PublicKey, Whirlpool>(whirlpoolPda, whirlpool);
+        }
+
+        #endregion
+
+        #region IstructionUtils
+
+        private async Task IncreaseLiquidityInstructions(
+            TransactionBuilder tb,
+            Whirlpool whirlpool, 
+            IncreaseLiquidityQuote quote,
+            PublicKey account,
+            Position position,
+            PublicKey positionAddress,
+            PublicKey positionAuthority,
+            Commitment commitment)
+        {
+            if(quote.TokenMaxA > 0)
+            {
+                // instruction to create token account A 
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintA, tb, commitment
+                );
+                // Wrap to wSOL if necessary
+                if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+                {
+                    SyncIfNative(account, whirlpool.TokenMintA, quote.TokenEstA, tb);
+                }
+            }
+
+            if (quote.TokenMaxB > 0)
+            {
+                // instruction to create token account B
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintB, tb, commitment
+                );
+                // Wrap to wSOL if necessary
+                if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+                {
+                    SyncIfNative(account, whirlpool.TokenMintB, quote.TokenEstB, tb);
+                }
+            }
+
+            tb.AddInstruction(
+                await OrcaInstruction.GenerateIncreaseLiquidityInstruction(
+                    Context,
+                    account,
+                    position,
+                    positionAddress,
+                    positionAuthority,
+                    quote.TokenEstA,
+                    quote.TokenEstB,
+                    quote.TokenMaxA,
+                    quote.TokenMaxB,
+                    commitment
+                )
+            );
+        }
+        
+        
+        private async Task IncreaseLiquidityInstructions(
+            TransactionBuilder tb,
+            Whirlpool whirlpool, 
+            IncreaseLiquidityQuote quote,
+            PublicKey account,
+            PublicKey positionMintAddress,
+            int tickLowerIndex,
+            int tickUpperIndex,
+            PublicKey positionAddress,
+            PublicKey positionAuthority,
+            Commitment commitment)
+        {
+            if(quote.TokenMaxA > 0)
+            {
+                // instruction to create token account A 
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintA, tb, commitment
+                );
+                // Wrap to wSOL if necessary
+                if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+                {
+                    SyncIfNative(account, whirlpool.TokenMintA, quote.TokenEstA, tb);
+                }
+            }
+
+            if (quote.TokenMaxB > 0)
+            {
+                // instruction to create token account B
+                await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    account, whirlpool.TokenMintB, tb, commitment
+                );
+                // Wrap to wSOL if necessary
+                if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+                {
+                    SyncIfNative(account, whirlpool.TokenMintB, quote.TokenEstB, tb);
+                }
+            }
+
+            tb.AddInstruction(
+                await OrcaInstruction.GenerateIncreaseLiquidityInstruction(
+                    Context,
+                    ownerAccount: account,
+                    whirlpoolAddress: whirlpool.Address,
+                    positionAddress: positionAddress,
+                    positionMintAddress: positionMintAddress,
+                    positionAuthority: positionAuthority,
+                    tickLowerIndex: tickLowerIndex,
+                    tickUpperIndex: tickUpperIndex,
+                    tokenAmountA: quote.TokenEstA,
+                    tokenAmountB: quote.TokenEstB,
+                    tokenMaxA: quote.TokenMaxA,
+                    tokenMaxB: quote.TokenMaxB,
+                    commitment: commitment
+                )
+            );
         }
 
         #endregion

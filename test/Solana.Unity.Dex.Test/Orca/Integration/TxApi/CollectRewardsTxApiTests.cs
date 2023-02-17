@@ -148,7 +148,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 
         [Test]
         [Description("all things for collect rewards in one transaction")]
-        public static async Task CollectRewards_Single_Transaction()
+        public static async Task CollectRewardsSingleTransaction()
         {
             //initialize pool, positions, and liquidity 
             WhirlpoolsTestFixture testFixture = await InitializeTestPool();
@@ -162,6 +162,38 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             await UpdateFeesAndRewards(
                 dex, position.PublicKey, position.TickArrayLower, position.TickArrayUpper
             );
+
+            //collect rewards
+            await TestCollectRewards(dex, testInfo, vaultStartBalance, 0);
+            await TestCollectRewards(dex, testInfo, vaultStartBalance, 1);
+            await TestCollectRewards(dex, testInfo, vaultStartBalance, 2);
+        }
+        
+        [Test]
+        [Description("all things for collect rewards with closed atas")]
+        public static async Task CollectRewardsClosedAtas()
+        {
+            //initialize pool, positions, and liquidity 
+            WhirlpoolsTestFixture testFixture = await InitializeTestPool();
+            IDex dex = new OrcaDex(_context);
+
+            //get data from test pool fixture 
+            var testInfo = testFixture.GetTestInfo();
+            FundedPositionInfo position = testInfo.Positions[0];
+
+            Whirlpool whirlpool = (await _context.WhirlpoolClient.GetWhirlpoolAsync(
+                testInfo.InitPoolParams.WhirlpoolPda.PublicKey
+            )).ParsedResult;
+            
+            //update fees/Rewards
+            await UpdateFeesAndRewards(
+                dex, position.PublicKey, position.TickArrayLower, position.TickArrayUpper
+            );
+            
+            //close reward atas
+            await TokenUtils.CloseAta(_context.RpcClient, whirlpool.RewardInfos[0].Mint, _context.WalletAccount, _context.WalletAccount);
+            await TokenUtils.CloseAta(_context.RpcClient, whirlpool.RewardInfos[1].Mint, _context.WalletAccount, _context.WalletAccount);
+            await TokenUtils.CloseAta(_context.RpcClient, whirlpool.RewardInfos[2].Mint, _context.WalletAccount, _context.WalletAccount);
 
             //collect rewards
             await TestCollectRewards(dex, testInfo, vaultStartBalance, 0);

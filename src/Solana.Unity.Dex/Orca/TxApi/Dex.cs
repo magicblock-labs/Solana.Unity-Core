@@ -196,21 +196,27 @@ namespace Solana.Unity.Dex.Orca.TxApi
             PublicKey tokenMintA,
             PublicKey tokenMintB,
             PublicKey configAccountAddress = null,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             Commitment? commitment = null
         );
 
         /// <inheritdoc />
-        public async Task<PublicKey> FindWhirlpoolAddress(
-            PublicKey tokenMintA,
+        public async Task<Pool> FindWhirlpoolAddress(PublicKey tokenMintA,
             PublicKey tokenMintB,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             PublicKey configAccountAddress = null,
-            Commitment? commitment = null
-        )
+            Commitment? commitment = Commitment.Finalized)
         {
-            (PublicKey whirlpoolAddress, _) = await FindWhirlpool(tokenMintA, tokenMintB, tickSpacing, configAccountAddress, commitment);
-            return whirlpoolAddress;
+            (PublicKey whirlpoolAddress, Whirlpool whirlpool) = await FindWhirlpool(tokenMintA, tokenMintB, tickSpacing, configAccountAddress, commitment);
+            return new Pool()
+            {
+                Address = whirlpoolAddress,
+                TokenMintA = whirlpool.TokenMintA,
+                TokenMintB = whirlpool.TokenMintB,
+                Liquidity = whirlpool.Liquidity,
+                Fee = whirlpool.FeeRate,
+                TickSpacing = whirlpool.TickSpacing,
+            };
         }
 
         /// <summary>
@@ -226,7 +232,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
         public abstract Task<Tuple<PublicKey, Whirlpool>> FindWhirlpool(
             PublicKey tokenMintA,
             PublicKey tokenMintB,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             PublicKey configAccountAddress = null,
             Commitment? commitment = null
         );

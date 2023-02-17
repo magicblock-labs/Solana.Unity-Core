@@ -52,7 +52,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         private static async Task<WhirlpoolsTestFixture> InitializeTestFixture()
         {
             int currentTick = 500;
-            ushort tickSpacing = TickSpacing.Standard;
+            ushort tickSpacing = TickSpacing.HundredTwentyEight;
 
             WhirlpoolsTestFixture fixture = await WhirlpoolsTestFixture.CreateInstance(
                 _context,

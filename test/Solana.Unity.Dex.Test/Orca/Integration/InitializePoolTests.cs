@@ -44,7 +44,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             var initFeeTierParams = FeeTierTestUtils.GenerateParams(
                 _context,
                 initConfigParams,
-                tickSpacing: TickSpacing.Standard
+                tickSpacing: TickSpacing.HundredTwentyEight
             );
             var initFeeTierResult = await FeeTierTestUtils.InitializeFeeTierAsync(
                 _context,
@@ -79,7 +79,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
                 initConfigParams.Accounts.Config,
                 tokenAMintAddr,
                 tokenBMintAddr,
-                TickSpacing.Standard
+                TickSpacing.HundredTwentyEight
             );
 
             Whirlpool whirlpool = (await _context.WhirlpoolClient.GetWhirlpoolAsync(

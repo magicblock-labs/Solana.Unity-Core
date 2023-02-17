@@ -120,5 +120,79 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.IsTrue(updateResult.WasSuccessful);
             Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(updateResult.Result, _defaultCommitment));
         }
+        
+        [Test]
+        [Description("all things for updates fees and rewards in one transaction closed atas")]
+        public static async Task UpdateFeesAndRewardsSingleTransactionClosedAtas()
+        {
+            //initialize pool, positions, and liquidity 
+            WhirlpoolsTestFixture testFixture = await InitializeTestPool();
+            OrcaDex dex = new (_context);
+            var testInfo = testFixture.GetTestInfo();
+            FundedPositionInfo position = testInfo.Positions[0];
+
+            Pda whirlpoolPda = testInfo.InitPoolParams.WhirlpoolPda;
+
+            //pool before liquidity decrease 
+            Whirlpool poolBefore = (
+                await _context.WhirlpoolClient.GetWhirlpoolAsync(whirlpoolPda.PublicKey, Commitment.Processed)
+            ).ParsedResult;
+
+            //get position before
+            Position positionBefore = (
+                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey)
+            ).ParsedResult;
+
+            Assert.That(positionBefore.FeeGrowthCheckpointA, Is.EqualTo(BigInteger.Zero));
+            Assert.That(positionBefore.FeeGrowthCheckpointB, Is.EqualTo(BigInteger.Zero));
+            Assert.That(positionBefore.RewardInfos[0].AmountOwed, Is.EqualTo(0));
+            Assert.That(positionBefore.RewardInfos[0].GrowthInsideCheckpoint, Is.EqualTo(BigInteger.Zero));
+
+            Pda oraclePda = PdaUtils.GetOracle(_context.ProgramId, whirlpoolPda.PublicKey);
+
+            Pda tickArrayPda = PdaUtils.GetTickArray(
+                _context.ProgramId, whirlpoolPda, 22528
+            );
+
+            //swap
+            var swapResult = await SwapTestUtils.SwapAsync(
+                _context,
+                SwapTestUtils.GenerateParams(
+                    _context,
+                    testInfo.PoolInitResult,
+                    whirlpoolAddress: whirlpoolPda,
+                    tickArrays: new PublicKey[]{
+                        tickArrayPda.PublicKey, tickArrayPda.PublicKey, tickArrayPda.PublicKey
+                    },
+                    oracleAddress: oraclePda,
+                    amount: 100_000,
+                    sqrtPriceLimit: ArithmeticUtils.DecimalToX64BigInt(4.95)
+                )
+            );
+
+            Assert.IsTrue(swapResult.WasSuccessful);
+            
+            //close reward atas
+            await TokenUtils.CloseAta(_context.RpcClient, poolBefore.RewardInfos[0].Mint, _context.WalletAccount, _context.WalletAccount);
+            await TokenUtils.CloseAta(_context.RpcClient, poolBefore.RewardInfos[1].Mint, _context.WalletAccount, _context.WalletAccount);
+            await TokenUtils.CloseAta(_context.RpcClient, poolBefore.RewardInfos[2].Mint, _context.WalletAccount, _context.WalletAccount);
+
+
+            //generate the transaction to update fees and rewards 
+            Transaction tx = await dex.UpdateFeesAndRewards(
+                position.PublicKey,
+                commitment: TestConfiguration.DefaultCommitment
+            );
+
+            //sign and execute the transaction 
+            tx.Sign(_context.WalletAccount);
+            var updateResult = await _context.RpcClient.SendTransactionAsync(
+                tx.Serialize(),
+                commitment: TestConfiguration.DefaultCommitment
+            );
+
+            Assert.IsTrue(updateResult.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(updateResult.Result, _defaultCommitment));
+        }
     }
 }

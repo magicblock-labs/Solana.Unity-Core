@@ -27,7 +27,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             _defaultCommitment = _context.WhirlpoolClient.DefaultCommitment;
         }
 
-        private static async Task<WhirlpoolsTestFixture> InitializeTestPool()
+        private static async Task<WhirlpoolsTestFixture> InitializeTestPool(bool tokenAIsNative = false)
         {
             int tickLowerIndex = 29440;
             int tickUpperIndex = 33536;
@@ -45,7 +45,8 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                         TickUpperIndex = 128,
                         LiquidityAmount = 10_000_000
                     }
-                }
+                },
+                tokenAIsNative: tokenAIsNative
             );
             
             return fixture;
@@ -150,6 +151,90 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.That(positionBeforeCollect.FeeOwedA, Is.EqualTo(581));
             Assert.That(positionBeforeCollect.FeeOwedB, Is.EqualTo(581));
             
+            // get collect fees transaction 
+            Transaction tx = await dex.CollectFees(
+                position.PublicKey,
+                commitment: _defaultCommitment
+            );
+
+            //sign and send tx 
+            tx.Sign(_context.WalletAccount);
+            var collectResult = await _context.RpcClient.SendTransactionAsync(
+                tx.Serialize(), 
+                commitment: TestConfiguration.DefaultCommitment
+            );
+
+            Assert.IsTrue(collectResult.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(collectResult.Result, _defaultCommitment));
+            
+
+            //get position after
+            Position positionAfterCollect = (
+                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey, _defaultCommitment)
+            ).ParsedResult;
+            
+            Assert.That(positionAfterCollect.FeeOwedA, Is.EqualTo(0));
+            Assert.That(positionAfterCollect.FeeOwedB, Is.EqualTo(0));
+        }
+        
+        [Test]
+        [Description("all things for collect fees in one transaction, when Atas are closed")]
+        public static async Task CollectFeesSingleTransactionClosedAtas()
+        {
+            //initialize pool, positions, and liquidity 
+            WhirlpoolsTestFixture testFixture = await InitializeTestPool(tokenAIsNative: true);
+            IDex dex = new OrcaDex(_context);
+            
+            //get data from test pool fixture 
+            var testInfo = testFixture.GetTestInfo();
+            Pda whirlpoolPda = testInfo.InitPoolParams.WhirlpoolPda;
+            FundedPositionInfo position = testInfo.Positions[0];
+            Pda tickArrayPda = PdaUtils.GetTickArray(_context.ProgramId, whirlpoolPda, 22528);
+
+            //examine position before swaps
+            var positionBeforeSwaps = (await _context.WhirlpoolClient.GetPositionAsync(
+                position.PublicKey, _defaultCommitment
+            )).ParsedResult;
+            
+            // get the specified whirlpool
+            Whirlpool whirlpool = (await _context.WhirlpoolClient.GetWhirlpoolAsync(
+                whirlpoolPda.PublicKey.ToString()
+            )).ParsedResult;
+
+            //before swaps, position fees owed are 0
+            Assert.That(positionBeforeSwaps.FeeOwedA, Is.EqualTo(0));
+            Assert.That(positionBeforeSwaps.FeeOwedB, Is.EqualTo(0));
+
+            //do swaps to accrue fees in both tokens
+            var txSwap = await dex.Swap(whirlpool.Address, 200_000, whirlpool.TokenMintA, unwrapSol: false);
+            var swap1Res = await _context.RpcClient.SendTransactionAsync(txSwap.Build(_context.WalletAccount), commitment:  _defaultCommitment);
+            txSwap = await dex.Swap(whirlpool.Address, 200_000, whirlpool.TokenMintB, unwrapSol: false);
+            var swap2Res = await _context.RpcClient.SendTransactionAsync(txSwap.Build(_context.WalletAccount), commitment:  _defaultCommitment);
+
+            Assert.IsTrue(swap1Res.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swap1Res.Result, _defaultCommitment));
+            Assert.IsTrue(swap2Res.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swap2Res.Result, _defaultCommitment));
+            
+            //update fees and rewards 
+            await UpdateFeesAndRewards(
+                dex, position.PublicKey
+            );
+
+            //get position before fee collection
+            Position positionBeforeCollect = (
+                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey, _defaultCommitment)
+            ).ParsedResult;
+
+            //assert that fees owed are correct 
+            Assert.That(positionBeforeCollect.FeeOwedA, Is.EqualTo(581));
+            Assert.That(positionBeforeCollect.FeeOwedB, Is.EqualTo(581));
+            
+            //close Atas
+            Assert.IsTrue(whirlpool.TokenMintA.ToString().Equals(AddressConstants.NATIVE_MINT));
+            await TokenUtils.CloseAta(_context.RpcClient, whirlpool.TokenMintA, _context.WalletAccount, _context.WalletAccount);
+            await TokenUtils.CloseAta(_context.RpcClient, whirlpool.TokenMintB, _context.WalletAccount, _context.WalletAccount);
+
             // get collect fees transaction 
             Transaction tx = await dex.CollectFees(
                 position.PublicKey,
