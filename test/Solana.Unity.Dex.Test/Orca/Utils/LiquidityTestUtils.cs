@@ -1,15 +1,17 @@
+using NUnit.Framework;
 using System.Numerics;
-using System.Threading.Tasks; 
-using System.Collections.Generic;
-using System.Linq;
-
+using System.Threading.Tasks;
 using Solana.Unity.Wallet;
 using Solana.Unity.Rpc.Core.Http;
-
-using Solana.Unity.Dex.Orca;
 using Solana.Unity.Dex.Orca.Address;
+using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Core.Program;
+using Solana.Unity.Dex.Orca.SolanaApi;
+using Solana.Unity.Programs;
+using Solana.Unity.Rpc;
+using Solana.Unity.Rpc.Builders;
+using Solana.Unity.Rpc.Types;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {
@@ -228,9 +230,27 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             Account feePayer = null
         )
         {
+
             if (feePayer == null)
                 feePayer = ctx.WalletAccount;
-                
+            
+            //get whirlpool 
+            Whirlpool whirlpool = (await ctx.WhirlpoolClient.GetWhirlpoolAsync(increaseParams.Accounts.Whirlpool, ctx.WhirlpoolClient.DefaultCommitment)).ParsedResult;
+
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                increaseParams.PositionAuthorityKeypair.PublicKey,
+                whirlpool.TokenMintA,
+                feePayer,
+                ctx.RpcClient,
+                ctx.WhirlpoolClient.DefaultCommitment);
+            
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                increaseParams.PositionAuthorityKeypair.PublicKey,
+                whirlpool.TokenMintB,
+                feePayer,
+                ctx.RpcClient,
+                ctx.WhirlpoolClient.DefaultCommitment);
+
             SigningCallback signer = new SigningCallback(new System.Collections.Generic.List<Account>{
                 feePayer,
                 increaseParams.PositionAuthorityKeypair
@@ -270,6 +290,33 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 signingCallback: (byte[] msg, PublicKey key) => signer.Sign(msg, key),
                 programId: ctx.ProgramId
             );
+        }
+        
+        private static async Task<PublicKey> CreateAssociatedTokenAccountInstructionIfNotExtant(
+            PublicKey owner,
+            PublicKey mintAddress,
+            Account feePayer,
+            IRpcClient rpc,
+            Commitment commitment
+        )
+        {
+            var ata = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(owner, mintAddress);
+            bool exists = await TokenUtilsTransaction.TokenAccountExists(
+                rpc, ata, commitment
+            );
+            if (!exists)
+            {
+                TransactionBuilder builder = new();
+                builder.AddInstruction(
+                    AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
+                        feePayer, owner, mintAddress
+                    )
+                );
+                var res = await rpc.SendTransactionAsync(builder.Build(feePayer), commitment: commitment);
+                Assert.IsTrue(res.WasSuccessful);
+                Assert.IsTrue(await rpc.ConfirmTransaction(res.Result, commitment: commitment));
+            }
+            return ata;
         }
     }
 }
