@@ -9,6 +9,7 @@ using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Swap;
 using Solana.Unity.Dex.Orca.Ticks;
 using Solana.Unity.Dex.Orca.Address;
+using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Types;
@@ -332,11 +333,27 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 )
             );
 
-            await Task.Delay(5000);
-
             //if there is liquidity, we must increase liquidity 
             if (fundParam.LiquidityAmount > 0)
             {
+                //get whirlpool 
+                Whirlpool whirlpool = (await ctx.WhirlpoolClient.GetWhirlpoolAsync(initPoolParams.WhirlpoolPda.PublicKey, ctx.WhirlpoolClient.DefaultCommitment)).ParsedResult;
+
+                await LiquidityTestUtils.CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    ctx.WalletAccount,
+                    whirlpool.TokenMintA,
+                    feePayer,
+                    ctx.RpcClient,
+                    ctx.WhirlpoolClient.DefaultCommitment);
+                
+                await LiquidityTestUtils.CreateAssociatedTokenAccountInstructionIfNotExtant(
+                    ctx.WalletAccount,
+                    whirlpool.TokenMintB,
+                    feePayer,
+                    ctx.RpcClient,
+                    ctx.WhirlpoolClient.DefaultCommitment);
+                
+                
                 //get token amounts 
                 TokenAmounts tokenAmounts = PoolUtils.GetTokenAmountsFromLiquidity(
                     liquidity: fundParam.LiquidityAmount,

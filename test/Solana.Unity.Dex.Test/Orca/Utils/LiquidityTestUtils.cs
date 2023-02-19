@@ -292,7 +292,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             );
         }
         
-        private static async Task<PublicKey> CreateAssociatedTokenAccountInstructionIfNotExtant(
+        public static async Task<PublicKey> CreateAssociatedTokenAccountInstructionIfNotExtant(
             PublicKey owner,
             PublicKey mintAddress,
             Account feePayer,
