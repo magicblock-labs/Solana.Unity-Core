@@ -1,3 +1,4 @@
+using Orca;
 using System.Numerics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -49,7 +50,7 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
                 .Build(new List<Account> { authority, mintAccount });
             return Transaction.Deserialize(tx); 
         }
-        
+
         /// <summary>
         /// Transaction to create an associated token account and mints a given number of tokens to it.
         /// </summary>
@@ -58,13 +59,15 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
         /// <param name="amount">Number of tokens to mint.</param>
         /// <param name="feePayer">Account to pay transaction fees.</param>
         /// <param name="destination">Account to which to mint.</param>
+        /// <param name="commitment"></param>
         /// <returns>Address of the token account.</returns>
         public static async Task<Transaction> CreateAndMintToAssociatedTokenAccount (
             IRpcClient rpc, 
             PublicKey mint, 
             BigInteger amount, 
             Account feePayer,
-            PublicKey destination
+            PublicKey destination,
+            Commitment commitment = Commitment.Finalized
         )
         {
             PublicKey associatedTokenAddress = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(destination, mint);
@@ -76,12 +79,52 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
                 ulong rentExemptionMin =
                     (await rpc.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
                 
-                transaction = CreateWSolAccountTransaction(destination, BigInteger.Zero, rentExemptionMin, associatedTokenAddress);
+                var blockHash = await rpc.GetRecentBlockHashAsync();
+                var tempAccount = new Account();
+                var sta = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(tempAccount, mint);
+                var trxBuild=  new TransactionBuilder()    
+                    .SetFeePayer(feePayer.PublicKey)
+                    .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                    .AddInstruction(SystemProgram.CreateAccount(
+                        feePayer,
+                        tempAccount,
+                        (ulong)(amount + rentExemptionMin),
+                        TokenProgram.TokenAccountDataSize,   
+                        TokenProgram.ProgramIdKey))
+                    .AddInstruction(TokenProgram.InitializeAccount(
+                        tempAccount,
+                        AddressConstants.NATIVE_MINT_PUBKEY,
+                        feePayer));
+                bool exists = await TokenAccountExists(
+                    rpc, associatedTokenAddress, commitment: commitment
+                );
+                if (!exists)
+                {
+                    trxBuild.AddInstruction(
+                        AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
+                            feePayer, destination, mint
+                        )
+                    );
+                }
+                var trx = trxBuild.AddInstruction(
+                    AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
+                        feePayer, tempAccount, mint
+                    )
+                )
+                .AddInstruction(TokenProgram.SyncNative(sta))
+                .AddInstruction(TokenProgram.Transfer(
+                    tempAccount,
+                    associatedTokenAddress,
+                    (ulong)amount,
+                    feePayer))
+                .AddInstruction(TokenProgram.SyncNative(associatedTokenAddress))
+                .Build(new List<Account>(){feePayer, tempAccount});
+                transaction = Transaction.Deserialize(trx);
             }
             else
             {
                 var blockHash = await rpc.GetRecentBlockHashAsync();
-                byte[] tx = new TransactionBuilder()
+                var txBuilder = new TransactionBuilder()
                     .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                     .SetFeePayer(feePayer.PublicKey)
                     .AddInstruction(
@@ -94,47 +137,19 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
                         associatedTokenAddress,
                         (ulong)amount,
                         feePayer
-                    ))
-                    .Build(feePayer);
+                    ));
+                if (mint.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
+                {
+                    txBuilder.AddInstruction(TokenProgram.SyncNative(associatedTokenAddress));
+                }
+                var tx= txBuilder.Build(feePayer);
                 transaction = Transaction.Deserialize(tx);
             }
 
             return transaction;
         }
-        
-        
-        /// <summary>
-        /// Creates and returns a transaction to create an account and initialize it with the native
-        /// mint address. 
-        /// </summary>
-        /// <param name="walletAddress"></param>
-        /// <param name="amountIn"></param>
-        /// <param name="rentExemptLamports">Minimum balance to avoid rent payment for account.</param>
-        /// <param name="associatedTokenAccountAddress">Address of the associated token account</param>
-        /// <returns>Raw bytes of the new transaction. </returns>
-        private static Transaction CreateWSolAccountTransaction(
-            PublicKey walletAddress, 
-            BigInteger amountIn, 
-            ulong rentExemptLamports,
-            PublicKey associatedTokenAccountAddress
-        )
-        {
 
-            var trx=  new TransactionBuilder()    
-                .AddInstruction(SystemProgram.CreateAccount(
-                    walletAddress,
-                    associatedTokenAccountAddress,
-                    (ulong)(amountIn + rentExemptLamports),
-                    TokenProgram.MintAccountDataSize,   
-                    TokenProgram.ProgramIdKey))
-                .AddInstruction(TokenProgram.InitializeAccount(
-                    associatedTokenAccountAddress,
-                    AddressConstants.NATIVE_MINT_PUBKEY,
-                    walletAddress)
-                ).Build(new List<Account>());
-            return Transaction.Deserialize(trx);
-        }   
-        
+
         /// <summary>
         /// Mint tokens to an owner account. 
         /// </summary>
@@ -164,6 +179,29 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
                 .Build(feePayer);
 
             return Transaction.Deserialize(tx);
+        }
+        
+        /// <summary>
+        /// Determines whether a token account with the given address exists.
+        /// </summary>
+        /// <param name="rpc">The rpc istance</param>
+        /// <param name="accountKey">Public key of token account.</param>
+        /// <param name="commitment">Commitment level to consider.</param>
+        /// <returns>True if account is found to exist.</returns>
+        public static async Task<bool> TokenAccountExists(
+            IRpcClient rpc,
+            PublicKey accountKey,
+            Commitment commitment
+        )
+        {
+            var accountInfoResult = await rpc.GetAccountInfoAsync(accountKey.ToString(), commitment); 
+            AccountInfo accountInfo = null; 
+            if (accountInfoResult.WasSuccessful) 
+            {
+                accountInfo = accountInfoResult.Result.Value;
+            }
+            
+            return (accountInfo != null);
         }
     }
 }

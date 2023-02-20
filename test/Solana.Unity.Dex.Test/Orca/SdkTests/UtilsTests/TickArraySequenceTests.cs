@@ -11,7 +11,7 @@ namespace Solana.Unity.Dex.Test.Orca.SdkTests.UtilsTests
     public static class TickArraySequenceTests
     {
         [TestFixture]
-        public static class CheckArrayContainsTickIndex
+        public static class IsValidTIckArray0
         {
             private static readonly TickArrayContainer _tickArray0 = TestDataUtils.BuildTickArrayData(0, new int[]{0, 32, 63});
             private static readonly TickArrayContainer _tickArray1 = TestDataUtils.BuildTickArrayData(64 * TickConstants.TICK_ARRAY_SIZE * -1, new int[]{0, 50});
@@ -19,31 +19,31 @@ namespace Solana.Unity.Dex.Test.Orca.SdkTests.UtilsTests
             
             //TODO: (LOW) can these be combined into one test using TestCase attribute 
             [Test]
-            [Description("a->b, arrayIndex 0 contains index")]
+            [Description("a->b, |--------ta2--------|--------ta1------i-|--------ta0--------|")]
             public static void AToBCheckArrayContainsIndex() 
             {
                 var seq = new TickArraySequence(
-                    new TickArrayContainer[] { _tickArray0, _tickArray1, _tickArray2 },
+                    new[] { _tickArray0, _tickArray1, _tickArray2 },
                     64,
                     true
                 );
                 
-                Assert.IsTrue(seq.CheckArrayContainsTickIndex(0, 250));
+                Assert.IsFalse(seq.IsValidTickArray0(-1*64));
                 Assert.IsFalse(seq.CheckArrayContainsTickIndex(0, -64));
             }
             
             [Test]
             [Description("b->a, arrayIndex 0 contains index")]
-            public static void BToACheckArrayContainsIndex() //b->a, arrayIndex 0 contains index
+            public static void BToACheckArrayContainsIndex()
             {
                 var seq = new TickArraySequence(
-                    new TickArrayContainer[] { _tickArray2, _tickArray1, _tickArray0 },
+                    new[] { _tickArray2, _tickArray1, _tickArray0 },
                     64,
                     false
                 );
 
                 Assert.IsTrue(seq.CheckArrayContainsTickIndex(0, -10000));
-                Assert.IsFalse(seq.CheckArrayContainsTickIndex(0, -64));
+                Assert.IsFalse(seq.IsValidTickArray0(-1));
             }
             
             [Test]
@@ -51,12 +51,77 @@ namespace Solana.Unity.Dex.Test.Orca.SdkTests.UtilsTests
             public static void NullDoesNotContainIndex() //
             {
                 var seq = new TickArraySequence(
-                    new TickArrayContainer[] { _tickArray2, TestDataUtils.TestEmptyTickArray, _tickArray0 },
+                    new[] { _tickArray2, TestDataUtils.TestEmptyTickArray, _tickArray0 },
                     64,
                     false
                 );
 
                 Assert.IsFalse(seq.CheckArrayContainsTickIndex(1, -64));
+            }
+            
+            [Test]
+            [Description("b->a, ---|i-------ta2--------|--------ta1--------|--------ta0--------|")]
+            public static void BtoATest1() //
+            {
+                var seq = new TickArraySequence(
+                    new[] { _tickArray2, TestDataUtils.TestEmptyTickArray, _tickArray0 },
+                    64,
+                    false
+                );
+                var ta2StartTickIndex = 64 * TickConstants.TICK_ARRAY_SIZE * -2;
+                Assert.IsTrue(seq.IsValidTickArray0(ta2StartTickIndex + 64));
+            }
+            
+            [Test]
+            [Description("b->a, ---|--------ta2-----i--|--------ta1--------|--------ta0--------|")]
+            public static void BtoATest2() //
+            {
+                var seq = new TickArraySequence(
+                    new[] { _tickArray2, TestDataUtils.TestEmptyTickArray, _tickArray0 },
+                    64,
+                    false
+                );
+                var ta2StartTickIndex = 64 * TickConstants.TICK_ARRAY_SIZE * -1;
+                Assert.IsTrue(seq.IsValidTickArray0(ta2StartTickIndex - 64 - 1));
+            }
+            
+            [Test]
+            [Description("b->a, ---|--------ta2------i-|--------ta1--------|--------ta0--------|")]
+            public static void BtoATest3() //
+            {
+                var seq = new TickArraySequence(
+                    new[] { _tickArray2, TestDataUtils.TestEmptyTickArray, _tickArray0 },
+                    64,
+                    false
+                );
+                var ta2StartTickIndex = 64 * TickConstants.TICK_ARRAY_SIZE * -1;
+                Assert.IsFalse(seq.IsValidTickArray0(ta2StartTickIndex - 64));
+            }
+            
+            [Test]
+            [Description("b->a, ---|--------ta2-------i|--------ta1--------|--------ta0--------|")]
+            public static void BtoATest4() //
+            {
+                var seq = new TickArraySequence(
+                    new[] { _tickArray2, TestDataUtils.TestEmptyTickArray, _tickArray0 },
+                    64,
+                    false
+                );
+                var ta2StartTickIndex = 64 * TickConstants.TICK_ARRAY_SIZE * -1;
+                Assert.IsFalse(seq.IsValidTickArray0(ta2StartTickIndex - 1));
+            }
+            
+            [Test]
+            [Description("b->a, ---|--------ta2--------|i-------ta1--------|--------ta0--------|")]
+            public static void BtoATest5() //
+            {
+                var seq = new TickArraySequence(
+                    new[] { _tickArray2, TestDataUtils.TestEmptyTickArray, _tickArray0 },
+                    64,
+                    false
+                );
+                var ta2StartTickIndex = 64 * TickConstants.TICK_ARRAY_SIZE * -1;
+                Assert.IsFalse(seq.IsValidTickArray0(ta2StartTickIndex));
             }
         }
 

@@ -13,8 +13,6 @@ using Solana.Unity.Dex.Ticks;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {
-    //TODO: (LOW) this class seems badly named. The idea of test fixtures is good, but they 
-    // need to be more organized. And maybe used in more cases 
     public class WhirlpoolsTestFixture
     {
         private TestWhirlpoolContext _context;
@@ -33,7 +31,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             WhirlpoolPda = new Pda(AddressConstants.DEFAULT_PUBLIC_KEY, 0),
             TokenVaultAKeyPair = new Account(),
             TokenVaultBKeyPair = new Account(),
-            TickSpacing = TickSpacing.Standard, //TODO: (LOW) this is used alot, should be a global default somewhere
+            TickSpacing = TickSpacing.HundredTwentyEight,
         };
         private InitializeConfigParams _initConfigParams = new InitializeConfigParams
         {
@@ -62,10 +60,11 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
         
         public static async Task<WhirlpoolsTestFixture> CreateInstance(
             TestWhirlpoolContext ctx,
-            ushort tickSpacing = TickSpacing.Standard, 
+            ushort tickSpacing = TickSpacing.HundredTwentyEight, 
             BigInteger? initialSqrtPrice = null,
             FundedPositionParams[] positions = null, 
-            RewardParams[] rewards = null
+            RewardParams[] rewards = null,
+            bool tokenAIsNative = false
         )
         {
             WhirlpoolsTestFixture output = new(ctx);
@@ -76,7 +75,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 initConfigParams,
                 tickSpacing,
                 InitializeFeeTierParams.DefaultDefaultFeeRate,
-                initialSqrtPrice
+                initialSqrtPrice,
+                tokenAIsNative: tokenAIsNative
             );
             
             output._initPoolParams = result.InitPoolParams;
@@ -94,8 +94,6 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 output._positions = (await PositionTestUtils.FundPositionsAsync(
                     ctx,
                     output._initPoolParams,
-                    output._tokenAccountA,
-                    output._tokenAccountB,
                     positions
                 )).ToArray();
             }

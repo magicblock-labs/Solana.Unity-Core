@@ -16,7 +16,7 @@ namespace Solana.Unity.Dex.Orca.Quotes
     {
         public static IncreaseLiquidityQuote GenerateIncreaseQuote(
             PublicKey inputTokenMint,
-            BigDecimal inputTokenAmount,
+            BigInteger inputTokenAmount,
             int tickLower,
             int tickUpper, 
             Percentage slippageTolerance,
@@ -30,8 +30,7 @@ namespace Solana.Unity.Dex.Orca.Quotes
             return GenerateIncreaseQuoteWithParams(
                new IncreaseLiquidityQuoteParams{
                    InputTokenMint = inputMint,
-                   //TODO: (HIGH) see below 
-                   //InputTokenAmount = DecimalUtil.toU64(inputTokenAmount, inputTokenInfo.decimals), 
+                   InputTokenAmount = inputTokenAmount, 
                    TickCurrentIndex = whirlpool.TickCurrentIndex,
                    TickLowerIndex = TickUtils.GetInitializableTickIndex(tickLower, whirlpool.TickSpacing),
                    TickUpperIndex = TickUtils.GetInitializableTickIndex(tickUpper, whirlpool.TickSpacing),

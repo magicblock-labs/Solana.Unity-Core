@@ -37,8 +37,13 @@ namespace Solana.Unity.Programs
         /// <param name="payer">The public key of the account used to fund the associated token account.</param>
         /// <param name="owner">The public key of the owner account for the new associated token account.</param>
         /// <param name="mint">The public key of the mint for the new associated token account.</param>
+        /// <param name="idempotent">If creation is idempotent, won't fail if ata already exists</param>
         /// <returns>The transaction instruction, returns null whenever an associated token address could not be derived..</returns>
-        public static TransactionInstruction CreateAssociatedTokenAccount(PublicKey payer, PublicKey owner, PublicKey mint)
+        public static TransactionInstruction CreateAssociatedTokenAccount(
+            PublicKey payer, 
+            PublicKey owner,
+            PublicKey mint, 
+            bool idempotent = false)
         {
             PublicKey associatedTokenAddress = DeriveAssociatedTokenAccount(owner, mint);
 
@@ -59,7 +64,7 @@ namespace Solana.Unity.Programs
             {
                 ProgramId = ProgramIdKey.KeyBytes,
                 Keys = keys,
-                Data = Array.Empty<byte>()
+                Data = idempotent ? new byte[]{ 1 } : Array.Empty<byte>()
             };
         }
 

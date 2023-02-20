@@ -7,7 +7,6 @@ using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
 using Solana.Unity.Dex.Ticks;
 using Solana.Unity.Dex.Quotes;
-using Solana.Unity.Dex.Swap;
 using System.Collections.Generic;
 
 namespace Solana.Unity.Dex
@@ -33,10 +32,10 @@ namespace Solana.Unity.Dex
         /// </remarks>
         /// <param name="whirlpoolAddress"></param> 
         /// <param name="amount"></param>
-        /// <param name="inputTokenMintAddress"></param> 
+        /// <param name="inputTokenMintAddress"></param>
+        /// <param name="amountSpecifiedIsInput"></param>
         /// <param name="slippage"></param>
-        /// <param name="amountSpecifiedTokenType"></param>
-        /// <param name="tokenAuthority"></param> 
+        /// <param name="unwrapSol"></param>
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
@@ -44,12 +43,12 @@ namespace Solana.Unity.Dex
             PublicKey whirlpoolAddress,
             BigInteger amount,
             PublicKey inputTokenMintAddress,
+            bool amountSpecifiedIsInput = true,
             double slippage = 0.01,
-            TokenType amountSpecifiedTokenType = TokenType.TokenA,
-            PublicKey tokenAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            bool unwrapSol = true,
+            Commitment? commitment = Commitment.Finalized
         );
-        
+
         /// <summary> 
         /// Constructs a transaction to perform a swap involving the two tokens managed by the specified 
         /// whirlpool. 
@@ -59,14 +58,16 @@ namespace Solana.Unity.Dex
         /// - tokenAuthority
         /// </remarks>
         /// <param name="whirlpoolAddress"></param> 
-        /// <param name="swapQuote"></param> 
+        /// <param name="swapQuote"></param>
+        /// <param name="unwrapSol"></param>
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> SwapWithQuote(
             PublicKey whirlpoolAddress,
             SwapQuote swapQuote,
-            Commitment commitment = Commitment.Finalized
+            bool unwrapSol = true,
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -88,13 +89,13 @@ namespace Solana.Unity.Dex
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> OpenPosition(
-            PublicKey positionMintAccount,
             PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
             int tickLowerIndex,
             int tickUpperIndex,
             bool withMetadata = false,
             PublicKey funderAddress = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -115,12 +116,12 @@ namespace Solana.Unity.Dex
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> OpenPositionWithMetadata(
-            PublicKey positionMintAccount,
             PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
             int tickLowerIndex,
             int tickUpperIndex,
             PublicKey funderAddress,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -144,23 +145,64 @@ namespace Solana.Unity.Dex
         /// <param name="whirlpoolAddress"></param> 
         /// <param name="tickLowerIndex"></param> 
         /// <param name="tickUpperIndex"></param> 
-        /// <param name="tokenMaxA"></param> 
-        /// <param name="tokenMaxB"></param> 
+        /// <param name="tokenAmountA"></param> 
+        /// <param name="tokenAmountB"></param>
+        /// <param name="slippageTolerance"></param>
         /// <param name="withMetadata"></param> 
         /// <param name="funderAccount"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
+        /// <returns>The generated Transaction instance</returns>
         Task<Transaction> OpenPositionWithLiquidity(
-            PublicKey positionMintAccount,
             PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
             int tickLowerIndex,
             int tickUpperIndex,
-            BigInteger tokenMaxA,
-            BigInteger tokenMaxB,
+            BigInteger tokenAmountA,
+            BigInteger tokenAmountB,
+            double slippageTolerance = 0,
             bool withMetadata = false,
             PublicKey funderAccount = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
+        );
+
+        /// <summary> 
+        /// Constructs a single transaction to open a position, initialize tick arrays (if necessary), and add 
+        /// liquidity to the position, given a quote. 
+        /// </summary> 
+        /// <remarks> 
+        /// Signers: 
+        /// - funder
+        /// - positionMint
+        /// 
+        /// At minimum, the transaction may contain only a single instruction, to open the position (this 
+        /// would be if liquidity specified is zero). 
+        /// At most, the transaction would contain instructions to: 
+        /// - initialize lower tick array (if necessary)
+        /// - initialize upper tick array (if necessary) 
+        /// - open the position 
+        /// - add liquidity to the position 
+        /// </remarks> 
+        /// <param name="positionMintAccount"></param> 
+        /// <param name="whirlpoolAddress"></param> 
+        /// <param name="tickLowerIndex"></param> 
+        /// <param name="tickUpperIndex"></param>
+        /// <param name="increaseLiquidityQuote"></param>
+        /// <param name="withMetadata"></param> 
+        /// <param name="funderAccount"></param> 
+        /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
+        /// any chain queries.</param> 
+        /// <returns>The generated Transaction instance</returns>
+        Task<Transaction> OpenPositionWithLiquidityWithQuote(
+            PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
+            int tickLowerIndex,
+            int tickUpperIndex,
+            IncreaseLiquidityQuote increaseLiquidityQuote,
+            bool withMetadata = false,
+            PublicKey funderAccount = null,
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -183,7 +225,7 @@ namespace Solana.Unity.Dex
             PublicKey positionAddress,
             PublicKey receiverAddress = null,
             PublicKey positionAuthority = null, 
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -194,18 +236,40 @@ namespace Solana.Unity.Dex
         /// - positionAuthority
         /// </remarks>
         /// <param name="positionAddress">The unique position identifier.</param> 
-        /// <param name="tokenMaxA"></param> 
-        /// <param name="tokenMaxB"></param> 
+        /// <param name="tokenAmountA"></param> 
+        /// <param name="tokenAmountB"></param>
+        /// <param name="slippageTolerance"></param>
         /// <param name="positionAuthority"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> IncreaseLiquidity(
             PublicKey positionAddress,
-            BigInteger tokenMaxA,
-            BigInteger tokenMaxB,
+            BigInteger tokenAmountA,
+            BigInteger tokenAmountB,
+            double slippageTolerance = 0,
             PublicKey positionAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
+        );
+        
+        /// <summary> 
+        /// Constructs a transaction to add liquidity to an open position, given a quote. 
+        /// </summary> 
+        /// <remarks> 
+        /// Signers: 
+        /// - positionAuthority
+        /// </remarks>
+        /// <param name="positionAddress">The unique position identifier.</param> 
+        /// <param name="increaseLiquidityQuote"></param> 
+        /// <param name="positionAuthority"></param> 
+        /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
+        /// any chain queries.</param> 
+        /// <returns>The generated Transaction instance</returns>
+        Task<Transaction> IncreaseLiquidityWithQuote(
+            PublicKey positionAddress,
+            IncreaseLiquidityQuote increaseLiquidityQuote,
+            PublicKey positionAuthority = null,
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -229,23 +293,19 @@ namespace Solana.Unity.Dex
             BigInteger tokenMinA,
             BigInteger tokenMinB,
             PublicKey positionAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
         /// Constructs a transaction to update fees and rewards for a given position. 
         /// </summary> 
         /// <param name="positionAddress">The unique position identifier.</param> 
-        /// <param name="tickArrayLower">Lower bounds tick array for the position.</param> 
-        /// <param name="tickArrayUpper">Upper bounds tick array of the position.</param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> UpdateFeesAndRewards(
             PublicKey positionAddress,
-            PublicKey tickArrayLower,
-            PublicKey tickArrayUpper,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -263,7 +323,7 @@ namespace Solana.Unity.Dex
         Task<Transaction> CollectFees(
             PublicKey positionAddress,
             PublicKey positionAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -274,8 +334,6 @@ namespace Solana.Unity.Dex
         /// - positionAuthority
         /// </remarks>
         /// <param name="positionAddress">The unique position identifier.</param> 
-        /// <param name="rewardMintAddress"></param> 
-        /// <param name="rewardVaultAddress"></param> 
         /// <param name="rewardIndex"></param> 
         /// <param name="positionAuthority"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
@@ -283,39 +341,29 @@ namespace Solana.Unity.Dex
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> CollectRewards(
             PublicKey positionAddress,
-            PublicKey rewardMintAddress,
-            PublicKey rewardVaultAddress,
             byte rewardIndex,
             PublicKey positionAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
         /// Constructs a single transaction to update fees and rewards, and then collect fees. 
         /// </summary> 
         /// <param name="positionAddress">The unique position identifier.</param> 
-        /// <param name="tickArrayLower"></param> 
-        /// <param name="tickArrayUpper"></param> 
         /// <param name="positionAuthority"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
         /// any chain queries.</param> 
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> UpdateAndCollectFees(
             PublicKey positionAddress,
-            PublicKey tickArrayLower,
-            PublicKey tickArrayUpper,
             PublicKey positionAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
         /// Constructs a single transaction to update fees and rewards, and then collect rewards. 
         /// </summary> 
         /// <param name="positionAddress">The unique position identifier.</param> 
-        /// <param name="tickArrayLower"></param> 
-        /// <param name="tickArrayUpper"></param> 
-        /// <param name="rewardMintAddress"></param> 
-        /// <param name="rewardVaultAddress"></param> 
         /// <param name="rewardIndex"></param> 
         /// <param name="positionAuthority"></param> 
         /// <param name="commitment">Transaction commitment on which to base the transaction, and to use for 
@@ -323,13 +371,9 @@ namespace Solana.Unity.Dex
         /// <returns>The generated Transaction instance</returns>
         Task<Transaction> UpdateAndCollectRewards(
             PublicKey positionAddress,
-            PublicKey tickArrayLower,
-            PublicKey tickArrayUpper,
-            PublicKey rewardMintAddress,
-            PublicKey rewardVaultAddress,
             byte rewardIndex,
             PublicKey positionAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary>
@@ -345,35 +389,32 @@ namespace Solana.Unity.Dex
             PublicKey tokenMintA,
             PublicKey tokenMintB,
             PublicKey configAccountAddress = null,
-            ushort tickSpacing = TickSpacing.Standard,
-            Commitment commitment = Commitment.Finalized
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
+            Commitment? commitment = Commitment.Finalized
         );
-        
+
         /// <summary>
         /// Determines whether or not a whirlpool with the given (or similar) characteristics can be found.
-        /// </summary> 
-        /// <param name="tokenMintA">Mint address of any token associated with the pool, preferably token A.</param> 
-        /// <param name="tokenMintB">Mint address of any token associated with the pool, preferably token B.</param> 
-        /// <param name="tickSpacing">Preferred tickSpacing associated with the pool; if not found, others will be queried.</param> 
+        /// </summary>
+        /// <param name="tokenMintA">Mint address of any token associated with the pool, preferably token A.</param>
+        /// <param name="tokenMintB">Mint address of any token associated with the pool, preferably token B.</param>
+        /// <param name="tickSpacing">Preferred tickSpacing associated with the pool; if not found, others will be queried.</param>
         /// <param name="configAccountAddress">Public key of the whirlpool config address account.</param>
-        /// <param name="commitment">Transaction commitment to use for chain queries.</param> 
-        /// <returns>A boolean value, true if the whirlpool was found.</returns>
-        public abstract Task<PublicKey> FindWhirlpoolAddress(
-            PublicKey tokenMintA,
+        /// <param name="commitment">Transaction commitment to use for chain queries.</param>
+        /// <returns>The pool if found</returns>
+        public Task<Pool> FindWhirlpoolAddress(PublicKey tokenMintA,
             PublicKey tokenMintB,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             PublicKey configAccountAddress = null,
-            Commitment commitment = Commitment.Finalized
-        );
+            Commitment? commitment = Commitment.Finalized);
         
         /// <summary> 
-        /// Creates a quote for a swap within a specific whirlpool. 
+        /// Creates a quote for a swap for a specified pair of input/output token mint. 
         /// </summary> 
         /// <param name="inputTokenMintAddress">The mint address of the input token (the token to swap).</param> 
         /// <param name="outputTokenMintAddress">The mint address of the output token (the token to swap for).</param> 
         /// <param name="tokenAmount">The amount to swap (could be of the input token or output token).</param> 
         /// <param name="slippageTolerance"></param> 
-        /// <param name="amountSpecifiedTokenType"></param> 
         /// <param name="amountSpecifiedIsInput">True if the <paramref name="tokenAmount">tokenAmount</paramref> 
         /// refers to the input token.</param> 
         /// <param name="commitment">Transaction commitment on which to use for any chain queries.</param> 
@@ -383,9 +424,8 @@ namespace Solana.Unity.Dex
             PublicKey outputTokenMintAddress,
             BigInteger tokenAmount,
             double slippageTolerance = 0.01,
-            TokenType amountSpecifiedTokenType = TokenType.TokenA,
             bool amountSpecifiedIsInput = true,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -395,7 +435,6 @@ namespace Solana.Unity.Dex
         /// <param name="inputTokenMintAddress">The mint address of the input token (the token to swap).</param> 
         /// <param name="tokenAmount">The amount to swap (could be of the input token or output token).</param> 
         /// <param name="slippageTolerance"></param> 
-        /// <param name="amountSpecifiedTokenType"></param> 
         /// <param name="amountSpecifiedIsInput">True if the <paramref name="tokenAmount">tokenAmount</paramref> 
         /// refers to the input token.</param> 
         /// <param name="commitment">Transaction commitment on which to use for any chain queries.</param> 
@@ -405,9 +444,8 @@ namespace Solana.Unity.Dex
             BigInteger tokenAmount,
             PublicKey inputTokenMintAddress,
             double slippageTolerance = 0.01,
-            TokenType amountSpecifiedTokenType = TokenType.TokenA,
             bool amountSpecifiedIsInput = true,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -425,11 +463,11 @@ namespace Solana.Unity.Dex
         Task<IncreaseLiquidityQuote> GetIncreaseLiquidityQuote(
             PublicKey whirlpoolAddress,
             PublicKey inputTokenMintAddress,
-            double inputTokenAmount,
+            BigInteger inputTokenAmount,
             double slippageTolerance,
             int tickLowerIndex,
             int tickUpperIndex,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = Commitment.Finalized
         );
 
         /// <summary> 
@@ -445,7 +483,7 @@ namespace Solana.Unity.Dex
             PublicKey positionAddress,
             BigInteger liquidityAmount,
             double slippageTolerance,
-            Commitment commitment
+            Commitment? commitment = Commitment.Finalized
         );
         
         /// <summary>
@@ -460,5 +498,22 @@ namespace Solana.Unity.Dex
         /// <param name="symbol">the token symbol</param>
         /// <returns></returns>
         Task<TokenData> GetTokenBySymbol(string symbol);
+
+        /// <summary>
+        /// Get a token details given the mint address
+        /// </summary>
+        /// <param name="orcaMint"></param>
+        /// <returns></returns>
+        Task<TokenData> GetTokenByMint(string orcaMint);
+        
+        /// <summary>
+        /// Get the list of positions for a given owner
+        /// </summary>
+        /// <param name="owner"></param>
+        /// <param name="commitment"></param>
+        /// <returns></returns>
+        public abstract Task<IList<PublicKey>> GetPositions(
+            PublicKey owner = null,
+            Commitment? commitment = Commitment.Finalized);
     }
 }

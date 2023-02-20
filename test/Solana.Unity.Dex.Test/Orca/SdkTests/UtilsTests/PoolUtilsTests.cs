@@ -11,7 +11,7 @@ using Solana.Unity.Dex.Test.Orca.Utils;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Swap;
 
-namespace Solana.Unity.Dex.Test.Orca.Sdk.Utils
+namespace Solana.Unity.Dex.Test.Orca.SdkTests.UtilsTests
 {
     //ALL 6 PASSING 
     public static class PoolUtilsTests

@@ -236,7 +236,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             int currentTick = 500;
             int lowerTickIndex = 7168;
             int upperTickIndex = 8960;
-            ushort tickSpacing = TickSpacing.Standard;
+            ushort tickSpacing = TickSpacing.HundredTwentyEight;
 
             WhirlpoolsTestFixture fixture = await WhirlpoolsTestFixture.CreateInstance(
                 _context,
@@ -487,7 +487,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             int currTick = -443621;
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPool(
                 ctx: _context,
-                tickSpacing: TickSpacing.Stable,
+                tickSpacing: TickSpacing.Eight,
                 initSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(currTick)
             );
 
@@ -575,7 +575,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             int currTick = 443635;
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPool(
                 ctx: _context,
-                tickSpacing: TickSpacing.Stable,
+                tickSpacing: TickSpacing.Eight,
                 initSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(currTick)
             );
 
@@ -872,7 +872,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
 
             WhirlpoolsTestFixture fixture = await WhirlpoolsTestFixture.CreateInstance(
                 _context,
-                tickSpacing: TickSpacing.Standard,
+                tickSpacing: TickSpacing.HundredTwentyEight,
                 positions: new FundedPositionParams[]{
                     new()
                     {

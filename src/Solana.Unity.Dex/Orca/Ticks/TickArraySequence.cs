@@ -37,17 +37,27 @@ namespace Solana.Unity.Dex.Orca.Ticks
 
         public bool CheckArrayContainsTickIndex(int sequenceIndex, int tickIndex)
         {
-            TickArray data = this._tickArrays[sequenceIndex]?.Data;
+            TickArray data = _tickArrays[sequenceIndex]?.Data;
             if (data == null)
                 return false;
 
-            return this.CheckIfIndexIsInTickArrayRange(data.StartTickIndex, tickIndex);
+            return CheckIfIndexIsInTickArrayRange(data.StartTickIndex, tickIndex);
+        }
+        
+        public bool IsValidTickArray0(int tickIndex)
+        {
+            int shift = _aToB ? 0 : _tickSpacing;
+            TickArray data = _tickArrays[0]?.Data;
+            if (data == null)
+                return false;
+
+            return CheckIfIndexIsInTickArrayRange(data.StartTickIndex, tickIndex + shift);
         }
         
         public bool CheckIfIndexIsInTickArrayRange(int startTick, int tickIndex)
         {
-            int upperBound = startTick + this._tickSpacing * TickConstants.TICK_ARRAY_SIZE;
-            return !(tickIndex < startTick || tickIndex > upperBound);
+            int upperBound = startTick + _tickSpacing * TickConstants.TICK_ARRAY_SIZE;
+            return tickIndex >= startTick && tickIndex < upperBound;
         }
         
         /// <summary>

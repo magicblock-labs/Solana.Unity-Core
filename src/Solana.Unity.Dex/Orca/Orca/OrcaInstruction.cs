@@ -231,6 +231,8 @@ namespace Solana.Unity.Dex.Orca.Orca
         /// <param name="position">Object representing the position to which to add liquidity.</param>
         /// <param name="positionAddress">Address of the position to which to add liquidity.</param>
         /// <param name="positionAuthority">Optional; if null, it's the context's wallet public key.</param>
+        /// <param name="tokenAmountA">Desired liquidity for whirlpool's token A.</param>
+        /// <param name="tokenAmountB">Desired liquidity for whirlpool's token B.</param>
         /// <param name="tokenMaxA">Max liquidity for whirlpool's token A.</param>
         /// <param name="tokenMaxB">Max liquidity for whirlpool's token B.</param>
         /// <param name="commitment">Commitment to be used for any queries necessary to build the transaction.</param>
@@ -241,6 +243,8 @@ namespace Solana.Unity.Dex.Orca.Orca
             Position position,
             PublicKey positionAddress,
             PublicKey positionAuthority,
+            BigInteger tokenAmountA,
+            BigInteger tokenAmountB,
             BigInteger tokenMaxA,
             BigInteger tokenMaxB,
             Commitment commitment
@@ -255,6 +259,8 @@ namespace Solana.Unity.Dex.Orca.Orca
                 positionAuthority,
                 position.TickLowerIndex,
                 position.TickUpperIndex, 
+                tokenAmountA,
+                tokenAmountB,
                 tokenMaxA, 
                 tokenMaxB, 
                 commitment
@@ -272,6 +278,8 @@ namespace Solana.Unity.Dex.Orca.Orca
         /// <param name="positionAuthority"></param>
         /// <param name="tickLowerIndex"></param>
         /// <param name="tickUpperIndex"></param>
+        /// <param name="tokenAmountA"></param>
+        /// <param name="tokenAmountB"></param>
         /// <param name="tokenMaxA"></param>
         /// <param name="tokenMaxB"></param>
         /// <param name="commitment">Commitment to be used for any queries necessary to build the transaction.</param>
@@ -285,6 +293,8 @@ namespace Solana.Unity.Dex.Orca.Orca
             PublicKey positionAuthority,
             int tickLowerIndex, 
             int tickUpperIndex,
+            BigInteger tokenAmountA,
+            BigInteger tokenAmountB,
             BigInteger tokenMaxA,
             BigInteger tokenMaxB,
             Commitment commitment
@@ -317,7 +327,7 @@ namespace Solana.Unity.Dex.Orca.Orca
                 whirlpool.TickCurrentIndex,
                 tickLowerIndex,
                 tickUpperIndex,
-                TokenAmounts.FromValues(tokenMaxA, tokenMaxB)
+                TokenAmounts.FromValues(tokenAmountA, tokenAmountB)
             );
 
             //tickarray addresses

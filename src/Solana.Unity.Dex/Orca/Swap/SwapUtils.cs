@@ -79,6 +79,7 @@ namespace Solana.Unity.Dex.Orca.Swap
             PublicKey whirlpoolAddress
         )
         {
+            int shift = aToB ? 0 : tickSpacing;
             int offset = 0;
             List<PublicKey> tickArrayAddresses = new List<PublicKey>();
             for (int n = 0; n < TickConstants.MAX_SWAP_TICK_ARRAYS; n++)
@@ -86,7 +87,7 @@ namespace Solana.Unity.Dex.Orca.Swap
                 int startIndex = 0;
                 try
                 {
-                    startIndex = TickUtils.GetStartTickIndex(tickCurrentIndex, tickSpacing, offset);
+                    startIndex = TickUtils.GetStartTickIndex(tickCurrentIndex + shift, tickSpacing, offset);
                 }
                 catch (Exception)
                 {

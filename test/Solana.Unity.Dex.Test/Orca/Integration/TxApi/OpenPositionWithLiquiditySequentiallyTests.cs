@@ -1,22 +1,22 @@
 using NUnit.Framework;
 using Orca;
-using Solana.Unity.Dex.Math;
 using System.Numerics;
 using System.Threading.Tasks;
+
+using Solana.Unity.Wallet;
 using Solana.Unity.Rpc.Models;
+using Solana.Unity.Dex.Orca.Core.Accounts;
+using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Swap;
-using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Test.Orca.Params;
-using Solana.Unity.Dex.Orca.Address;
-using Solana.Unity.Dex.Quotes;
 using Solana.Unity.Dex.Test.Orca.Utils;
 using Solana.Unity.Rpc.Types;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 {
     [TestFixture]
-    public class IncreaseLiquidityTxApiTests
+    public class OpenPositionWithMetadataTxApiTests
     {
         private const int LowerTickIndex = 7168;
         private const int UpperTickIndex = 8960;
@@ -50,16 +50,37 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         }
 
         [Test]
-        [Description("all things for increasing liquidity of a position in one transaction")]
-        public static async Task IncreaseLiquiditySingleTransaction()
+        [Description("all things for opening a position and increasing liquidity in one transaction")]
+        public static async Task OpenPositionWithLiquiditySingleTransaction()
         {
             //initialize everything 
             var testFixture = await InitializeTestPool();
-            IDex dex = new OrcaDex(_context);
-
             var testInfo = testFixture.GetTestInfo();
-            FundedPositionInfo position = testInfo.Positions[0];
             Pda whirlpoolPda = testInfo.InitPoolParams.WhirlpoolPda;
+            
+            IDex dex = new OrcaDex(_context);
+            
+            Account positionMint = new();
+            PublicKey positionPda = PdaUtils.GetPosition(_context.ProgramId, positionMint);
+
+            var openPositionTx = await dex.OpenPosition(
+                testInfo.InitPoolParams.WhirlpoolPda,
+                positionMint, 
+                LowerTickIndex,
+                UpperTickIndex,
+                commitment: _defaultCommitment);
+            
+            openPositionTx.Sign(_context.WalletAccount);
+            openPositionTx.Sign(positionMint);
+            
+            var openResult = await _context.RpcClient.SendTransactionAsync(
+                openPositionTx.Serialize(),
+                commitment: TestConfiguration.DefaultCommitment
+            );
+
+            Assert.IsTrue(openResult.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(openResult.Result, _defaultCommitment));
+
             
             //get pool snapshot before liquidity increase
             Whirlpool poolBefore = (await _context.WhirlpoolClient.GetWhirlpoolAsync(
@@ -77,7 +98,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             
             //create increase liquidity tx
             Transaction tx = await dex.IncreaseLiquidity(
-                position.PublicKey,
+                positionPda,
                 tokenAmounts.TokenA,
                 tokenAmounts.TokenB,
                 commitment: TestConfiguration.DefaultCommitment
@@ -114,11 +135,11 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 
             //position 
             Position positionAfter = (await _context.WhirlpoolClient.GetPositionAsync(
-                position.PublicKey,
+                positionPda,
                 _defaultCommitment
             )).ParsedResult;
 
-            Assert.NotNull(position);
+            Assert.NotNull(positionAfter);
             Assert.That(positionAfter.Liquidity, Is.EqualTo(liquidityAmount));
 
             Assert.That(poolAfter.RewardLastUpdatedTimestamp, Is.GreaterThan(poolBefore.RewardLastUpdatedTimestamp));
@@ -126,17 +147,40 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         }
         
         [Test]
-        [Description("all things for increasing liquidity of a position in one transaction")]
-        public static async Task IncreaseLiquidityWithQuoteSingleTransaction()
+        [Description("all things for opening a position and increasing liquidity, with closed wsol ata")]
+        public static async Task OpenPositionWithLiquidityClosingAtas()
         {
             //initialize everything 
-            var testFixture = await InitializeTestPool();
-            IDex dex = new OrcaDex(_context);
-
+            var testFixture = await InitializeTestPool(tokenAIsNative: true);
             var testInfo = testFixture.GetTestInfo();
-            FundedPositionInfo position = testInfo.Positions[0];
             Pda whirlpoolPda = testInfo.InitPoolParams.WhirlpoolPda;
             
+            IDex dex = new OrcaDex(_context);
+            
+            Account positionMint = new();
+            PublicKey positionPda = PdaUtils.GetPosition(_context.ProgramId, positionMint);
+
+            var openPositionTx = await dex.OpenPosition(
+                testInfo.InitPoolParams.WhirlpoolPda,
+                positionMint, 
+                LowerTickIndex,
+                UpperTickIndex,
+                commitment: _defaultCommitment);
+            
+            openPositionTx.Sign(_context.WalletAccount);
+            openPositionTx.Sign(positionMint);
+            
+            var openResult = await _context.RpcClient.SendTransactionAsync(
+                openPositionTx.Serialize(),
+                commitment: TestConfiguration.DefaultCommitment
+            );
+
+            Assert.IsTrue(openResult.WasSuccessful);
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(openResult.Result, _defaultCommitment));
+            
+            // Close WSOl ata
+            await TokenUtils.CloseAta(_context.RpcClient, AddressConstants.NATIVE_MINT_PUBKEY, _context.WalletAccount, _context.WalletAccount);
+
             //get pool snapshot before liquidity increase
             Whirlpool poolBefore = (await _context.WhirlpoolClient.GetWhirlpoolAsync(
                 testInfo.InitPoolParams.WhirlpoolPda.PublicKey.ToString()
@@ -150,19 +194,12 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                 UpperTickIndex,
                 tokenAmounts
             );
-
-            IncreaseLiquidityQuote increaseLiquidityQuote = await dex.GetIncreaseLiquidityQuote(
-                testInfo.InitPoolParams.WhirlpoolPda,
-                poolBefore.TokenMintA,
-                tokenAmounts.TokenA,
-                0.01,
-                LowerTickIndex,
-                UpperTickIndex);
             
             //create increase liquidity tx
-            Transaction tx = await dex.IncreaseLiquidityWithQuote(
-                position.PublicKey,
-                increaseLiquidityQuote,
+            Transaction tx = await dex.IncreaseLiquidity(
+                positionPda,
+                tokenAmounts.TokenA,
+                tokenAmounts.TokenB,
                 commitment: TestConfiguration.DefaultCommitment
             );
 
@@ -170,6 +207,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             tx.Sign(_context.WalletAccount);
             var increaseResult = await _context.RpcClient.SendTransactionAsync(
                 tx.Serialize(),
+                skipPreflight: true,
                 commitment: TestConfiguration.DefaultCommitment
             );
             
@@ -192,16 +230,16 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                 _defaultCommitment
             )).Result.Value.Amount;
 
-            Assert.That(ulong.Parse(tokenBalanceA), Is.EqualTo((ulong)increaseLiquidityQuote.TokenEstA));
-            Assert.That(ulong.Parse(tokenBalanceB), Is.EqualTo((ulong)increaseLiquidityQuote.TokenEstB));
+            Assert.That(tokenBalanceA, Is.EqualTo(tokenAmounts.TokenA.ToString()));
+            Assert.That(tokenBalanceB, Is.EqualTo(tokenAmounts.TokenB.ToString()));
 
             //position 
             Position positionAfter = (await _context.WhirlpoolClient.GetPositionAsync(
-                position.PublicKey,
+                positionPda,
                 _defaultCommitment
             )).ParsedResult;
 
-            Assert.NotNull(position);
+            Assert.NotNull(positionAfter);
             Assert.That(positionAfter.Liquidity, Is.EqualTo(liquidityAmount));
 
             Assert.That(poolAfter.RewardLastUpdatedTimestamp, Is.GreaterThan(poolBefore.RewardLastUpdatedTimestamp));

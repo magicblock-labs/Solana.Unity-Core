@@ -53,7 +53,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
                 if (!tick.Initialized)
                     continue;
 
-                Console.WriteLine($"{tickArray.StartTickIndex + n * TickSpacing.Stable}: {tick.FeeGrowthOutsideA.ToString()}, {tick.FeeGrowthOutsideB.ToString()}");
+                Console.WriteLine($"{tickArray.StartTickIndex + n * TickSpacing.Eight}: {tick.FeeGrowthOutsideA.ToString()}, {tick.FeeGrowthOutsideB.ToString()}");
             }
         }
         
@@ -180,7 +180,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             PoolInitResult poolInitResult = await PoolTestUtils.BuildPoolWithTokens(
                 _context,
                 ConfigTestUtils.GenerateParams(_context),
-                tickSpacing: TickSpacing.Stable,
+                tickSpacing: TickSpacing.Eight,
                 initSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(27500)
             );
             
@@ -198,7 +198,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
                 whirlpool: whirlpoolPda,
                 27456, // to 30528
                 3,
-                TickSpacing.Stable,
+                TickSpacing.Eight,
                 aToB: false
             );
 
@@ -464,9 +464,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
 
             await DisplayTokenVaultBalances(poolInitResult);
             await DisplayTickArrays(tickArrays);
-
-            //collect protocol fees 
-            //TODO: (MID) implement collect protocol fees 
 
             await DisplayTokenVaultBalances(poolInitResult);
         }

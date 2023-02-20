@@ -11,7 +11,6 @@ using Solana.Unity.Rpc.Types;
 using Solana.Unity.Dex.Orca.Core;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Quotes;
-using Solana.Unity.Dex.Swap;
 using Solana.Unity.Dex.Ticks;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,17 +22,35 @@ namespace Solana.Unity.Dex.Orca.TxApi
     /// </summary> 
     public abstract class Dex : IDex
     {
-        protected readonly IWhirlpoolContext _context;
+        /// <summary>
+        /// The whirlpool context object.
+        /// </summary>
+        protected readonly IWhirlpoolContext Context;
         
-        //Gets the RpcClient from the context object. 
-        protected IRpcClient RpcClient => _context.RpcClient;
         
-        //Gets the WhirlpoolClient from the context object. 
-        protected WhirlpoolClient WhirlpoolClient => _context.WhirlpoolClient;
+        /// <summary>
+        /// The default commitment level.
+        /// </summary>
+        protected readonly Commitment DefaultCommitment;
+        
+        /// <summary>
+        /// Gets the RpcClient from the context object.
+        /// </summary>
+        protected IRpcClient RpcClient => Context.RpcClient;
+        
+        /// <summary>
+        /// Gets the WhirlpoolClient from the context object.
+        /// </summary>
+        protected WhirlpoolClient WhirlpoolClient => Context.WhirlpoolClient;
 
+        /// <summary>
+        /// Create a new instance of Dex using the whirlpool context.
+        /// </summary>
+        /// <param name="context"></param>
         protected Dex(IWhirlpoolContext context)
         {
-            _context = context;
+            Context = context;
+            DefaultCommitment = Context.WhirlpoolClient.DefaultCommitment;
         }
 
         /// <inheritdoc />
@@ -41,51 +58,65 @@ namespace Solana.Unity.Dex.Orca.TxApi
             PublicKey whirlpoolAddress,
             BigInteger amount,
             PublicKey inputTokenMintAddress,
+            bool amountSpecifiedIsInput = true,
             double slippage = 0.01,
-            TokenType amountSpecifiedTokenType = TokenType.TokenA,
-            PublicKey tokenAuthority = null,
-            Commitment commitment = Commitment.Finalized
+            bool unwrapSol = true,
+            Commitment? commitment = null
         );
         
         /// <inheritdoc />
         public abstract Task<Transaction> SwapWithQuote(
             PublicKey whirlpoolAddress,
             SwapQuote swapQuote,
-            Commitment commitment = Commitment.Finalized
+            bool unwrapSol = true,
+            Commitment? commitment = null
         );
         
         /// <inheritdoc />
         public abstract Task<Transaction> OpenPosition(
-            PublicKey positionMintAccount,
             PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
             int tickLowerIndex,
             int tickUpperIndex,
-            bool withMetadata,
-            PublicKey funderAccount,
-            Commitment commitment
+            bool withMetadata = false,
+            PublicKey funderAccount = null, 
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> OpenPositionWithMetadata(
-            PublicKey positionMintAccount,
             PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
             int tickLowerIndex,
             int tickUpperIndex,
-            PublicKey funderAccount,
-            Commitment commitment
+            PublicKey funderAccount = null, 
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> OpenPositionWithLiquidity(
-            PublicKey positionMintAccount,
             PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
             int tickLowerIndex,
             int tickUpperIndex,
-            BigInteger tokenMaxA,
-            BigInteger tokenMaxB,
+            BigInteger tokenAmountA,
+            BigInteger tokenAmountB,
+            double slippageTolerance = 0,
             bool withMetadata = false,
             PublicKey funderAccount = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = null
+        );
+        
+        /// <inheritdoc />
+        public abstract Task<Transaction> OpenPositionWithLiquidityWithQuote(
+            PublicKey whirlpoolAddress,
+            PublicKey positionMintAccount,
+            int tickLowerIndex,
+            int tickUpperIndex,
+            IncreaseLiquidityQuote increaseLiquidityQuote,
+            bool withMetadata = false,
+            PublicKey funderAccount = null,
+            Commitment? commitment = null
         );
         
         /// <inheritdoc />
@@ -93,16 +124,25 @@ namespace Solana.Unity.Dex.Orca.TxApi
             PublicKey positionAddress,
             PublicKey receiverAddress = null,
             PublicKey positionAuthority = null, 
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> IncreaseLiquidity(
             PublicKey positionAddress,
-            BigInteger tokenMaxA, 
-            BigInteger tokenMaxB,
-            PublicKey positionAuthority,
-            Commitment commitment
+            BigInteger tokenAmountA, 
+            BigInteger tokenAmountB,
+            double slippageTolerance = 0,
+            PublicKey positionAuthority = null,
+            Commitment? commitment = null
+        );
+        
+        /// <inheritdoc />
+        public abstract Task<Transaction> IncreaseLiquidityWithQuote(
+            PublicKey positionAddress,
+            IncreaseLiquidityQuote increaseLiquidityQuote,
+            PublicKey positionAuthority = null,
+            Commitment? commitment = null
         );
         
         /// <inheritdoc />
@@ -111,54 +151,44 @@ namespace Solana.Unity.Dex.Orca.TxApi
             BigInteger liquidityAmount, 
             BigInteger tokenMinA, 
             BigInteger tokenMinB,
-            PublicKey positionAuthority,
-            Commitment commitment
+            PublicKey positionAuthority = null,
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> UpdateFeesAndRewards(
             PublicKey positionAddress,
-            PublicKey tickArrayLower,
-            PublicKey tickArrayUpper,
-            Commitment commitment
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> CollectFees(
             PublicKey positionAddress,
-            PublicKey positionAuthority,
-            Commitment commitment
+            PublicKey positionAuthority = null,
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> CollectRewards(
             PublicKey positionAddress,
-            PublicKey rewardMintAddress,
-            PublicKey rewardVaultAddress,
             byte rewardIndex,
-            PublicKey positionAuthority,
-            Commitment commitment
+            PublicKey positionAuthority = null,
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> UpdateAndCollectFees(
             PublicKey positionAddress,
-            PublicKey tickArrayLower,
-            PublicKey tickArrayUpper,
-            PublicKey positionAuthority,
-            Commitment commitment
+            PublicKey positionAuthority = null,
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
         public abstract Task<Transaction> UpdateAndCollectRewards(
             PublicKey positionAddress,
-            PublicKey tickArrayLower,
-            PublicKey tickArrayUpper,
-            PublicKey rewardMintAddress,
-            PublicKey rewardVaultAddress,
             byte rewardIndex,
-            PublicKey positionAuthority,
-            Commitment commitment
+            PublicKey positionAuthority = null,
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
@@ -166,21 +196,27 @@ namespace Solana.Unity.Dex.Orca.TxApi
             PublicKey tokenMintA,
             PublicKey tokenMintB,
             PublicKey configAccountAddress = null,
-            ushort tickSpacing = TickSpacing.Standard,
-            Commitment commitment = Commitment.Finalized
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
-        public async Task<PublicKey> FindWhirlpoolAddress(
-            PublicKey tokenMintA,
+        public async Task<Pool> FindWhirlpoolAddress(PublicKey tokenMintA,
             PublicKey tokenMintB,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             PublicKey configAccountAddress = null,
-            Commitment commitment = Commitment.Finalized
-        )
+            Commitment? commitment = Commitment.Finalized)
         {
-            (PublicKey whirlpollAddress, _) = await FindWhirlpool(tokenMintA, tokenMintB, tickSpacing, configAccountAddress, commitment);
-            return whirlpollAddress;
+            (PublicKey whirlpoolAddress, Whirlpool whirlpool) = await FindWhirlpool(tokenMintA, tokenMintB, tickSpacing, configAccountAddress, commitment);
+            return new Pool()
+            {
+                Address = whirlpoolAddress,
+                TokenMintA = whirlpool.TokenMintA,
+                TokenMintB = whirlpool.TokenMintB,
+                Liquidity = whirlpool.Liquidity,
+                Fee = whirlpool.FeeRate,
+                TickSpacing = whirlpool.TickSpacing,
+            };
         }
 
         /// <summary>
@@ -196,9 +232,9 @@ namespace Solana.Unity.Dex.Orca.TxApi
         public abstract Task<Tuple<PublicKey, Whirlpool>> FindWhirlpool(
             PublicKey tokenMintA,
             PublicKey tokenMintB,
-            ushort tickSpacing = TickSpacing.Standard,
+            ushort tickSpacing = TickSpacing.HundredTwentyEight,
             PublicKey configAccountAddress = null,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = null
         );
         
         /// <summary>
@@ -209,7 +245,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
         /// <returns></returns>
         public abstract Task<Whirlpool> GetWhirlpool(
             PublicKey whirlpoolAddress,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
@@ -218,9 +254,8 @@ namespace Solana.Unity.Dex.Orca.TxApi
             PublicKey outputTokenMintAddress,
             BigInteger tokenAmount,
             double slippageTolerance = 0.01,
-            TokenType amountSpecifiedTokenType = TokenType.TokenA,
             bool amountSpecifiedIsInput = true,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = null
         )
         {
             (PublicKey _, Whirlpool whrp)  = await FindWhirlpool(
@@ -231,8 +266,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
                 whrp, 
                 tokenAmount, 
                 inputTokenMintAddress,
-                slippageTolerance, 
-                amountSpecifiedTokenType, 
+                slippageTolerance,
                 amountSpecifiedIsInput);
         }
 
@@ -242,9 +276,8 @@ namespace Solana.Unity.Dex.Orca.TxApi
             BigInteger tokenAmount,
             PublicKey inputTokenMintAddress,
             double slippageTolerance = 0.01,
-            TokenType amountSpecifiedTokenType = TokenType.TokenA,
             bool amountSpecifiedIsInput = true,
-            Commitment commitment = Commitment.Finalized
+            Commitment? commitment = null
         )
         {
             Whirlpool whrp = await GetWhirlpool(whirlpoolAddress, commitment);
@@ -252,8 +285,7 @@ namespace Solana.Unity.Dex.Orca.TxApi
                 whrp, 
                 tokenAmount, 
                 inputTokenMintAddress,
-                slippageTolerance, 
-                amountSpecifiedTokenType, 
+                slippageTolerance,
                 amountSpecifiedIsInput);
         }
 
@@ -265,7 +297,6 @@ namespace Solana.Unity.Dex.Orca.TxApi
         /// <param name="tokenAmount"></param>
         /// <param name="inputTokenMintAddress"></param>
         /// <param name="slippageTolerance"></param>
-        /// <param name="amountSpecifiedTokenType"></param>
         /// <param name="amountSpecifiedIsInput"></param>
         /// <returns></returns>
         public abstract Task<SwapQuote> GetSwapQuoteFromWhirlpool(
@@ -273,7 +304,6 @@ namespace Solana.Unity.Dex.Orca.TxApi
             BigInteger tokenAmount,
             PublicKey inputTokenMintAddress,
             double slippageTolerance = 0.01,
-            TokenType amountSpecifiedTokenType = TokenType.TokenA,
             bool amountSpecifiedIsInput = true
         );
 
@@ -281,11 +311,11 @@ namespace Solana.Unity.Dex.Orca.TxApi
         public abstract Task<IncreaseLiquidityQuote> GetIncreaseLiquidityQuote(
             PublicKey whirlpoolAddress,
             PublicKey inputTokenMintAddress,
-            double inputTokenAmount,
+            BigInteger inputTokenAmount,
             double slippageTolerance,
             int tickLowerIndex,
             int tickUpperIndex,
-            Commitment commitment
+            Commitment? commitment = null
         );
 
         /// <inheritdoc />
@@ -293,13 +323,18 @@ namespace Solana.Unity.Dex.Orca.TxApi
             PublicKey positionAddress,
             BigInteger liquidityAmount,
             double slippageTolerance,
-            Commitment commitment
+            Commitment? commitment = null
         );
+
+        /// <inheritdoc />
+        public abstract Task<IList<PublicKey>> GetPositions(
+            PublicKey owner = null,
+            Commitment? commitment = null);
 
         /// <inheritdoc />
         public async Task<IList<TokenData>> GetTokens()
         {
-            return await OrcaTokens.GetTokens(_context.RpcClient.NodeAddress.ToString().Contains("devnet") ? 
+            return await OrcaTokens.GetTokens(Context.RpcClient.NodeAddress.ToString().Contains("devnet") ? 
                 Cluster.DevNet : Cluster.MainNet );
         }
 
@@ -311,6 +346,15 @@ namespace Solana.Unity.Dex.Orca.TxApi
             return tokens.First(t => 
                 string.Equals(t.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase) || 
                 string.Equals(t.Symbol, $"${symbol}", StringComparison.CurrentCultureIgnoreCase));
+        }
+        
+        /// <inheritdoc />
+        public async Task<TokenData> GetTokenByMint(string mint)
+        {
+            IList<TokenData> tokens = await GetTokens();
+            
+            return tokens.First(t => 
+                string.Equals(t.Mint, mint, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

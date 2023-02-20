@@ -27,7 +27,7 @@ namespace Solana.Unity.Dex.Orca.Swap
         /// These are the token mints that will be prioritized as the second token in the pair (quote).
         /// The number that the mint maps to determines the priority that it will be used as the quote currency.
         /// </summary>
-        public static readonly Dictionary<string, int> QuoteTokens = new Dictionary<string, int>()
+        public static readonly Dictionary<string, int> QuoteTokens = new()
         {
             { "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB", 100},
             { "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v", 90},
@@ -150,8 +150,8 @@ namespace Solana.Unity.Dex.Orca.Swap
         {
             return (GetQuoteTokenPriority(tokenMintAKey.ToString()) > 
                     GetQuoteTokenPriority(tokenMintBKey.ToString())) 
-                ? Tuple.Create<PublicKey, PublicKey>(tokenMintBKey, tokenMintAKey)
-                : Tuple.Create<PublicKey, PublicKey>(tokenMintAKey, tokenMintBKey);
+                ? Tuple.Create(tokenMintBKey, tokenMintAKey)
+                : Tuple.Create(tokenMintAKey, tokenMintBKey);
         }
 
         public static int GetQuoteTokenPriority(string mint)

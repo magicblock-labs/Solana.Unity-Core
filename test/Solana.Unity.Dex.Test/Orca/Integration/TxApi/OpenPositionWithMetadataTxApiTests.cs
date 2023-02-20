@@ -15,7 +15,7 @@ using Solana.Unity.Rpc.Types;
 namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 {
     [TestFixture]
-    public class OpenPositionWithMetadataTxApiTests
+    public class OpenPositionWithLiquidityTxApiTests
     {
         private static TestWhirlpoolContext _context;
         private static Commitment _defaultCommitment;
