@@ -55,6 +55,12 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             );
 
             var testInfo = fixture.GetTestInfo();
+            
+            Position positionBefore = (await _context.WhirlpoolClient.GetPositionAsync(
+                testInfo.Positions[0].PublicKey,
+                _defaultCommitment
+            )).ParsedResult;
+            
             Whirlpool poolBefore = (await _context.WhirlpoolClient.GetWhirlpoolAsync(
                 testInfo.InitPoolParams.WhirlpoolPda.PublicKey,
                 Commitment.Processed
@@ -88,7 +94,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(result.Result));
 
             
-            BigInteger remainingLiquidity = liquidityAmount - removalQuote.LiquidityAmount;
+            BigInteger remainingLiquidity = positionBefore.Liquidity - removalQuote.LiquidityAmount;
 
             //position 
             Position position = (await _context.WhirlpoolClient.GetPositionAsync(

@@ -404,7 +404,7 @@ namespace Orca
             
             //retrieve the whirlpool
             Whirlpool whirlpool = (await Context.WhirlpoolClient.GetWhirlpoolAsync(
-                    position.Whirlpool)).ParsedResult;
+                    position.Whirlpool, commitment.GetValueOrDefault(DefaultCommitment))).ParsedResult;
             
             //generate the transaction 
             TransactionBuilder tb = new();

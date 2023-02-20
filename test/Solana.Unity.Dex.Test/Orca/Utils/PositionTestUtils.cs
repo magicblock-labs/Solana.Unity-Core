@@ -330,10 +330,15 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             //if there is liquidity, we must increase liquidity 
             if (fundParam.LiquidityAmount > 0)
             {
+                //get whirpool token account
+                Whirlpool whirlpool = (await ctx.WhirlpoolClient.GetWhirlpoolAsync(
+                    initPoolParams.WhirlpoolPda.PublicKey,
+                    ctx.WhirlpoolClient.DefaultCommitment
+                )).ParsedResult;
 
                 TokenAmounts tokenAmounts = PoolUtils.GetTokenAmountsFromLiquidity(
                     liquidity: fundParam.LiquidityAmount,
-                    currentSqrtPrice: initPoolParams.InitSqrtPrice,
+                    currentSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(whirlpool.TickCurrentIndex),
                     lowerSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(fundParam.TickLowerIndex),
                     upperSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(fundParam.TickUpperIndex),
                     roundUp: true
@@ -344,6 +349,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                     openPositionParams.PositionPda, 
                     tokenAmounts.TokenA,
                     tokenAmounts.TokenB, 
+                    slippageTolerance: 0.1,
                     commitment: ctx.WhirlpoolClient.DefaultCommitment);
                 txIncrease.Sign(feePayer);
                 var increaseResult = await ctx.RpcClient.SendTransactionAsync(txIncrease.Serialize(), commitment: ctx.WhirlpoolClient.DefaultCommitment);
