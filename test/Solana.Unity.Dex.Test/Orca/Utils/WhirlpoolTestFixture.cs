@@ -94,8 +94,6 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 output._positions = (await PositionTestUtils.FundPositionsAsync(
                     ctx,
                     output._initPoolParams,
-                    output._tokenAccountA,
-                    output._tokenAccountB,
                     positions
                 )).ToArray();
             }

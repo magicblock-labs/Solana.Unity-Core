@@ -204,8 +204,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             await PositionTestUtils.FundPositionsAsync(
                 _context,
                 poolInitResult.InitPoolParams,
-                poolInitResult.TokenAccountA,
-                poolInitResult.TokenAccountB,
                 fundParams
             );
 
@@ -952,9 +950,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             //fund positions 
             await PositionTestUtils.FundPositionsAsync(
                 _context, 
-                poolInitResult.InitPoolParams, 
-                poolInitResult.TokenAccountA,
-                poolInitResult.TokenAccountB,
+                poolInitResult.InitPoolParams,
                 fundParams
             );
             
@@ -1016,8 +1012,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             await PositionTestUtils.FundPositionsAsync(
                 _context,
                 poolInitResult.InitPoolParams,
-                poolInitResult.TokenAccountA,
-                poolInitResult.TokenAccountB,
                 fundParams
             );
 
@@ -1077,8 +1071,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             await PositionTestUtils.FundPositionsAsync(
                 _context,
                 poolInitResult.InitPoolParams,
-                poolInitResult.TokenAccountA,
-                poolInitResult.TokenAccountB,
                 fundParams
             );
 
@@ -1137,8 +1129,6 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             await PositionTestUtils.FundPositionsAsync(
                 _context,
                 poolInitResult.InitPoolParams,
-                poolInitResult.TokenAccountA,
-                poolInitResult.TokenAccountB,
                 fundParams
             );
 

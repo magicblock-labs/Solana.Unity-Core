@@ -292,13 +292,11 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             );
         }
         
-        public static async Task<PublicKey> CreateAssociatedTokenAccountInstructionIfNotExtant(
-            PublicKey owner,
+        public static async Task CreateAssociatedTokenAccountInstructionIfNotExtant(PublicKey owner,
             PublicKey mintAddress,
             Account feePayer,
             IRpcClient rpc,
-            Commitment commitment
-        )
+            Commitment commitment)
         {
             var ata = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(owner, mintAddress);
             bool exists = await TokenUtilsTransaction.TokenAccountExists(
@@ -312,14 +310,13 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 builder.SetRecentBlockHash(recentHash.Result.Value.Blockhash);
                 builder.AddInstruction(
                     AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
-                        feePayer, owner, mintAddress
+                        feePayer, owner, mintAddress, idempotent: true
                     )
                 );
                 var res = await rpc.SendTransactionAsync(builder.Build(feePayer), commitment: commitment);
                 Assert.IsTrue(res.WasSuccessful);
                 Assert.IsTrue(await rpc.ConfirmTransaction(res.Result, commitment: commitment));
             }
-            return ata;
         }
     }
 }

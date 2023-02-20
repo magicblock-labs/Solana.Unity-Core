@@ -21,6 +21,7 @@ using Solana.Unity.Dex.Orca.Math;
 using Solana.Unity.Dex.Orca.Orca;
 using Solana.Unity.Dex.Quotes;
 using Solana.Unity.Dex.Ticks;
+using System.Linq;
 
 namespace Orca
 {
@@ -408,67 +409,19 @@ namespace Orca
             //generate the transaction 
             TransactionBuilder tb = new();
             
-            //add instruction to collect fees, if available
-            if (position.FeeOwedA > 0 || position.FeeOwedB > 0)
+            //create token accounts if they don't exist
+            HashSet<PublicKey> mints = new() { whirlpool.TokenMintA, whirlpool.TokenMintB };
+            whirlpool.RewardInfos.ToList().ForEach(rewardInfo => mints.Add(rewardInfo.Mint));
+            mints.ToList().ForEach(async mint =>
             {
                 await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
-                ); 
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
-                ); 
-                
-                tb.AddInstruction(
-                    await OrcaInstruction.GenerateCollectFeesInstruction(
-                        Context,
-                        account,
-                        position,
-                        positionAddress,
-                        positionAuthority,
-                        commitment.GetValueOrDefault(DefaultCommitment)
-                    )
+                    account, mint, tb, commitment.GetValueOrDefault(DefaultCommitment)
                 );
-            }
+            });
             
-            //add instruction to collect rewards, if available
-            for (var rewardIndex = 0; rewardIndex < position.RewardInfos.Length; rewardIndex++)
-            {
-                if (position.RewardInfos[rewardIndex].AmountOwed > 0)
-                {
-                    //optional instruction to create reward token account (if it doesn't exist) 
-                    PublicKey rewardTokenOwnerAddress = await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                        account, whirlpool.RewardInfos[rewardIndex].Mint, tb,
-                        commitment.GetValueOrDefault(DefaultCommitment)
-                    );
-
-                    //instruction to collect rewards 
-                    tb.AddInstruction(
-                        await OrcaInstruction.GenerateCollectRewardsInstruction(
-                            Context,
-                            account,
-                            position,
-                            positionAddress,
-                            whirlpool.RewardInfos[rewardIndex].Mint,
-                            whirlpool.RewardInfos[rewardIndex].Vault,
-                            rewardTokenOwnerAddress,
-                            positionAuthority,
-                            (byte)rewardIndex,
-                            commitment.GetValueOrDefault(DefaultCommitment)
-                        )
-                    );
-                }
-            }
-
             //add instruction to remove liquidity, if position has liquidity 
             if (position.Liquidity > 0) 
             {
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
-                );
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
-                );
-                
                 tb.AddInstruction(
                     await OrcaInstruction.GenerateDecreaseLiquidityInstruction(
                         Context, 
@@ -478,6 +431,43 @@ namespace Orca
                         positionAuthority,
                         position.Liquidity,
                         0, 0, 
+                        commitment.GetValueOrDefault(DefaultCommitment)
+                    )
+                );
+            }
+
+            tb.AddInstruction(
+                await OrcaInstruction.GenerateCollectFeesInstruction(
+                    Context,
+                    account,
+                    position,
+                    positionAddress,
+                    positionAuthority,
+                    commitment.GetValueOrDefault(DefaultCommitment)
+                )
+            );
+            
+            //add instruction to collect rewards, if available
+            for (var rewardIndex = 0; rewardIndex < position.RewardInfos.Length; rewardIndex++)
+            {
+                // Skip if no rewards
+                if(whirlpool.RewardInfos[rewardIndex].Mint.Equals(PublicKey.DefaultPublicKey))continue;
+                
+                PublicKey rewardTokenOwnerAddress = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(account,
+                    whirlpool.RewardInfos[rewardIndex].Mint);
+
+                //instruction to collect rewards 
+                tb.AddInstruction(
+                    await OrcaInstruction.GenerateCollectRewardsInstruction(
+                        Context,
+                        account,
+                        position,
+                        positionAddress,
+                        whirlpool.RewardInfos[rewardIndex].Mint,
+                        whirlpool.RewardInfos[rewardIndex].Vault,
+                        rewardTokenOwnerAddress,
+                        positionAuthority,
+                        (byte)rewardIndex,
                         commitment.GetValueOrDefault(DefaultCommitment)
                     )
                 );
@@ -604,21 +594,15 @@ namespace Orca
 
             TransactionBuilder tb = new();
             
-            if(tokenMinA > 0)
-            {
-                // instruction to create token account A 
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
-                );
-            }
+            // instruction to create token account A 
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintA, tb, commitment.GetValueOrDefault(DefaultCommitment)
+            );
 
-            if (tokenMinB > 0)
-            {
-                // instruction to create token account B
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
-                );
-            }
+            // instruction to create token account B
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintB, tb, commitment.GetValueOrDefault(DefaultCommitment)
+            );
             
             tb.AddInstruction(
                 await OrcaInstruction.GenerateDecreaseLiquidityInstruction(
@@ -1101,6 +1085,7 @@ namespace Orca
             Commitment commitment
         )
         {
+            if (mintAddress.Equals(PublicKey.DefaultPublicKey)) return null;
             bool exists = await InstructionUtil.AssociatedTokenAccountExists(
                 Context, ownerAddress, mintAddress, commitment
             );
@@ -1108,7 +1093,7 @@ namespace Orca
             {
                 builder.AddInstruction(
                     AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
-                        ownerAddress, ownerAddress, mintAddress
+                        ownerAddress, ownerAddress, mintAddress, idempotent: true
                     )
                 );
             }
@@ -1234,30 +1219,24 @@ namespace Orca
             PublicKey positionAuthority,
             Commitment commitment)
         {
-            if(quote.TokenMaxA > 0)
+            // instruction to create token account A 
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintA, tb, commitment
+            );
+            // Wrap to wSOL if necessary
+            if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
             {
-                // instruction to create token account A 
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintA, tb, commitment
-                );
-                // Wrap to wSOL if necessary
-                if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
-                {
-                    SyncIfNative(account, whirlpool.TokenMintA, quote.TokenEstA, tb);
-                }
+                SyncIfNative(account, whirlpool.TokenMintA, quote.TokenMaxA, tb);
             }
 
-            if (quote.TokenMaxB > 0)
+            // instruction to create token account B
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintB, tb, commitment
+            );
+            // Wrap to wSOL if necessary
+            if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
             {
-                // instruction to create token account B
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintB, tb, commitment
-                );
-                // Wrap to wSOL if necessary
-                if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
-                {
-                    SyncIfNative(account, whirlpool.TokenMintB, quote.TokenEstB, tb);
-                }
+                SyncIfNative(account, whirlpool.TokenMintB, quote.TokenMaxB, tb);
             }
 
             tb.AddInstruction(
@@ -1289,30 +1268,24 @@ namespace Orca
             PublicKey positionAuthority,
             Commitment commitment)
         {
-            if(quote.TokenMaxA > 0)
+            // instruction to create token account A 
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintA, tb, commitment
+            );
+            // Wrap to wSOL if necessary
+            if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
             {
-                // instruction to create token account A 
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintA, tb, commitment
-                );
-                // Wrap to wSOL if necessary
-                if (whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
-                {
-                    SyncIfNative(account, whirlpool.TokenMintA, quote.TokenEstA, tb);
-                }
+                SyncIfNative(account, whirlpool.TokenMintA, quote.TokenMaxA, tb);
             }
 
-            if (quote.TokenMaxB > 0)
+            // instruction to create token account B
+            await CreateAssociatedTokenAccountInstructionIfNotExtant(
+                account, whirlpool.TokenMintB, tb, commitment
+            );
+            // Wrap to wSOL if necessary
+            if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
             {
-                // instruction to create token account B
-                await CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    account, whirlpool.TokenMintB, tb, commitment
-                );
-                // Wrap to wSOL if necessary
-                if (whirlpool.TokenMintB.Equals(AddressConstants.NATIVE_MINT_PUBKEY))
-                {
-                    SyncIfNative(account, whirlpool.TokenMintB, quote.TokenEstB, tb);
-                }
+                SyncIfNative(account, whirlpool.TokenMintB, quote.TokenMaxB, tb);
             }
 
             tb.AddInstruction(

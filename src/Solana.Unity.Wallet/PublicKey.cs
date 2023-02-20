@@ -21,6 +21,8 @@ namespace Solana.Unity.Wallet
         /// </summary>
         public const int PublicKeyLength = 32;
 
+        public static PublicKey DefaultPublicKey = new(new byte[PublicKeyLength]);
+        
         private string _key;
 
         /// <summary>

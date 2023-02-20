@@ -231,7 +231,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.That(positionBeforeCollect.FeeOwedB, Is.EqualTo(581));
             
             //close Atas
-            Assert.IsTrue(whirlpool.TokenMintA.ToString().Equals(AddressConstants.NATIVE_MINT));
+            Assert.IsTrue(whirlpool.TokenMintA.Equals(AddressConstants.NATIVE_MINT_PUBKEY));
             await TokenUtils.CloseAta(_context.RpcClient, whirlpool.TokenMintA, _context.WalletAccount, _context.WalletAccount);
             await TokenUtils.CloseAta(_context.RpcClient, whirlpool.TokenMintB, _context.WalletAccount, _context.WalletAccount);
 

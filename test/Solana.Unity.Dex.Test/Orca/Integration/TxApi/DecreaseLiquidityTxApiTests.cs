@@ -66,6 +66,12 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Whirlpool poolBefore = (
                 await _context.WhirlpoolClient.GetWhirlpoolAsync(whirlpoolPda.PublicKey, Commitment.Processed)
             ).ParsedResult;
+            
+            //position 
+            Position positionBefore = (await _context.WhirlpoolClient.GetPositionAsync(
+                testInfo.Positions[0].PublicKey.ToString(),
+                _defaultCommitment
+            )).ParsedResult;
 
             //generate liquidity removal quote
             DecreaseLiquidityQuote removalQuote = DecreaseLiquidityQuoteUtils.GenerateDecreaseQuoteWithParams(
@@ -99,11 +105,12 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.IsTrue(decreaseResult.WasSuccessful);
             Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(decreaseResult.Result, _defaultCommitment));
 
-            BigInteger remainingLiquidity = liquidityAmount - removalQuote.LiquidityAmount;
+            BigInteger remainingLiquidity = positionBefore.Liquidity - removalQuote.LiquidityAmount;
 
             //position 
             Position position = (await _context.WhirlpoolClient.GetPositionAsync(
-                testInfo.Positions[0].PublicKey.ToString()
+                testInfo.Positions[0].PublicKey.ToString(),
+                _defaultCommitment
             )).ParsedResult;
 
             Assert.NotNull(position);
@@ -147,6 +154,12 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             await TokenUtils.CloseAta(_context.RpcClient, poolBefore.TokenMintA, _context.WalletAccount, _context.WalletAccount);
             await TokenUtils.CloseAta(_context.RpcClient, poolBefore.TokenMintB, _context.WalletAccount, _context.WalletAccount);
 
+            //position 
+            Position positionBefore = (await _context.WhirlpoolClient.GetPositionAsync(
+                testInfo.Positions[0].PublicKey.ToString(),
+                _defaultCommitment
+            )).ParsedResult;
+            
             //generate liquidity removal quote
             DecreaseLiquidityQuote removalQuote = DecreaseLiquidityQuoteUtils.GenerateDecreaseQuoteWithParams(
                 new DecreaseLiquidityQuoteParams
@@ -179,11 +192,12 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             Assert.IsTrue(decreaseResult.WasSuccessful);
             Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(decreaseResult.Result, _defaultCommitment));
 
-            BigInteger remainingLiquidity = liquidityAmount - removalQuote.LiquidityAmount;
+            BigInteger remainingLiquidity = positionBefore.Liquidity - removalQuote.LiquidityAmount;
 
             //position 
             Position position = (await _context.WhirlpoolClient.GetPositionAsync(
-                testInfo.Positions[0].PublicKey.ToString()
+                testInfo.Positions[0].PublicKey.ToString(),
+                _defaultCommitment
             )).ParsedResult;
 
             Assert.NotNull(position);
@@ -191,7 +205,8 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 
             //ticks
             TickArray tickArray = (await _context.WhirlpoolClient.GetTickArrayAsync(
-                testInfo.Positions[0].TickArrayLower
+                testInfo.Positions[0].TickArrayLower,
+                _defaultCommitment
             )).ParsedResult;
 
             AssertUtils.AssertTick(tickArray.Ticks[56], true, remainingLiquidity, remainingLiquidity);

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Orca;
 using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using Solana.Unity.Dex.Test.Orca.Params;
 using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Types;
 using Solana.Unity.Rpc.Types;
+using System.Numerics;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {
@@ -235,15 +237,12 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             TestWhirlpoolContext ctx,
             PoolInitResult poolInitResult,
             IEnumerable<FundedPositionParams> fundParams,
-            Account feePayer = null,
-            Commitment commitment = Commitment.Finalized
+            Account feePayer = null
         )
         {
             return await FundPositionsAsync(
                 ctx,
                 initPoolParams: poolInitResult.InitPoolParams,
-                tokenAccountA: poolInitResult.TokenAccountA,
-                tokenAccountB: poolInitResult.TokenAccountB,
                 fundParams: fundParams,
                 feePayer
             );
@@ -252,8 +251,6 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
         public static async Task<IList<FundedPositionInfo>> FundPositionsAsync(
             TestWhirlpoolContext ctx,
             InitializePoolParams initPoolParams,
-            PublicKey tokenAccountA,
-            PublicKey tokenAccountB,
             IEnumerable<FundedPositionParams> fundParams,
             Account feePayer = null
         )
@@ -267,9 +264,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             {
                 promises.Add(FundPositionAsync(ctx,
                     initPoolParams,
-                    tokenAccountA,
-                    tokenAccountB,
-                    fundParam
+                    fundParam,
+                    feePayer
                 ));
             }
 
@@ -291,8 +287,6 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
         private static async Task<FundedPositionInfo> FundPositionAsync(
             TestWhirlpoolContext ctx,
             InitializePoolParams initPoolParams,
-            PublicKey tokenAccountA,
-            PublicKey tokenAccountB,
             FundedPositionParams fundParam,
             Account feePayer = null
         )
@@ -336,25 +330,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             //if there is liquidity, we must increase liquidity 
             if (fundParam.LiquidityAmount > 0)
             {
-                //get whirlpool 
-                Whirlpool whirlpool = (await ctx.WhirlpoolClient.GetWhirlpoolAsync(initPoolParams.WhirlpoolPda.PublicKey, ctx.WhirlpoolClient.DefaultCommitment)).ParsedResult;
 
-                await LiquidityTestUtils.CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    ctx.WalletAccount,
-                    whirlpool.TokenMintA,
-                    feePayer,
-                    ctx.RpcClient,
-                    ctx.WhirlpoolClient.DefaultCommitment);
-                
-                await LiquidityTestUtils.CreateAssociatedTokenAccountInstructionIfNotExtant(
-                    ctx.WalletAccount,
-                    whirlpool.TokenMintB,
-                    feePayer,
-                    ctx.RpcClient,
-                    ctx.WhirlpoolClient.DefaultCommitment);
-                
-                
-                //get token amounts 
                 TokenAmounts tokenAmounts = PoolUtils.GetTokenAmountsFromLiquidity(
                     liquidity: fundParam.LiquidityAmount,
                     currentSqrtPrice: initPoolParams.InitSqrtPrice,
@@ -362,32 +338,16 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                     upperSqrtPrice: PriceMath.TickIndexToSqrtPriceX64(fundParam.TickUpperIndex),
                     roundUp: true
                 );
-
-                var increaseResult = await LiquidityTestUtils.IncreaseLiquidityAsync(
-                    ctx,
-                    new IncreaseLiquidityParams
-                    {
-                        Accounts = new IncreaseLiquidityAccounts
-                        {
-                            PositionAuthority = ctx.WalletPubKey,
-                            Whirlpool = initPoolParams.WhirlpoolPda,
-                            Position = openPositionParams.PositionPda,
-                            PositionTokenAccount = openPositionParams.Accounts.PositionTokenAccount,
-                            TokenOwnerAccountA = tokenAccountA,
-                            TokenOwnerAccountB = tokenAccountB,
-                            TokenVaultA = initPoolParams.TokenVaultAKeyPair.PublicKey,
-                            TokenVaultB = initPoolParams.TokenVaultBKeyPair.PublicKey,
-                            TickArrayLower = tickArrayLowerPda,
-                            TickArrayUpper = tickArrayUpperPda,
-                            TokenProgram = AddressConstants.TOKEN_PROGRAM_PUBKEY,
-                        },
-                        LiquidityAmount = fundParam.LiquidityAmount,
-                        TokenMaxA = (ulong)tokenAmounts.TokenA,
-                        TokenMaxB = (ulong)tokenAmounts.TokenB,
-                        PositionAuthorityKeypair = ctx.WalletAccount
-                    }
-                );
                 
+                IDex dex = new OrcaDex(ctx);
+                var txIncrease = await dex.IncreaseLiquidity(
+                    openPositionParams.PositionPda, 
+                    tokenAmounts.TokenA,
+                    tokenAmounts.TokenB, 
+                    commitment: ctx.WhirlpoolClient.DefaultCommitment);
+                txIncrease.Sign(feePayer);
+                var increaseResult = await ctx.RpcClient.SendTransactionAsync(txIncrease.Serialize(), commitment: ctx.WhirlpoolClient.DefaultCommitment);
+
                 Assert.IsTrue(increaseResult.WasSuccessful, $"Failed to IncreaseLiquidity: {increaseResult.Reason}");
                 Assert.IsTrue(await ctx.RpcClient.ConfirmTransaction(increaseResult.Result)); 
 

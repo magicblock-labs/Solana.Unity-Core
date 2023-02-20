@@ -274,9 +274,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
 
             var fundedPositions = await PositionTestUtils.FundPositionsAsync(
                 ctx,
-                initPoolParams: initResult.InitPoolParams, 
-                tokenAccountA: initResult.TokenAccountA,
-                tokenAccountB: initResult.TokenAccountB,
+                initPoolParams: initResult.InitPoolParams,
                 fundParams: fundParams
             );
 
