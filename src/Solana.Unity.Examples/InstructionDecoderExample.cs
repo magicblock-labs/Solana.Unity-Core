@@ -5,6 +5,7 @@ using Solana.Unity.Rpc.Models;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -16,14 +17,14 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(MnemonicWords);
 
             var fromAccount = wallet.GetAccount(10);
             var toAccount = wallet.GetAccount(8);
 
-            var blockHash = rpcClient.GetRecentBlockHash();
+            var blockHash = await rpcClient.GetRecentBlockHashAsync();
             Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
 
             var msgBytes = new TransactionBuilder()
@@ -57,12 +58,12 @@ namespace Solana.Unity.Examples
     public class InstructionDecoderFromBlockExample : IExample
     {
         private static readonly IRpcClient rpcClient = ClientFactory.GetClient(Cluster.TestNet);
-        public void Run()
+        public async void Run()
         {
             var blockList = new ulong[] { 87731252, 87731314 };
             foreach (var slot in blockList)
             {
-                var block = rpcClient.GetBlock(slot);
+                var block = await rpcClient.GetBlockAsync(slot);
                 File.WriteAllText($"./response{slot}.json", block.RawRpcResponse);
                 Console.WriteLine($"BlockHash >> {block.Result.Blockhash}");
 

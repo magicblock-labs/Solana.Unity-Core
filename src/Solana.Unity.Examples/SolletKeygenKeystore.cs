@@ -4,6 +4,7 @@ using Solana.Unity.Wallet.Bip39;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {

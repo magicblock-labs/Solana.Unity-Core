@@ -9,6 +9,7 @@ using Solana.Unity.Wallet;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -21,7 +22,7 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
@@ -32,12 +33,12 @@ namespace Solana.Unity.Examples
             #region Create and Initialize a token Mint Account
 
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = RpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await RpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionAcc =
-                RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             ulong minBalanceForExemptionMint =
-                RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
 
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
@@ -81,7 +82,7 @@ namespace Solana.Unity.Examples
                 AddInstruction(MemoProgram.NewMemo(initialAccount, "Hello from Sol.Net")).
                 Build(new List<Account> { ownerAccount, mintAccount, initialAccount });
 
-            string createAndInitializeMintToTxSignature = Examples.SubmitTxSendAndLog(createAndInitializeMintToTx);
+            string createAndInitializeMintToTxSignature = await Examples.SubmitTxSendAndLog(createAndInitializeMintToTx);
 
             Examples.PollConfirmedTx(createAndInitializeMintToTxSignature);
 
@@ -117,7 +118,7 @@ namespace Solana.Unity.Examples
                 AddInstruction(MemoProgram.NewMemo(ownerAccount, "Hello from Sol.Net")).
                 Build(new List<Account> { ownerAccount });
 
-            string createAssociatedTokenAccountTxSignature = Examples.SubmitTxSendAndLog(createAssociatedTokenAccountTx);
+            string createAssociatedTokenAccountTxSignature = await Examples.SubmitTxSendAndLog(createAssociatedTokenAccountTx);
 
             Examples.PollConfirmedTx(createAssociatedTokenAccountTxSignature);
 

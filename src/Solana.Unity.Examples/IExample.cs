@@ -1,4 +1,6 @@
-﻿namespace Solana.Unity.Examples
+﻿using System.Threading.Tasks;
+
+namespace Solana.Unity.Examples
 {
     interface IExample
     {

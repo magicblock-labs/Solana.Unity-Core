@@ -10,6 +10,7 @@ using Solana.Unity.Wallet.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -22,15 +23,15 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = RpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await RpcClient.GetRecentBlockHashAsync();
             ulong minBalanceForExemptionAcc =
-                RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             ulong minBalanceForExemptionMint =
-                RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
 
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
@@ -82,7 +83,7 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = txx.Serialize();
 
-            var txSim = RpcClient.SimulateTransaction(txBytes);
+            var txSim = await RpcClient.SimulateTransactionAsync(txBytes);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
@@ -108,7 +109,7 @@ namespace Solana.Unity.Examples
             }
 
             var txDecBytes = tx.Serialize();
-            var txDecSim = RpcClient.SimulateTransaction(txDecBytes);
+            var txDecSim = await RpcClient.SimulateTransactionAsync(txDecBytes);
             string decLogs = Examples.PrettyPrintTransactionSimulationLogs(txDecSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txDecSim.Result.Value.Error}\n\tLogs: \n" + decLogs);
         }

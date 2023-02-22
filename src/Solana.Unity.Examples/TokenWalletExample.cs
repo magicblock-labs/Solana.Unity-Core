@@ -3,6 +3,7 @@ using Solana.Unity.Extensions.TokenMint;
 using Solana.Unity.Rpc;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -15,7 +16,7 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
 
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
@@ -26,7 +27,7 @@ namespace Solana.Unity.Examples
             tokens.Add(new TokenDef("AHRNasvVB8UDkU9knqPcn4aVfRbnbVC9HJgSTBwbx8re", "Solnet Test Token", "STT", 2));
 
             // load snapshot of wallet and sub-accounts
-            TokenWallet tokenWallet = TokenWallet.Load(RpcClient, tokens, ownerAccount);
+            TokenWallet tokenWallet = await TokenWallet.LoadAsync(RpcClient, tokens, ownerAccount);
             var balances = tokenWallet.Balances();
             var maxsym = balances.Max(x => x.Symbol.Length);
             var maxname = balances.Max(x => x.TokenName.Length);

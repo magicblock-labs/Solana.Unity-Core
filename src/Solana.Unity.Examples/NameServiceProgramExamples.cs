@@ -3,6 +3,7 @@ using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Builders;
 using Solana.Unity.Wallet;
 using System;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -48,17 +49,17 @@ namespace Solana.Unity.Examples
             return nameAccountKey;
         }
 
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(MnemonicWords);
 
-            var blockHash = rpcClient.GetRecentBlockHash();
+            var blockHash = await rpcClient.GetRecentBlockHashAsync();
             var minBalanceForExemptionNameAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(NameServiceProgram.NameAccountSize + 96).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(NameServiceProgram.NameAccountSize + 96)).Result;
 
             Console.WriteLine($"MinBalanceForRentExemption NameAccount >> {minBalanceForExemptionNameAcc}");
             var minBalanceForExemptionNameReverseRegistry =
-                rpcClient.GetMinimumBalanceForRentExemption(96 + 18).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(96 + 18)).Result;
             Console.WriteLine($"MinBalanceForRentExemption ReverseRegistry >> {minBalanceForExemptionNameReverseRegistry}");
 
             var payerAccount = wallet.GetAccount(10);
@@ -94,11 +95,11 @@ namespace Solana.Unity.Examples
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
 
-            var txSim = rpcClient.SimulateTransaction(tx);
+            var txSim = await rpcClient.SimulateTransactionAsync(tx);
             var logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            var txReq = rpcClient.SendTransaction(tx);
+            var txReq = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
         }
     }
