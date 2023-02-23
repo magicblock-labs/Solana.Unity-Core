@@ -283,7 +283,8 @@ namespace Solana.Unity.Rpc
         /// <param name="addresses">The list of addresses to query, as base-58 encoded strings.</param>
         /// <param name="epoch">The epoch.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
-        /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
+        /// <returns>Returns a task that holds the asynchronous operation result and state.
+        /// The InflationReward will be null if there is no inflation reward</returns>
         Task<RequestResult<List<InflationReward>>> GetInflationRewardAsync(IList<string> addresses,
             ulong epoch = 0, Commitment commitment = Commitment.Finalized);
         
