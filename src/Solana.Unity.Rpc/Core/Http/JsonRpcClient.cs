@@ -145,10 +145,8 @@ namespace Solana.Unity.Rpc.Core.Http
             RequestResult<T> result = new(response);
             try
             {
-                if (result.HttpStatusCode != HttpStatusCode.OK)
-                    return result;
-                
-                result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (response.Content != null)
+                    result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (_logger != null)
                 {
@@ -274,9 +272,8 @@ namespace Solana.Unity.Rpc.Core.Http
             RequestResult<JsonRpcBatchResponse> result = new(response);
             try
             {
-                if (result.HttpStatusCode != HttpStatusCode.OK)
-                    return result;
-                result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (response.Content != null)
+                    result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (_logger != null)
                 {
