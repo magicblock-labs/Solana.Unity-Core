@@ -84,7 +84,7 @@ for a list of other commonly needed programs see below:
 
 ## Examples
 
-The [Solana.Unity.Examples](https://github.com/garbles-labs/Solana.Unity-Core/tree/master/src/Solana.Unity.Examples/) project contains some code examples,
+The [Solana.Unity.Examples](https://github.com/magicblock-labs/Solana.Unity-Core/tree/master/src/Solana.Unity.Examples/) project contains some code examples,
 essentially we're trying very hard to make it intuitive and easy to use the library.
 When trying to run these examples they might lead to errors in cases where they create new accounts, in these cases, the response from the RPC
 contains an and the transaction simulation logs which state that `account address is ... already in use`,
@@ -92,7 +92,7 @@ all you need to do is increment the value that is used to derive that account fr
 
 ### Wallets
 
-The [Solana.Unity.Wallet](https://github.com/garbles-labs/Solana.Unity-Core/tree/master/src/Solana.Unity.Wallet/) project implements wallet and key generation features, these were made compatible
+The [Solana.Unity.Wallet](https://github.com/magicblock-labs/Solana.Unity-Core/tree/master/src/Solana.Unity.Wallet/) project implements wallet and key generation features, these were made compatible
 with both the keys generated using `solana-keygen` and the keys generated using the popular browser wallet [sollet.io](https://www.sollet.io).
 
 #### Initializing a wallet compatible with sollet
