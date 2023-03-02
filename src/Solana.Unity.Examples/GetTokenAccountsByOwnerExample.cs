@@ -5,6 +5,7 @@ using Solana.Unity.Rpc.Models;
 using Solana.Unity.Wallet;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -20,11 +21,11 @@ namespace Solana.Unity.Examples
         {
         }
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
             Account ownerAccount = wallet.GetAccount(10);
-            RequestResult<ResponseValue<List<TokenAccount>>> token_accounts = rpcClient.GetTokenAccountsByOwner(ownerAccount.PublicKey, tokenProgramId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+            RequestResult<ResponseValue<List<TokenAccount>>> token_accounts = await rpcClient.GetTokenAccountsByOwnerAsync(ownerAccount.PublicKey, tokenProgramId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 
             foreach (TokenAccount account in token_accounts.Result.Value)
             {
@@ -33,7 +34,7 @@ namespace Solana.Unity.Examples
             }
 
             var tokAccount = new PublicKey("CuieVDEDtLo7FypA9SbLM9saXFdb1dsshEkyErMqkRQq");
-            var tokenAccounts = mRpcClient.GetTokenAccountsByOwner(tokAccount, tokenProgramId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+            var tokenAccounts = await mRpcClient.GetTokenAccountsByOwnerAsync(tokAccount, tokenProgramId: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 
             foreach (TokenAccount account in tokenAccounts.Result.Value)
             {
@@ -44,7 +45,7 @@ namespace Solana.Unity.Examples
             }
 
             var delegateKey = new PublicKey("4Nd1mBQtrMJVYVfKf2PJy9NZUZdTAsp7D4xWLs4gDB4T");
-            var delegateTokenAccounts = mRpcClient.GetTokenAccountsByDelegate(delegateKey, "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT");
+            var delegateTokenAccounts = await mRpcClient.GetTokenAccountsByDelegateAsync(delegateKey, "StepAscQoEioFxxWGnh2sLBDFp9d8rvKz2Yp39iDpyT");
 
             foreach (TokenAccount account in delegateTokenAccounts.Result.Value)
             {

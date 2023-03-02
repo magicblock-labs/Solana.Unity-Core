@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -26,15 +27,15 @@ namespace Solana.Unity.Examples
         /// Submits a transaction and logs the output from SimulateTransaction.
         /// </summary>
         /// <param name="tx">The transaction data ready to simulate or submit to the network.</param>
-        public static string SubmitTxSendAndLog(byte[] tx)
+        public static async Task<string> SubmitTxSendAndLog(byte[] tx)
         {
             Console.WriteLine($"Tx Data: {Convert.ToBase64String(tx)}");
 
-            RequestResult<ResponseValue<SimulationLogs>> txSim = RpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await RpcClient.SimulateTransactionAsync(tx);
             string logs = PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            RequestResult<string> txReq = RpcClient.SendTransaction(tx);
+            RequestResult<string> txReq = await RpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
 
             return txReq.Result;
@@ -44,13 +45,13 @@ namespace Solana.Unity.Examples
         /// Polls the rpc client until a transaction signature has been confirmed.
         /// </summary>
         /// <param name="signature">The first transaction signature.</param>
-        public static void PollConfirmedTx(string signature)
+        public static async void PollConfirmedTx(string signature)
         {
-            RequestResult<TransactionMetaSlotInfo> txMeta = RpcClient.GetTransaction(signature);
+            RequestResult<TransactionMetaSlotInfo> txMeta = await RpcClient.GetTransactionAsync(signature);
             while (!txMeta.WasSuccessful)
             {
                 Thread.Sleep(5000);
-                txMeta = RpcClient.GetTransaction(signature);
+                txMeta = await RpcClient.GetTransactionAsync(signature);
             }
         }
 

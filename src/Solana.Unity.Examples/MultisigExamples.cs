@@ -8,6 +8,7 @@ using Solana.Unity.Rpc.Models;
 using Solana.Unity.Wallet;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -22,20 +23,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -88,10 +89,10 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string createMultiSigAndMintSignature = Examples.SubmitTxSendAndLog(txBytes);
+            string createMultiSigAndMintSignature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(createMultiSigAndMintSignature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             msgData = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
@@ -134,7 +135,7 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string mintToSignature = Examples.SubmitTxSendAndLog(txBytes);
+            string mintToSignature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(mintToSignature);
         }
     }
@@ -150,20 +151,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -207,7 +208,7 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string mintToSignature = Examples.SubmitTxSendAndLog(txBytes);
+            string mintToSignature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(mintToSignature);
         }
     }
@@ -223,20 +224,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -306,7 +307,7 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string signature = Examples.SubmitTxSendAndLog(txBytes);
+            string signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
             // After the previous transaction is confirmed we use TransferChecked to transfer tokens using the
@@ -339,7 +340,7 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
         }
     }
@@ -355,20 +356,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -424,10 +425,10 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string signature = Examples.SubmitTxSendAndLog(txBytes);
+            string signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
 
             // Then we create an account which will be the token's mint authority
@@ -476,10 +477,10 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             // Here we mint tokens to an account using the mint authority multi sig
             msgData = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
@@ -523,10 +524,10 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             // After doing this, we freeze the account to which we just minted tokens
             // Notice how the signers used are different, because the `freezeAuthority` has different signers
@@ -560,10 +561,10 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             // Because we're actually cool people, we now thaw that same account and then set the authority to nothing
             msgData = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
@@ -607,7 +608,7 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
         }
     }
@@ -623,20 +624,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -700,10 +701,10 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string signature = Examples.SubmitTxSendAndLog(txBytes);
+            string signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             msgData = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
@@ -746,10 +747,10 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             msgData = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
@@ -783,10 +784,10 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            blockHash = rpcClient.GetRecentBlockHash();
+            blockHash = await rpcClient.GetRecentBlockHashAsync();
 
 
             msgData = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
@@ -824,7 +825,7 @@ namespace Solana.Unity.Examples
 
             txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            signature = Examples.SubmitTxSendAndLog(txBytes);
+            signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
         }
@@ -841,20 +842,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -925,7 +926,7 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string signature = Examples.SubmitTxSendAndLog(txBytes);
+            string signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
         }
@@ -942,20 +943,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -970,7 +971,7 @@ namespace Solana.Unity.Examples
 
             // The account has balance so we'll burn it before
             RequestResult<ResponseValue<TokenBalance>> balance =
-                rpcClient.GetTokenAccountBalance(tokenAccountWithMultisigOwner.PublicKey);
+                await rpcClient.GetTokenAccountBalanceAsync(tokenAccountWithMultisigOwner.PublicKey);
 
             Console.WriteLine($"Account Balance >> {balance.Result.Value.UiAmountString}");
 
@@ -1016,7 +1017,7 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string signature = Examples.SubmitTxSendAndLog(txBytes);
+            string signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
         }
@@ -1031,14 +1032,14 @@ namespace Solana.Unity.Examples
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
             // The multisig which is the token account authority
             Account tokenMultiSignature = wallet.GetAccount(4045);
 
-            var account = rpcClient.GetAccountInfo(tokenMultiSignature.PublicKey);
+            var account = await rpcClient.GetAccountInfoAsync(tokenMultiSignature.PublicKey);
 
             var multiSigAccount = MultiSignatureAccount.Deserialize(Convert.FromBase64String(account.Result.Value.Data[0]));
 

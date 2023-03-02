@@ -28,7 +28,7 @@ namespace Solana.Unity.Extensions.Test
 
 
         [TestMethod]
-        public void TestLoadKnownMint()
+        public async void TestLoadKnownMint()
         {
             // get owner
             var ownerWallet = new Wallet.Wallet(MnemonicWords);
@@ -49,7 +49,7 @@ namespace Solana.Unity.Extensions.Test
 
             // load account
             var publicKey = "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5";
-            var wallet = TokenWallet.Load(client, tokens, publicKey);
+            var wallet = await TokenWallet.LoadAsync(client, tokens, publicKey);
 
             // check wallet 
             Assert.IsNotNull(wallet);
@@ -79,7 +79,7 @@ namespace Solana.Unity.Extensions.Test
 
 
         [TestMethod]
-        public void TestLoadUnknownMint()
+        public async void TestLoadUnknownMint()
         {
             // get owner
             var ownerWallet = new Wallet.Wallet(MnemonicWords);
@@ -93,7 +93,7 @@ namespace Solana.Unity.Extensions.Test
 
             // load account
             var tokens = new TokenMintResolver();
-            var wallet = TokenWallet.Load(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
+            var wallet = await TokenWallet.LoadAsync(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
 
             // check wallet 
             Assert.IsNotNull(wallet);
@@ -115,7 +115,7 @@ namespace Solana.Unity.Extensions.Test
 
 
         [TestMethod]
-        public void TestProvisionAtaInjectBuilder()
+        public async void TestProvisionAtaInjectBuilder()
         {
             // get owner
             var ownerWallet = new Wallet.Wallet(MnemonicWords);
@@ -133,7 +133,7 @@ namespace Solana.Unity.Extensions.Test
             tokens.Add(testToken);
 
             // load account
-            var wallet = TokenWallet.Load(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
+            var wallet = await TokenWallet.LoadAsync(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
 
             // check wallet 
             Assert.IsNotNull(wallet);
@@ -164,7 +164,7 @@ namespace Solana.Unity.Extensions.Test
 
 
         [TestMethod]
-        public void TestLoadRefresh()
+        public async void TestLoadRefresh()
         {
             // get owner
             var ownerWallet = new Wallet.Wallet(MnemonicWords);
@@ -184,19 +184,19 @@ namespace Solana.Unity.Extensions.Test
             tokens.Add(testToken);
 
             // load account
-            var wallet = TokenWallet.Load(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
+            var wallet = await TokenWallet.LoadAsync(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
 
             // check wallet 
             Assert.IsNotNull(wallet);
 
             // refresh
-            wallet.Refresh();
+            await wallet.RefreshAsync();
 
         }
 
 
         [TestMethod]
-        public void TestSendTokenProvisionAta()
+        public async void TestSendTokenProvisionAta()
         {
 
             // get owner
@@ -223,7 +223,7 @@ namespace Solana.Unity.Extensions.Test
             tokens.Add(testToken);
 
             // load account 
-            var wallet = TokenWallet.Load(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
+            var wallet = await TokenWallet.LoadAsync(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
             Assert.IsNotNull(wallet);
 
             // identify test token account with some balance
@@ -237,23 +237,22 @@ namespace Solana.Unity.Extensions.Test
             client.AddTextFile("Resources/TokenWallet/GetTokenAccountsByOwnerResponse2.json");
             client.AddTextFile("Resources/TokenWallet/GetRecentBlockhashResponse.json");
             client.AddTextFile("Resources/TokenWallet/SendTransactionResponse.json");
-            wallet.Send(testTokenAccount, 1M, targetOwner, signer.PublicKey, builder => builder.Build(signer));
-
+            await wallet.SendAsync(testTokenAccount, 1M, targetOwner, signer.PublicKey, builder => builder.Build(signer));
         }
 
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestTokenWalletLoadAddressCheck()
+        public async void TestTokenWalletLoadAddressCheck()
         {
             // try to load a made up wallet address
             var client = new MockTokenWalletRpc();
             var tokens = new TokenMintResolver();
-            TokenWallet.Load(client, tokens, "FAKEkjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
+            await TokenWallet.LoadAsync(client, tokens, "FAKEkjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
         }
 
 
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestTokenWalletSendAddressCheck()
+        public async void TestTokenWalletSendAddressCheck()
         {
 
             // get owner
@@ -272,15 +271,14 @@ namespace Solana.Unity.Extensions.Test
             tokens.Add(testToken);
 
             // load account and identify test token account with some balance
-            var wallet = TokenWallet.Load(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
+            var wallet = await TokenWallet.LoadAsync(client, tokens, "9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5");
             Assert.IsNotNull(wallet);
             var testTokenAccount = wallet.TokenAccounts().ForToken(testToken).WithAtLeast(5M).First();
             Assert.IsFalse(testTokenAccount.IsAssociatedTokenAccount);
 
             // trigger send to bogus target wallet
             var targetOwner = "FAILzxtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5";
-            wallet.Send(testTokenAccount, 1M, targetOwner, signer.PublicKey, builder => builder.Build(signer));
-
+            await wallet.SendAsync(testTokenAccount, 1M, targetOwner, signer.PublicKey, builder => builder.Build(signer));
         }
 
 
@@ -288,7 +286,7 @@ namespace Solana.Unity.Extensions.Test
         /// Check to make sure callee can not send source TokenWalletAccount from Wallet A using Wallet B
         /// </summary>
         [TestMethod, ExpectedException(typeof(AggregateException))]
-        public void TestSendTokenDefendAgainstAccountMismatch()
+        public async void TestSendTokenDefendAgainstAccountMismatch()
         {
 
             // define mints and get owner 
@@ -304,14 +302,14 @@ namespace Solana.Unity.Extensions.Test
             Assert.AreEqual("9we6kjtbcZ2vy3GSLLsZTEhbAqXPTRvEyoxa8wxSqKp5", account_a.PublicKey.Key);
             client.AddTextFile("Resources/TokenWallet/GetBalanceResponse.json");
             client.AddTextFile("Resources/TokenWallet/GetTokenAccountsByOwnerResponse.json");
-            var wallet_a = TokenWallet.Load(client, tokens, account_a);
+            var wallet_a = await TokenWallet.LoadAsync(client, tokens, account_a);
 
             // load wallet b
             var account_b = ownerWallet.GetAccount(2);
             Assert.AreEqual("3F2RNf2f2kWYgJ2XsqcjzVeh3rsEQnwf6cawtBiJGyKV", account_b.PublicKey.Key);
             client.AddTextFile("Resources/TokenWallet/GetBalanceResponse.json");
             client.AddTextFile("Resources/TokenWallet/GetTokenAccountsByOwnerResponse2.json");
-            var wallet_b = TokenWallet.Load(client, tokens, account_b);
+            var wallet_b = await TokenWallet.LoadAsync(client, tokens, account_b);
 
             // use other account as mock target and check derived PDA
             var destination = ownerWallet.GetAccount(99);
@@ -321,7 +319,7 @@ namespace Solana.Unity.Extensions.Test
             Assert.IsFalse(account_in_a.IsAssociatedTokenAccount);
 
             // attempt to send using wallet b - this should not succeed
-            wallet_b.Send(account_in_a, 1M, destination, account_a.PublicKey, builder => builder.Build(account_b));
+            await wallet_b.SendAsync(account_in_a, 1M, destination, account_a.PublicKey, builder => builder.Build(account_b));
 
         }
 

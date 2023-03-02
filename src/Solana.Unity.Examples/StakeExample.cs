@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using static Solana.Unity.Programs.Models.Stake.State;
 using Solana.Unity.Wallet.Bip39;
 using Solana.Unity.Wallet.Utilities;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -19,12 +20,12 @@ namespace Solana.Unity.Examples
 
         private const string MnemonicWords =
            "clerk shoe noise umbrella apple gold alien swap desert rubber truck okay twenty fiscal near talent drastic present leg put balcony leader access glimpse";
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
-            rpcClient.RequestAirdrop(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
-            ulong minBalance = rpcClient.GetMinimumBalanceForRentExemption(StakeProgram.StakeAccountDataSize).Result;
+            await rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "yrdy1", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
             Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
@@ -42,11 +43,11 @@ namespace Solana.Unity.Examples
                      StakeProgram.ProgramIdKey))
                 .Build(new List<Account> { fromAccount });
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
 
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx, skipPreflight: true);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx, skipPreflight: true);
             Console.WriteLine($"First Tx Result: {firstSig.Result}");
         }
     }
@@ -56,18 +57,18 @@ namespace Solana.Unity.Examples
 
         private const string MnemonicWords =
            "clerk shoe noise umbrella apple gold alien swap desert rubber truck okay twenty fiscal near talent drastic present leg put balcony leader access glimpse";
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             var seed = wallet.DeriveMnemonicSeed();
             var b58 = new Base58Encoder();
             string f = b58.EncodeData(seed);
-            rpcClient.RequestAirdrop(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
-            ulong minbalanceforexception = rpcClient.GetMinimumBalanceForRentExemption(StakeProgram.StakeAccountDataSize).Result;
+            rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             Account toAccount = wallet.GetAccount(1);
-            rpcClient.RequestAirdrop(toAccount.PublicKey, 100_000_000);
+            rpcClient.RequestAirdropAsync(toAccount.PublicKey, 100_000_000);
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "dog5", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
 
             Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
@@ -86,11 +87,11 @@ namespace Solana.Unity.Examples
                 .Build(new List<Account> { fromAccount });
 
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
 
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx, skipPreflight: true);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx, skipPreflight: true);
             Console.WriteLine($"First Tx Result: {firstSig.Result}");
         }
     }
@@ -100,11 +101,11 @@ namespace Solana.Unity.Examples
 
         private const string MnemonicWords =
            "clerk shoe noise umbrella apple gold alien swap desert rubber truck okay twenty fiscal near talent drastic present leg put balcony leader access glimpse";
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
-            rpcClient.RequestAirdrop(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             Account fromAccount = wallet.Account;
             Account toAccount = wallet.GetAccount(1);
@@ -123,11 +124,11 @@ namespace Solana.Unity.Examples
                     fromAccount))
                 .Build(new List<Account> { fromAccount });
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
 
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx, skipPreflight: true);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx, skipPreflight: true);
             Console.WriteLine($"First Tx Result: {firstSig.Result}");
         }
     }
@@ -137,12 +138,12 @@ namespace Solana.Unity.Examples
 
         private const string MnemonicWords =
            "clerk shoe noise umbrella apple gold alien swap desert rubber truck okay twenty fiscal near talent drastic present leg put balcony leader access glimpse";
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
-            rpcClient.RequestAirdrop(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
-            ulong minbalanceforexception = rpcClient.GetMinimumBalanceForRentExemption(StakeProgram.StakeAccountDataSize).Result;
+            rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "dog5", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
             Authorized authorized = new Authorized()
@@ -177,11 +178,11 @@ namespace Solana.Unity.Examples
                 .Build(new List<Account> { fromAccount });
 
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
 
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"First Tx Result: {firstSig.Result}");
         }
     }
@@ -192,12 +193,12 @@ namespace Solana.Unity.Examples
         private const string MnemonicWords =
            "clerk shoe noise umbrella apple gold alien swap desert rubber truck okay twenty fiscal near talent drastic present leg put balcony leader access glimpse";
 
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
-            rpcClient.RequestAirdrop(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
-            ulong minbalanceforexception = rpcClient.GetMinimumBalanceForRentExemption(StakeProgram.StakeAccountDataSize).Result;
+            rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             Account stakeAccount = wallet.GetAccount(22);
 
@@ -230,11 +231,11 @@ namespace Solana.Unity.Examples
                     lockup))
                 .Build(new List<Account> { fromAccount, stakeAccount });
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
 
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"First Tx Result: {firstSig.Result}");
         }
     }
@@ -245,12 +246,12 @@ namespace Solana.Unity.Examples
         private const string MnemonicWords =
            "clerk shoe noise umbrella apple gold alien swap desert rubber truck okay twenty fiscal near talent drastic present leg put balcony leader access glimpse";
 
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
-            rpcClient.RequestAirdrop(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
-            ulong minBalance = rpcClient.GetMinimumBalanceForRentExemption(StakeProgram.StakeAccountDataSize).Result;
+            rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
 
             Account a6 = wallet.GetAccount(6);
             Account a5 = wallet.GetAccount(5);
@@ -277,11 +278,11 @@ namespace Solana.Unity.Examples
                     ))
                 .CompileMessage();
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
 
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"First Tx Result: {firstSig.Result}");
         }
     }

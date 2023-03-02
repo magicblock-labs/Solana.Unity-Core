@@ -1,6 +1,7 @@
 ﻿using Solana.Unity.Programs.Clients;
 using Solana.Unity.Rpc;
 using System;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {

@@ -8,6 +8,7 @@ using Solana.Unity.Rpc.Models;
 using Solana.Unity.Wallet;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
@@ -19,14 +20,14 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
             Account fromAccount = wallet.GetAccount(10);
             Account toAccount = wallet.GetAccount(8);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
             Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
 
             byte[] tx = new TransactionBuilder()
@@ -37,10 +38,10 @@ namespace Solana.Unity.Examples
                 .Build(fromAccount);
 
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"First Tx Signature: {firstSig.Result}");
         }
     }
@@ -53,17 +54,17 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
 
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account mintAccount = wallet.GetAccount(2222);
@@ -106,11 +107,11 @@ namespace Solana.Unity.Examples
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
 
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            RequestResult<string> txReq = rpcClient.SendTransaction(tx);
+            RequestResult<string> txReq = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
         }
     }
@@ -123,17 +124,17 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
 
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account mintAccount = wallet.GetAccount(21);
@@ -155,11 +156,11 @@ namespace Solana.Unity.Examples
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
 
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            RequestResult<string> txReq = rpcClient.SendTransaction(tx);
+            RequestResult<string> txReq = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
         }
     }
@@ -172,12 +173,12 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
-            ulong minBalanceForExemptionAcc = rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            ulong minBalanceForExemptionAcc = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
 
             Account mintAccount = wallet.GetAccount(31);
@@ -211,11 +212,11 @@ namespace Solana.Unity.Examples
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
 
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            RequestResult<string> txReq = rpcClient.SendTransaction(tx);
+            RequestResult<string> txReq = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
         }
     }
@@ -228,13 +229,13 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
 
             Account mintAccount = wallet.GetAccount(21);
@@ -273,11 +274,11 @@ namespace Solana.Unity.Examples
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
 
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            RequestResult<string> txReq = rpcClient.SendTransaction(tx);
+            RequestResult<string> txReq = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
         }
     }
@@ -289,13 +290,13 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(NonceAccount.AccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(NonceAccount.AccountDataSize)).Result;
 
             Account ownerAccount = wallet.GetAccount(10);
             Console.WriteLine($"OwnerAccount: {ownerAccount}");
@@ -321,11 +322,11 @@ namespace Solana.Unity.Examples
 
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            RequestResult<string> txReq = rpcClient.SendTransaction(tx);
+            RequestResult<string> txReq = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
         }
     }
@@ -337,7 +338,7 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
@@ -349,7 +350,7 @@ namespace Solana.Unity.Examples
             Console.WriteLine($"ToAccount: {toAccount}");
 
             // Get the Nonce Account to get the Nonce to use for the transaction
-            RequestResult<ResponseValue<AccountInfo>> nonceAccountInfo = rpcClient.GetAccountInfo(nonceAccount.PublicKey);
+            RequestResult<ResponseValue<AccountInfo>> nonceAccountInfo = await rpcClient.GetAccountInfoAsync(nonceAccount.PublicKey);
             byte[] accountDataBytes = Convert.FromBase64String(nonceAccountInfo.Result.Value.Data[0]);
             NonceAccount nonceAccountData = NonceAccount.Deserialize(accountDataBytes);
             Console.WriteLine($"NonceAccount Authority: {nonceAccountData.Authorized.Key}");
@@ -377,11 +378,11 @@ namespace Solana.Unity.Examples
                 .Build(ownerAccount);
 
             Console.WriteLine($"Tx: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
 
-            RequestResult<string> txReq = rpcClient.SendTransaction(tx);
+            RequestResult<string> txReq = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"Tx Signature: {txReq.Result}");
         }
     }
@@ -394,20 +395,20 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
 
             ulong minBalanceForExemptionMultiSig =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MultisigAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption MultiSig >> {minBalanceForExemptionMultiSig}");
             ulong minBalanceForExemptionAcc =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Account >> {minBalanceForExemptionAcc}");
             ulong minBalanceForExemptionMint =
-                rpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result;
+                (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result;
             Console.WriteLine($"MinBalanceForRentExemption Mint Account >> {minBalanceForExemptionMint}");
 
             Account ownerAccount = wallet.GetAccount(10);
@@ -432,7 +433,7 @@ namespace Solana.Unity.Examples
 
             byte[] txBytes = Examples.LogTransactionAndSerialize(tx);
 
-            string mintToSignature = Examples.SubmitTxSendAndLog(txBytes);
+            string mintToSignature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(mintToSignature);
         }
     }
@@ -445,14 +446,14 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
             Account fromAccount = wallet.GetAccount(10);
             Account toAccount = wallet.GetAccount(8);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = rpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
             Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
 
             TransactionBuilder txBuilder = new TransactionBuilder()
@@ -468,10 +469,10 @@ namespace Solana.Unity.Examples
                 .Serialize();
 
             Console.WriteLine($"Tx base64: {Convert.ToBase64String(tx)}");
-            RequestResult<ResponseValue<SimulationLogs>> txSim = rpcClient.SimulateTransaction(tx);
+            RequestResult<ResponseValue<SimulationLogs>> txSim = await rpcClient.SimulateTransactionAsync(tx);
             string logs = Examples.PrettyPrintTransactionSimulationLogs(txSim.Result.Value.Logs);
             Console.WriteLine($"Transaction Simulation:\n\tError: {txSim.Result.Value.Error}\n\tLogs: \n" + logs);
-            RequestResult<string> firstSig = rpcClient.SendTransaction(tx);
+            RequestResult<string> firstSig = await rpcClient.SendTransactionAsync(tx);
             Console.WriteLine($"First Tx Signature: {firstSig.Result}");
         }
     }

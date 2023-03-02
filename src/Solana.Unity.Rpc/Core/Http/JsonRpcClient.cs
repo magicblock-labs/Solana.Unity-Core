@@ -145,7 +145,8 @@ namespace Solana.Unity.Rpc.Core.Http
             RequestResult<T> result = new(response);
             try
             {
-                result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (response.Content != null)
+                    result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (_logger != null)
                 {
@@ -268,10 +269,11 @@ namespace Solana.Unity.Rpc.Core.Http
         private async Task<RequestResult<JsonRpcBatchResponse>> HandleBatchResult(JsonRpcBatchRequest reqs, HttpResponseMessage response)
         {
             var id_for_log = reqs.Min(x => x.Id);
-            RequestResult<JsonRpcBatchResponse> result = new RequestResult<JsonRpcBatchResponse>(response);
+            RequestResult<JsonRpcBatchResponse> result = new(response);
             try
             {
-                result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (response.Content != null)
+                    result.RawRpcResponse = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
                 if (_logger != null)
                 {

@@ -4,12 +4,13 @@ using Solana.Unity.Rpc.Builders;
 using Solana.Unity.Wallet;
 using Solana.Unity.Wallet.Bip39;
 using System;
+using System.Threading.Tasks;
 
 namespace Solana.Unity.Examples
 {
     public class HelloWorldExample : IExample
     {
-        public void Run()
+        public async void Run()
         {
             var wallet = new Wallet.Wallet(WordCount.TwentyFour, WordList.English);
 
@@ -20,11 +21,11 @@ namespace Solana.Unity.Examples
 
             IRpcClient rpcClient = ClientFactory.GetClient(Cluster.TestNet);
 
-            var balance = rpcClient.GetBalance(wallet.Account.PublicKey);
+            var balance = await rpcClient.GetBalanceAsync(wallet.Account.PublicKey);
 
             Console.WriteLine($"Balance: {balance.Result.Value}");
 
-            var transactionHash = rpcClient.RequestAirdrop(wallet.Account.PublicKey, 100_000_000);
+            var transactionHash = await rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
 
             Console.WriteLine($"TxHash: {transactionHash.Result}");
 
@@ -32,22 +33,22 @@ namespace Solana.Unity.Examples
 
             streamingRpcClient.ConnectAsync().Wait();
 
-            var subscription = streamingRpcClient.SubscribeSignature(transactionHash.Result, (sub, data) =>
+            var subscription = streamingRpcClient.SubscribeSignature(transactionHash.Result, async (sub, data) =>
             {
                 if (data.Value.Error == null)
                 {
-                    balance = rpcClient.GetBalance(wallet.Account.PublicKey);
+                    balance = await rpcClient.GetBalanceAsync(wallet.Account.PublicKey);
 
                     Console.WriteLine($"Balance: {balance.Result.Value}");
 
                     var memoInstruction = MemoProgram.NewMemoV2("Hello Solana World, using Solana.Unity :)");
 
-                    var recentHash = rpcClient.GetRecentBlockHash();
+                    var recentHash = await rpcClient.GetRecentBlockHashAsync();
 
                     var tx = new TransactionBuilder().AddInstruction(memoInstruction).SetFeePayer(wallet.Account)
                         .SetRecentBlockHash(recentHash.Result.Value.Blockhash).Build(wallet.Account);
 
-                    var txHash = rpcClient.SendTransaction(tx);
+                    var txHash = await rpcClient.SendTransactionAsync(tx);
 
                     Console.WriteLine($"TxHash: {txHash.Result}");
                 }

@@ -20,11 +20,11 @@ namespace Solana.Unity.Examples
             "route clerk disease box emerge airport loud waste attitude film army tray " +
             "forward deal onion eight catalog surface unit card window walnut wealth medal";
 
-        public void Run()
+        public async void Run()
         {
             //how to load current state
             IRpcClient mainnetRpc = ClientFactory.GetClient(Cluster.MainNet);
-            var resp = mainnetRpc.GetAccountInfo("GAM8dQkm4LwYJgPZbML61mKPUCQX7uAquxu67p9oifSK");
+            var resp = await mainnetRpc.GetAccountInfoAsync("GAM8dQkm4LwYJgPZbML61mKPUCQX7uAquxu67p9oifSK");
             var obj = TokenSwapAccount.Deserialize(Convert.FromBase64String(resp.Result.Value.Data[0]));
             Console.WriteLine($"Pool Mint: {obj.PoolMint}");
 
@@ -36,35 +36,35 @@ namespace Solana.Unity.Examples
             var tokenBUserAccount = new Account();
 
             //setup some mints and tokens owned by wallet
-            RequestResult<ResponseValue<BlockHash>> blockHash = RpcClient.GetRecentBlockHash();
+            RequestResult<ResponseValue<BlockHash>> blockHash = await RpcClient.GetRecentBlockHashAsync();
             var tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     tokenAMint,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result,
                     TokenProgram.MintAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     tokenBMint,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result,
                     TokenProgram.MintAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     tokenAUserAccount,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result,
                     TokenProgram.TokenAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     tokenBUserAccount,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result,
                     TokenProgram.TokenAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
@@ -101,7 +101,7 @@ namespace Solana.Unity.Examples
                     wallet.Account
                 ))
                 .Build(new Account[] { wallet.Account, tokenAMint, tokenBMint, tokenAUserAccount, tokenBUserAccount });
-            var txSig = Examples.SubmitTxSendAndLog(tx);
+            var txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             var swap = new Account();
@@ -112,14 +112,14 @@ namespace Solana.Unity.Examples
             var swapTokenBAccount = new Account();
 
             //init the swap authority's token accounts
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     swapTokenAAccount,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result,
                     TokenProgram.TokenAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
@@ -137,7 +137,7 @@ namespace Solana.Unity.Examples
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     swapTokenBAccount,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result,
                     TokenProgram.TokenAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
@@ -153,7 +153,7 @@ namespace Solana.Unity.Examples
                     wallet.Account
                 ))
                 .Build(new Account[] { wallet.Account, swapTokenAAccount, swapTokenBAccount });
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             var poolMint = new Account();
@@ -161,14 +161,14 @@ namespace Solana.Unity.Examples
             var poolFeeAccount = new Account();
 
             //create the pool mint and the user and fee pool token accounts
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     poolMint,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.MintAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MintAccountDataSize)).Result,
                     TokenProgram.MintAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
@@ -180,7 +180,7 @@ namespace Solana.Unity.Examples
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     poolUserAccount,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result,
                     TokenProgram.TokenAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
@@ -192,7 +192,7 @@ namespace Solana.Unity.Examples
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     poolFeeAccount,
-                    RpcClient.GetMinimumBalanceForRentExemption(TokenProgram.TokenAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result,
                     TokenProgram.TokenAccountDataSize,
                     TokenProgram.ProgramIdKey
                 ))
@@ -202,18 +202,18 @@ namespace Solana.Unity.Examples
                     program.OwnerKey
                 ))
                 .Build(new Account[] { wallet.Account, poolMint, poolUserAccount, poolFeeAccount });
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             //create the swap
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
                     swap,
-                    RpcClient.GetMinimumBalanceForRentExemption((long)TokenSwapProgram.TokenSwapAccountDataSize).Result,
+                    (await RpcClient.GetMinimumBalanceForRentExemptionAsync((long)TokenSwapProgram.TokenSwapAccountDataSize)).Result,
                     TokenSwapProgram.TokenSwapAccountDataSize,
                     program.ProgramIdKey
                 ))
@@ -243,11 +243,11 @@ namespace Solana.Unity.Examples
             Console.WriteLine($"Pool Mint Account: {poolMint}");
             Console.WriteLine($"Pool User Account: {poolUserAccount}");
             Console.WriteLine($"Pool Fee Account: {poolFeeAccount}");
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             //now a user can swap in the pool
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
@@ -264,11 +264,11 @@ namespace Solana.Unity.Examples
                     1_000_000_000,
                     500_000))
                 .Build(wallet.Account);
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             //user can add liq
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
@@ -285,11 +285,11 @@ namespace Solana.Unity.Examples
                     100_000_000_000,
                     100_000_000_000))
                 .Build(wallet.Account);
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             //user can remove liq
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
@@ -307,11 +307,11 @@ namespace Solana.Unity.Examples
                     1_000,
                     1_000))
                 .Build(wallet.Account);
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             //user can deposit single
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
@@ -326,11 +326,11 @@ namespace Solana.Unity.Examples
                     1_000_000_000,
                     1_000))
                 .Build(wallet.Account);
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
             //user can withdraw single
-            blockHash = RpcClient.GetRecentBlockHash();
+            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
                 .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
@@ -346,7 +346,7 @@ namespace Solana.Unity.Examples
                     1_000_000,
                     100_000))
                 .Build(wallet.Account);
-            txSig = Examples.SubmitTxSendAndLog(tx);
+            txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
         }
     }
