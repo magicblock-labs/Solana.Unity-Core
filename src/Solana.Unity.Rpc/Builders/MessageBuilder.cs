@@ -30,6 +30,13 @@ namespace Solana.Unity.Rpc.Builders
         /// </summary>
         private readonly AccountKeysList _accountKeysList;
 
+        
+        /// <summary>
+        /// The list of <see cref="PublicKey"/>s present in the transaction.
+        /// Memorized only if the transaction was deserialized and used to serialize keeping the same order.
+        /// </summary>
+        public IList<PublicKey> AccountKeys = null;
+
         /// <summary>
         /// The list of instructions contained within this transaction.
         /// </summary>
@@ -181,7 +188,7 @@ namespace Solana.Unity.Rpc.Builders
         {
             List<AccountMeta> newList = new();
             var keysList = _accountKeysList.AccountList;
-            int feePayerIndex = Array.FindIndex<AccountMeta>( _accountKeysList.AccountList.ToArray(),
+            int feePayerIndex = Array.FindIndex( _accountKeysList.AccountList.ToArray(),
                 x => x.PublicKey == FeePayer.Key);
 
             if (feePayerIndex == -1)
@@ -195,6 +202,13 @@ namespace Solana.Unity.Rpc.Builders
             }
 
             newList.AddRange(keysList);
+
+            if (AccountKeys != null &&
+                newList.Select(m => new PublicKey(m.PublicKey)).All(AccountKeys.Contains))
+            {
+                // Using the accounts keys order of the deserialized transaction.
+                newList = newList.OrderBy(m => AccountKeys.IndexOf(new PublicKey(m.PublicKey))).ToList();
+            }
 
             return newList;
         }

@@ -55,6 +55,13 @@ namespace Solana.Unity.Rpc.Models
         /// The list of <see cref="TransactionInstruction"/>s present in the transaction.
         /// </summary>
         public List<TransactionInstruction> Instructions { get; set; }
+        
+        
+        /// <summary>
+        /// The list of <see cref="PublicKey"/>s present in the transaction.
+        /// Memorized when deserializing a transaction. Avoid to change the keys order when deserializing.
+        /// </summary>
+        private IList<PublicKey> _accountKeys;
 
         /// <summary>
         /// The recent block hash for the transaction.
@@ -83,7 +90,7 @@ namespace Solana.Unity.Rpc.Models
         /// </summary>
         public byte[] CompileMessage()
         {
-            MessageBuilder messageBuilder = new() { FeePayer = FeePayer };
+            MessageBuilder messageBuilder = new() { FeePayer = FeePayer, AccountKeys = _accountKeys };
 
             if (RecentBlockHash != null) messageBuilder.RecentBlockHash = RecentBlockHash;
             if (NonceInformation != null) messageBuilder.NonceInformation = NonceInformation;
@@ -295,7 +302,8 @@ namespace Solana.Unity.Rpc.Models
             {
                 RecentBlockHash = message.RecentBlockhash,
                 Signatures = new List<SignaturePubKeyPair>(),
-                Instructions = new List<TransactionInstruction>()
+                Instructions = new List<TransactionInstruction>(),
+                _accountKeys = message.AccountKeys
             };
 
             if (message.Header.RequiredSignatures > 0)
@@ -373,7 +381,6 @@ namespace Solana.Unity.Rpc.Models
                         TransactionBuilder.SignatureLength);
                 signatures.Add(signature.ToArray());
             }
-
             return Populate(
                 Message.Deserialize(data[
                     (encodedLength + (signaturesLength * TransactionBuilder.SignatureLength))..]),
