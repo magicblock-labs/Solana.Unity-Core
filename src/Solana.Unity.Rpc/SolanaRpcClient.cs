@@ -991,8 +991,7 @@ namespace Solana.Unity.Rpc
         public async Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false,
             Commitment preflightCommitment = Commitment.Finalized)
         {
-            return await SendTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, preflightCommitment)
-                .ConfigureAwait(false);
+            return await SendTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, preflightCommitment);
         }
 
 
@@ -1024,8 +1023,7 @@ namespace Solana.Unity.Rpc
         public async Task<RequestResult<string>> SendAndConfirmTransactionAsync(byte[] transaction, bool skipPreflight = false,
             Commitment preflightCommitment = Commitment.Finalized, Commitment confirmationCommitment = Commitment.Finalized)
         {
-            RequestResult<string> res = await SendAndConfirmTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, preflightCommitment)
-                .ConfigureAwait(false);
+            RequestResult<string> res = await SendAndConfirmTransactionAsync(Convert.ToBase64String(transaction), skipPreflight, preflightCommitment);
             return res;
         }
 
@@ -1091,8 +1089,7 @@ namespace Solana.Unity.Rpc
             IList<string> accountsToReturn = null)
         {
             return await SimulateTransactionAsync(Convert.ToBase64String(transaction), sigVerify, commitment,
-                    replaceRecentBlockhash, accountsToReturn)
-                .ConfigureAwait(false);
+                    replaceRecentBlockhash, accountsToReturn);
         }
 
         /// <inheritdoc cref="IRpcClient.SimulateTransaction(string, bool, Commitment, bool, IList{string})"/>

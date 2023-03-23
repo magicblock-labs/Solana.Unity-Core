@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Solana.Unity.Rpc.Utilities;
 
@@ -39,19 +40,16 @@ public static class RuntimePlatforms
         {
             return false;
         }
-        string platform = GetRuntimePlatform();
-        return platform == WebGLPlayer || string.IsNullOrEmpty(platform);
+        return RuntimeUtils.GetRuntimePlatform().Equals(WebGLPlayer);
     }
-    
-    /// <summary>
-    /// Return the runtime platform using reflection if running on Unity, otherwise return null
-    /// </summary>
-    /// <returns></returns>
+}
+
+[UnityEngine.Scripting.Preserve]
+class RuntimeUtils
+{
+    [UnityEngine.Scripting.Preserve]
     public static string GetRuntimePlatform()
     {
-        return Type.GetType("UnityEngine.Device.Application, UnityEngine")?.
-            GetMethod("get_platform")
-            ?.Invoke(null, null)
-            .ToString();
+        return Application.platform.ToString();
     }
 }
