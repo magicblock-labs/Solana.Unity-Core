@@ -14,13 +14,13 @@ namespace Solana.Unity.Dex.Test.Orca.SdkTests.UtilsTests
             {
                 ulong value = 100_000_000;
                 int decimals = 6;
-                var valueDouble = DecimalUtil.FromUlong(value, decimals);
-                Assert.IsTrue(valueDouble.Equals(100.0));
+                var valueDecimals = DecimalUtil.FromUlong(value, decimals);
+                Assert.IsTrue(valueDecimals.Equals((decimal)100.0));
                 
-                Assert.IsTrue(DecimalUtil.ToUlong(valueDouble, decimals).Equals(value));
-                Assert.IsTrue(DecimalUtil.ToUlong((float)valueDouble, decimals).Equals(value));
+                Assert.IsTrue(DecimalUtil.ToUlong(valueDecimals, decimals).Equals(value));
+                Assert.IsTrue(DecimalUtil.ToUlong((float)valueDecimals, decimals).Equals(value));
 
-                Assert.IsTrue(DecimalUtil.FromBigInteger(value, decimals).Equals(valueDouble));
+                Assert.IsTrue(DecimalUtil.FromBigInteger(value, decimals).Equals(valueDecimals));
             }
             
         }
