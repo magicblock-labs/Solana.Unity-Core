@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Solana.Unity.Extensions.TokenMint
+namespace Solana.Unity.Extensions.Models.TokenMint
 {
     /// <summary>
     /// Token Definition object used by the TokenMintResolver
@@ -142,17 +142,33 @@ namespace Solana.Unity.Extensions.TokenMint
     }
 
     /// <summary>
-    /// Internal class used to deserialize tokenlist.json
+    /// Class used to deserialize tokenlist.json
     /// </summary>
-    internal class TokenListDoc
+    public class TokenListDoc
     {
-        public IList<TokenListItem> tokens { get; set; }
+        public List<TokenListItem> tokens { get; set; }
+
+        /// <summary>
+        /// Empty constructor
+        /// </summary>
+        public TokenListDoc()
+        {
+        }
+
+        /// <summary>
+        /// Constructor with tokens
+        /// </summary>
+        /// <param name="tokens"></param>
+        public TokenListDoc(List<TokenListItem> tokens)
+        {
+            this.tokens = tokens;
+        }
     }
 
     /// <summary>
     /// Internal class used to deserialize tokenlist.json
     /// </summary>
-    internal class TokenListItem
+    public class TokenListItem
     {
         public string Address { get; set; }
         public string Symbol { get; set; }
@@ -160,6 +176,13 @@ namespace Solana.Unity.Extensions.TokenMint
         public int Decimals { get; set; }
         public string LogoUri { get; set; }
         public Dictionary<string, object> Extensions { get; set; }
+        
+        /// <summary>
+        /// Empty constructor
+        /// </summary>
+        public TokenListItem()
+        {
+        }
     }
 
 }

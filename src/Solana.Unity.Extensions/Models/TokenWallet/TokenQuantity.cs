@@ -1,4 +1,4 @@
-﻿using Solana.Unity.Extensions.TokenMint;
+﻿using Solana.Unity.Extensions.Models.TokenMint;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -7,7 +7,6 @@ using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
 using Solana.Unity.Extensions.Models;
 using Solana.Unity.Wallet;
-using Solana.Unity.Wallet.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -131,7 +130,7 @@ namespace Solana.Unity.Extensions
         /// <param name="publicKey">The account public key.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>A task that results in an instance of TokenWallet loaded with the token accounts of the publicKey provided.</returns>
-        public async static Task<TokenWallet> LoadAsync(ITokenWalletRpcProxy client,
+        public static async Task<TokenWallet> LoadAsync(ITokenWalletRpcProxy client,
                                                         ITokenMintResolver mintResolver,
                                                         PublicKey publicKey,
                                                         Commitment commitment = Commitment.Finalized)

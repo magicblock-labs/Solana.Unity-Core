@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Solana.Unity.Extensions.Models.TokenMint;
 using Solana.Unity.Programs;
 using Solana.Unity.Rpc.Builders;
 using Solana.Unity.Rpc.Messages;
@@ -42,7 +43,7 @@ namespace Solana.Unity.Extensions.Test
 
             // define some mints
             var tokens = new TokenMintResolver();
-            var testToken = new TokenMint.TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
+            var testToken = new TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
             tokens.Add(testToken);
             Assert.AreEqual(125U, testToken.ConvertDecimalToUlong(1.25M));
             Assert.AreEqual(1.25M, testToken.ConvertUlongToDecimal(125U));
@@ -129,7 +130,7 @@ namespace Solana.Unity.Extensions.Test
 
             // define some mints
             var tokens = new TokenMintResolver();
-            var testToken = new TokenMint.TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
+            var testToken = new TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
             tokens.Add(testToken);
 
             // load account
@@ -180,7 +181,7 @@ namespace Solana.Unity.Extensions.Test
 
             // define some mints
             var tokens = new TokenMintResolver();
-            var testToken = new TokenMint.TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
+            var testToken = new TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
             tokens.Add(testToken);
 
             // load account
@@ -219,7 +220,7 @@ namespace Solana.Unity.Extensions.Test
 
             // define some mints
             var tokens = new TokenMintResolver();
-            var testToken = new TokenMint.TokenDef(mintPubkey.Key, "TEST", "TEST", 2);
+            var testToken = new TokenDef(mintPubkey.Key, "TEST", "TEST", 2);
             tokens.Add(testToken);
 
             // load account 
@@ -267,7 +268,7 @@ namespace Solana.Unity.Extensions.Test
 
             // define some mints
             var tokens = new TokenMintResolver();
-            var testToken = new TokenMint.TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
+            var testToken = new TokenDef("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819", "TEST", "TEST", 2);
             tokens.Add(testToken);
 
             // load account and identify test token account with some balance
@@ -293,7 +294,7 @@ namespace Solana.Unity.Extensions.Test
             var client = new MockTokenWalletRpc();
             var mintPubkey = new PublicKey("98mCaWvZYTmTHmimisaAQW4WGLphN1cWhcC7KtnZF819");
             var tokens = new TokenMintResolver();
-            var testToken = new TokenMint.TokenDef(mintPubkey.Key, "TEST", "TEST", 2);
+            var testToken = new TokenDef(mintPubkey.Key, "TEST", "TEST", 2);
             tokens.Add(testToken);
             var ownerWallet = new Wallet.Wallet(MnemonicWords);
 

@@ -1,5 +1,5 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Solana.Unity.Extensions.TokenMint;
+using Solana.Unity.Extensions.Models.TokenMint;
 using Solana.Unity.Wallet;
 using System.IO;
 

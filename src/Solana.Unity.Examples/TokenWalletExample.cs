@@ -1,5 +1,5 @@
 ﻿using Solana.Unity.Extensions;
-using Solana.Unity.Extensions.TokenMint;
+using Solana.Unity.Extensions.Models.TokenMint;
 using Solana.Unity.Rpc;
 using System;
 using System.Linq;

@@ -1,0 +1,10 @@
+<linker>
+  
+  <!--Preserve Solana.Unity.Extensions assembly-->
+  
+  <assembly fullname="Solana.Unity.Extensions">
+    <namespace fullname="Solana.Unity.Extensions" preserve="all"/>
+    <type fullname="Solana.Unity.Extensions.*" preserve="all"/>
+  </assembly>
+
+</linker>
