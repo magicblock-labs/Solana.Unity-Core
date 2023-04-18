@@ -11,5 +11,11 @@
     <ProjectReference Include="..\Solana.Unity.Wallet\Solana.Unity.Wallet.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\link.xml">
+      <LogicalName>Solana.Unity.Extensions.xml</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+
   <Import Project="..\..\SharedBuildProperties.props" />
 </Project>

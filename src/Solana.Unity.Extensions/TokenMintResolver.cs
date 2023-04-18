@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Solana.Unity.Extensions.TokenMint;
+using Solana.Unity.Extensions.Models.TokenMint;
 using Solana.Unity.Rpc.Core.Http;
 using System;
 using System.Collections.Generic;

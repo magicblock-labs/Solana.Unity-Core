@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 using Solana.Unity.Dex.Models;
+using Solana.Unity.Dex.Orca.Orca;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Core.Http;
 using System;
@@ -70,14 +71,6 @@ namespace Orca
             return tokens.First(t => 
                 string.Equals(t.Symbol, symbol, StringComparison.CurrentCultureIgnoreCase) || 
                 string.Equals(t.Symbol, $"${symbol}", StringComparison.CurrentCultureIgnoreCase));
-        }
-        
-        /// <summary>
-        /// Serialized from JSON; represents the entire JSON output. 
-        /// </summary>
-        private class TokensDocument
-        {
-            public IList<TokenData> tokens; 
         }
     }
     

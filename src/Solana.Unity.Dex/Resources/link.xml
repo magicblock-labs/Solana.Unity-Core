@@ -1,0 +1,10 @@
+<linker>
+  
+  <!--Preserve Solana.Unity.Dex assembly-->
+
+  <assembly fullname="Solana.Unity.Dex">
+    <namespace fullname="Solana.Unity.Dex" preserve="all"/>
+    <type fullname="Solana.Unity.Dex.*" preserve="all"/>
+  </assembly>
+
+</linker>

@@ -1,0 +1,10 @@
+<linker>
+  
+  <!--Preserve Solana.Unity.Rpc assembly-->
+  
+  <assembly fullname="Solana.Unity.Rpc">
+    <namespace fullname="Solana.Unity.Rpc" preserve="all"/>
+    <type fullname="Solana.Unity.Rpc.*" preserve="all"/>
+  </assembly>
+
+</linker>
