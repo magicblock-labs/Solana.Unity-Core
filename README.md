@@ -442,9 +442,7 @@ We encourage everyone to contribute, submit issues, PRs, discuss. Every kind of 
 
 ## Solana.Unity Maintainers
 
-
 * **Gabriele** - [GabrielePicco](https://github.com/GabrielePicco)
-* **Luca** - [lucacillario](https://github.com/lucacillario)
 
 ## Solnet Maintainers
 
