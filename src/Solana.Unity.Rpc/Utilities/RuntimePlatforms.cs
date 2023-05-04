@@ -1,5 +1,7 @@
 using System;
+using System.Reflection;
 using UnityEngine;
+using WebSocketSharp;
 
 namespace Solana.Unity.Rpc.Utilities;
 
@@ -9,6 +11,7 @@ namespace Solana.Unity.Rpc.Utilities;
 public static class RuntimePlatforms
 {
     private const string WebGLPlayer = "WebGLPlayer";
+    private const string Android = "Android";
 
     /// <summary>
     /// Return True if running on Unity, False otherwise
@@ -41,6 +44,35 @@ public static class RuntimePlatforms
             return false;
         }
         return RuntimeUtils.GetRuntimePlatform().Equals(WebGLPlayer);
+    }
+    
+    /// <summary>
+    /// Return True if running on Unity, False otherwise
+    /// </summary>
+    /// <returns>Return True if running on Unity, False otherwise</returns>
+    public static bool IsAndroid()
+    {
+        if (!IsUnityPlayer())
+        {
+            return false;
+        }
+        return RuntimeUtils.GetRuntimePlatform().Equals(Android);
+    }
+
+    /// <summary>
+    /// Return True if running on Mono, False otherwise
+    /// </summary>
+    /// <returns></returns>
+    public static bool IsMono()
+    {
+        if (!IsUnityPlayer()) return false;
+        Type type = Type.GetType("Mono.Runtime");
+        if (type == null) return false;
+        MethodInfo displayName = type.GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
+        if (displayName == null) return false;
+        var monoVersion = displayName.Invoke(null, null);
+        Debug.Log(monoVersion?.ToString() );
+        return monoVersion?.ToString() != null;
     }
 }
 
