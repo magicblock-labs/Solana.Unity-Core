@@ -482,7 +482,7 @@ namespace Solana.Unity.Rpc
                 sub.ChangeState(SubscriptionStatus.ErrorSubscribing, e.Message);
                 if (_logger != null)
                 {
-                    Console.WriteLine($"{msg.Id} {msg.Method} Unable to send message");
+                    Console.WriteLine($"{msg.Id} {msg.Method} Unable to send message, {e.Message}");
                 }
                 
             }

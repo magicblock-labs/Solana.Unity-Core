@@ -9,6 +9,7 @@ namespace Solana.Unity.Rpc.Utilities;
 public static class RuntimePlatforms
 {
     private const string WebGLPlayer = "WebGLPlayer";
+    private const string Android = "Android";
 
     /// <summary>
     /// Return True if running on Unity, False otherwise
@@ -41,6 +42,19 @@ public static class RuntimePlatforms
             return false;
         }
         return RuntimeUtils.GetRuntimePlatform().Equals(WebGLPlayer);
+    }
+    
+    /// <summary>
+    /// Return True if running on Unity, False otherwise
+    /// </summary>
+    /// <returns>Return True if running on Unity, False otherwise</returns>
+    public static bool IsAndroid()
+    {
+        if (!IsUnityPlayer())
+        {
+            return false;
+        }
+        return RuntimeUtils.GetRuntimePlatform().Equals(Android);
     }
 }
 
