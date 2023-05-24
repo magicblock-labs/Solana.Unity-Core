@@ -1,0 +1,10 @@
+<linker>
+  
+  <!--Preserve Solana.Unity.KeyStore assembly-->
+  
+  <assembly fullname="Solana.Unity.KeyStore">
+    <namespace fullname="Solana.Unity.KeyStore" preserve="all"/>
+    <type fullname="Solana.Unity.KeyStore.*" preserve="all"/>
+  </assembly>
+
+</linker>
