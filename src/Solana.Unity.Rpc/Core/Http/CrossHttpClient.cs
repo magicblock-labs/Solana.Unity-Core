@@ -31,8 +31,6 @@ public static class CrossHttpClient
         return await httpClient.SendAsync(httpReq).ConfigureAwait(false);
     }
     
-    
-        
     /// <summary>
     /// Convert a httReq to a Unity Web request
     /// </summary>
@@ -42,26 +40,35 @@ public static class CrossHttpClient
     /// <exception cref="HttpRequestException"></exception>
     private static async Task<HttpResponseMessage> SendUnityWebRequest(Uri uri, HttpRequestMessage httpReq)
     {
-        using UnityWebRequest request = new(uri, httpReq.Method.ToString());
-        if (httpReq.Content != null)
-        {
-            request.uploadHandler = new UploadHandlerRaw(await httpReq.Content.ReadAsByteArrayAsync());
-            request.SetRequestHeader("Content-Type", "application/json");
-        }
-        request.downloadHandler = new DownloadHandlerBuffer();
-        if (_currentRequestTask != null)
-        {
-            await _currentRequestTask.Task;
-        }
-        UnityWebRequest.Result result = await SendRequest(request);
         HttpResponseMessage response = new();
-        if (result == UnityWebRequest.Result.Success)
+        try
         {
-            response.StatusCode = HttpStatusCode.OK;
-            response.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(request.downloadHandler.text));
+            using UnityWebRequest request = new(uri, httpReq.Method.ToString());
+            if (httpReq.Content != null)
+            {
+                request.uploadHandler = new UploadHandlerRaw(await httpReq.Content.ReadAsByteArrayAsync());
+                request.SetRequestHeader("Content-Type", "application/json");
+            }
+            request.downloadHandler = new DownloadHandlerBuffer();
+            if (_currentRequestTask != null)
+            {
+                await _currentRequestTask.Task;
+            }
+            UnityWebRequest.Result result = await SendRequest(request);
+        
+            if (result == UnityWebRequest.Result.Success)
+            {
+                response.StatusCode = HttpStatusCode.OK;
+                response.Content = new ByteArrayContent(Encoding.UTF8.GetBytes(request.downloadHandler.text));
+            }
+            else
+            {
+                response.StatusCode = HttpStatusCode.ExpectationFailed;
+            }
         }
-        else
+        catch (Exception e)
         {
+            response.Content = new StringContent("Error: " + e.Message);
             response.StatusCode = HttpStatusCode.ExpectationFailed;
         }
         return response;
@@ -70,19 +77,34 @@ public static class CrossHttpClient
     private static Task<UnityWebRequest.Result> SendRequest(UnityWebRequest request)
     {
         TaskCompletionSource<UnityWebRequest.Result> sendRequestTask = new();
-        _currentRequestTask = sendRequestTask;
-        UnityWebRequestAsyncOperation op = request.SendWebRequest();
+        try
+        {
+            _currentRequestTask = sendRequestTask;
+            UnityWebRequestAsyncOperation op = request.SendWebRequest();
 
-        if (request.isDone)
-        {
-            sendRequestTask.SetResult(request.result);
-        }
-        else
-        {
-            op.completed += asyncOp =>
+            if (request.isDone)
             {
-                sendRequestTask.SetResult(((UnityWebRequestAsyncOperation)asyncOp).webRequest.result);
-            };
+                sendRequestTask.SetResult(request.result);
+            }
+            else
+            {
+                op.completed += asyncOp =>
+                {
+                    if (op.webRequest.error != null || request.error != null)
+                    {
+                        sendRequestTask.SetException(
+                            new HttpRequestException(op.webRequest.error == null ? op.webRequest.error : request.error));
+                    }
+                    else
+                    {
+                        sendRequestTask.SetResult(((UnityWebRequestAsyncOperation)asyncOp).webRequest.result);
+                    }
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            sendRequestTask.SetException(ex);
         }
         return sendRequestTask.Task;
     }
