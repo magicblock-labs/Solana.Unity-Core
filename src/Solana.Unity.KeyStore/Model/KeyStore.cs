@@ -15,5 +15,18 @@ namespace Solana.Unity.KeyStore.Model
 
         [JsonProperty("version")]
         public int Version { get; set; }
+
+        [JsonConstructor]
+        public KeyStore()
+        {
+        }
+
+        public KeyStore(CryptoInfo<TKdfParams> crypto, string id, string address, int version)
+        {
+            Crypto = crypto;
+            Id = id;
+            Address = address;
+            Version = version;
+        }
     }
 }

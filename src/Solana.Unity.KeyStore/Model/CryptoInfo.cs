@@ -4,6 +4,8 @@ namespace Solana.Unity.KeyStore.Model
 {
     public class CryptoInfo<TKdfParams> where TKdfParams : KdfParams
     {
+        
+        [JsonConstructor]
         public CryptoInfo()
         {
         }
