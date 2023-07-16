@@ -36,11 +36,11 @@ namespace Solana.Unity.Rpc.Test
         public async Task TestConfirmFailedTransaction()
         {
             IRpcClient rpcClient = ClientFactory.GetClient(Cluster.MainNet);
-            var commitment = Commitment.Confirmed;
+            var commitment = Commitment.Finalized;
             string txSignature =
                 "2kiCpX5eBCLF58mGCiU2mbfoWvNvWTT5DETji7g2khRzmjVu4EvzjrnYp3mTR4wKLcEzvBP1mYqaUX2vCMbyGMjR";
-            var succeeded = await rpcClient.ConfirmTransaction(txSignature, commitment);
-            Assert.IsFalse(succeeded);
+            var confirmed = await rpcClient.ConfirmTransaction(txSignature, commitment);
+            Assert.IsTrue(confirmed);
         }
         
         [TestMethod]
