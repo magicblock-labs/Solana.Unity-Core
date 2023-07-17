@@ -1,8 +1,11 @@
-﻿namespace Solana.Unity.Rpc.Types
+﻿using System.ComponentModel;
+
+namespace Solana.Unity.Rpc.Types
 {
     /// <summary>
     /// The commitment describes how finalized a block is at that point in time.
     /// </summary>
+    [DefaultValue(None)]
     public enum Commitment
     {
         /// <summary>
@@ -17,6 +20,11 @@
         /// <summary>
         /// The node will query its most recent block. Note that the block may not be complete.
         /// </summary>
-        Processed
+        Processed,
+        
+        /// <summary>
+        /// Used as default value.
+        /// </summary>
+        None
     }
 }
