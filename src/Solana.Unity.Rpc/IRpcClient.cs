@@ -28,7 +28,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>A task which may return a request result holding the context and account info.</returns>
         Task<RequestResult<ResponseValue<TokenMintInfo>>> GetTokenMintInfoAsync(string pubKey,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         
         /// <summary>
@@ -41,7 +41,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>A task which may return a request result holding the context and account info.</returns>
         Task<RequestResult<ResponseValue<TokenAccountInfo>>> GetTokenAccountInfoAsync(string pubKey,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         /// <summary>
         /// Gets the account info.
@@ -54,7 +54,7 @@ namespace Solana.Unity.Rpc
         /// <param name="encoding">The encoding of the account data.</param>
         /// <returns>A task which may return a request result holding the context and account info.</returns>
         Task<RequestResult<ResponseValue<AccountInfo>>> GetAccountInfoAsync(string pubKey,
-            Commitment commitment = Commitment.Finalized, BinaryEncoding encoding = BinaryEncoding.Base64);
+            Commitment commitment = default, BinaryEncoding encoding = BinaryEncoding.Base64);
         
         /// <summary>
         /// Gets the balance <b>asynchronously</b> for a certain public key.
@@ -65,7 +65,7 @@ namespace Solana.Unity.Rpc
         /// <param name="pubKey">The public key.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>A task which may return a request result holding the context and address balance.</returns>
-        Task<RequestResult<ResponseValue<ulong>>> GetBalanceAsync(string pubKey, Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<ResponseValue<ulong>>> GetBalanceAsync(string pubKey, Commitment commitment = default);
         
         /// <summary>
         /// Returns identity and transaction information about a block in the ledger.
@@ -87,7 +87,7 @@ namespace Solana.Unity.Rpc
         /// <param name="transactionDetails">The level of transaction detail to return, see <see cref="TransactionDetailsFilterType"/>.</param>
         /// <param name="blockRewards">Whether to populate the <c>rewards</c> array, the default includes rewards.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<BlockInfo>> GetBlockAsync(ulong slot, Commitment commitment = Commitment.Finalized,
+        Task<RequestResult<BlockInfo>> GetBlockAsync(ulong slot, Commitment commitment = default,
             TransactionDetailsFilterType transactionDetails = TransactionDetailsFilterType.Full, bool blockRewards = false);
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Solana.Unity.Rpc
         /// <param name="blockRewards">Whether to populate the <c>rewards</c> array, the default includes rewards.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         [Obsolete("Please use GetBlockAsync whenever possible instead. This method is expected to be removed in solana-core v1.8.")]
-        Task<RequestResult<BlockInfo>> GetConfirmedBlockAsync(ulong slot, Commitment commitment = Commitment.Finalized,
+        Task<RequestResult<BlockInfo>> GetConfirmedBlockAsync(ulong slot, Commitment commitment = default,
             TransactionDetailsFilterType transactionDetails = TransactionDetailsFilterType.Full, bool blockRewards = false);
         
         /// <summary>
@@ -126,7 +126,7 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="commitment">The commitment state to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<ulong>> GetBlockHeightAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<ulong>> GetBlockHeightAsync(Commitment commitment = default);
         
         /// <summary>
         /// Returns recent block production information from the current or previous epoch.
@@ -140,7 +140,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<BlockProductionInfo>>> GetBlockProductionAsync(string identity = null,
-            ulong? firstSlot = null, ulong? lastSlot = null, Commitment commitment = Commitment.Finalized);
+            ulong? firstSlot = null, ulong? lastSlot = null, Commitment commitment = default);
         
         /// <summary>
         /// Returns a list of blocks between two slots.
@@ -150,7 +150,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<List<ulong>>> GetBlocksAsync(ulong startSlot, ulong endSlot = 0,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
 
         /// <summary>
         /// Returns a list of confirmed blocks between two slots.
@@ -166,7 +166,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         [Obsolete("Please use GetBlocksAsync whenever possible instead. This method is expected to be removed in solana-core v1.8.")]
-        Task<RequestResult<List<ulong>>> GetConfirmedBlocksAsync(ulong startSlot, ulong endSlot = 0, Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<List<ulong>>> GetConfirmedBlocksAsync(ulong startSlot, ulong endSlot = 0, Commitment commitment = default);
         
         /// <summary>
         /// Returns a list of confirmed blocks starting at the given slot.
@@ -176,7 +176,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<List<ulong>>> GetBlocksWithLimitAsync(ulong startSlot,
-            ulong limit, Commitment commitment = Commitment.Finalized);
+            ulong limit, Commitment commitment = default);
 
         /// <summary>
         /// Returns a list of confirmed blocks starting at the given slot.
@@ -187,7 +187,7 @@ namespace Solana.Unity.Rpc
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         [Obsolete("Please use GetBlocksWithLimitAsync whenever possible instead. This method is expected to be removed in solana-core v1.8.")]
         Task<RequestResult<List<ulong>>> GetConfirmedBlocksWithLimitAsync(ulong startSlot,
-            ulong limit, Commitment commitment = Commitment.Finalized);
+            ulong limit, Commitment commitment = default);
         
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="commitment">The commitment state to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<EpochInfo>> GetEpochInfoAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<EpochInfo>> GetEpochInfoAsync(Commitment commitment = default);
         
         /// <summary>
         /// Gets epoch schedule information from this cluster's genesis config.
@@ -223,7 +223,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<FeeCalculatorInfo>>> GetFeeCalculatorForBlockhashAsync(
-            string blockhash, Commitment commitment = Commitment.Finalized);
+            string blockhash, Commitment commitment = default);
         
         /// <summary>
         /// Gets the fee rate governor information from the root bank.
@@ -237,7 +237,7 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<ResponseValue<FeesInfo>>> GetFeesAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<ResponseValue<FeesInfo>>> GetFeesAsync(Commitment commitment = default);
         
         /// <summary>
         /// Returns the slot of the lowest confirmed block that has not been purged from the ledger.
@@ -269,7 +269,7 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<InflationGovernor>> GetInflationGovernorAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<InflationGovernor>> GetInflationGovernorAsync(Commitment commitment = default);
         
         /// <summary>
         /// Gets the specific inflation values for the current epoch.
@@ -286,7 +286,7 @@ namespace Solana.Unity.Rpc
         /// <returns>Returns a task that holds the asynchronous operation result and state.
         /// The InflationReward will be null if there is no inflation reward</returns>
         Task<RequestResult<List<InflationReward>>> GetInflationRewardAsync(IList<string> addresses,
-            ulong epoch = 0, Commitment commitment = Commitment.Finalized);
+            ulong epoch = 0, Commitment commitment = default);
         
         /// <summary>
         /// Gets the 20 largest accounts, by lamport balance.
@@ -296,7 +296,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<List<LargeAccount>>>> GetLargestAccountsAsync(AccountFilterType? filter = null,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         /// <summary>
         /// Returns the leader schedule for an epoch.
@@ -307,7 +307,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<Dictionary<string, List<ulong>>>> GetLeaderScheduleAsync(ulong slot = 0,
-            string identity = null, Commitment commitment = Commitment.Finalized);
+            string identity = null, Commitment commitment = default);
         
         /// <summary>
         /// Gets the maximum slot seen from retransmit stage.
@@ -328,7 +328,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ulong>> GetMinimumBalanceForRentExemptionAsync(long accountDataSize,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         /// <summary>
         /// Gets the lowest slot that the node has information about in its ledger.
@@ -346,7 +346,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>A task which may return a request result holding the context and account info.</returns>
         Task<RequestResult<ResponseValue<List<AccountInfo>>>> GetMultipleAccountsAsync(IList<string> accounts,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         /// <summary>
         /// Returns all accounts owned by the provided program Pubkey.
@@ -357,7 +357,7 @@ namespace Solana.Unity.Rpc
         /// <param name="dataSize">The data size of the account to compare against the program account data.</param>
         /// <param name="memCmpList">The list of comparisons to match against the program account data.</param>
         /// <returns>A task which may return a request result holding the context and account info.</returns>
-        Task<RequestResult<List<AccountKeyPair>>> GetProgramAccountsAsync(string pubKey, Commitment commitment = Commitment.Finalized,
+        Task<RequestResult<List<AccountKeyPair>>> GetProgramAccountsAsync(string pubKey, Commitment commitment = default,
             int? dataSize = null, IList<MemCmp> memCmpList = null);
         
         /// <summary>
@@ -365,7 +365,7 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<ResponseValue<BlockHash>>> GetRecentBlockHashAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<ResponseValue<BlockHash>>> GetRecentBlockHashAsync(Commitment commitment = default);
         
         /// <summary>
         /// Gets a list of recent performance samples.
@@ -390,7 +390,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<List<SignatureStatusInfo>>> GetSignaturesForAddressAsync(string accountPubKey, ulong limit = 1000,
-            string before = null, string until = null, Commitment commitment = Commitment.Finalized);
+            string before = null, string until = null, Commitment commitment = default);
 
         /// <summary>
         /// Gets confirmed signatures for transactions involving the address.
@@ -406,7 +406,7 @@ namespace Solana.Unity.Rpc
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         [Obsolete("Please use GetSignaturesForAddressAsync whenever possible instead. This method is expected to be removed in solana-core v1.8.")]
         Task<RequestResult<List<SignatureStatusInfo>>> GetConfirmedSignaturesForAddress2Async(string accountPubKey, ulong limit = 1000,
-            string before = null, string until = null, Commitment commitment = Commitment.Finalized);
+            string before = null, string until = null, Commitment commitment = default);
         
 
         /// <summary>
@@ -426,14 +426,14 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<ulong>> GetSlotAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<ulong>> GetSlotAsync(Commitment commitment = default);
         
         /// <summary>
         /// Gets the current slot leader.
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<string>> GetSlotLeaderAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<string>> GetSlotLeaderAsync(Commitment commitment = default);
         
         /// <summary>
         /// Gets the slot leaders for a given slot range.
@@ -443,7 +443,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<List<string>>> GetSlotLeadersAsync(ulong start, ulong limit,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         /// <summary>
         /// Gets the highest slot that the node has a snapshot for.
@@ -459,14 +459,14 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<StakeActivationInfo>> GetStakeActivationAsync(string publicKey, ulong epoch = 0,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
 
         /// <summary>
         /// Gets information about the current supply.
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<ResponseValue<Supply>>> GetSupplyAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<ResponseValue<Supply>>> GetSupplyAsync(Commitment commitment = default);
         
         /// <summary>
         /// Gets the token balance for an account, given the token mint.
@@ -478,7 +478,7 @@ namespace Solana.Unity.Rpc
         Task<RequestResult<ResponseValue<TokenBalance>>> GetTokenBalanceByOwnerAsync(
             string ownerPubKey,
             string tokenMintPubKey,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
 
         /// <summary>
         /// Gets the token balance of an SPL Token account.
@@ -487,7 +487,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<TokenBalance>>> GetTokenAccountBalanceAsync(string splTokenAccountPublicKey,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         /// <summary>
         /// Gets all SPL Token accounts by approved delegate.
@@ -498,7 +498,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<List<TokenAccount>>>> GetTokenAccountsByDelegateAsync(
-            string ownerPubKey, string tokenMintPubKey = null, string tokenProgramId = null, Commitment commitment = Commitment.Finalized);
+            string ownerPubKey, string tokenMintPubKey = null, string tokenProgramId = null, Commitment commitment = default);
         
         /// <summary>
         /// Gets all SPL Token accounts by token owner.
@@ -509,7 +509,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<List<TokenAccount>>>> GetTokenAccountsByOwnerAsync(
-            string ownerPubKey, string tokenMintPubKey = null, string tokenProgramId = null, Commitment commitment = Commitment.Finalized);
+            string ownerPubKey, string tokenMintPubKey = null, string tokenProgramId = null, Commitment commitment = default);
         
         /// <summary>
         /// Gets the 20 largest token accounts of a particular SPL Token.
@@ -518,7 +518,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<List<LargeTokenAccount>>>> GetTokenLargestAccountsAsync(string tokenMintPubKey,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
 
         /// <summary>
@@ -528,7 +528,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<TokenBalance>>> GetTokenSupplyAsync(string tokenMintPubKey,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
         /// <summary>
         /// Returns transaction details for a confirmed transaction.
@@ -543,7 +543,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<TransactionMetaSlotInfo>> GetTransactionAsync(string signature,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
 
         /// <summary>
         /// Returns transaction details for a confirmed transaction.
@@ -558,14 +558,14 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         [Obsolete("Please use GetTransactionAsync whenever possible instead. This method is expected to be removed in solana-core v1.8.")]
-        Task<RequestResult<TransactionMetaSlotInfo>> GetConfirmedTransactionAsync(string signature, Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<TransactionMetaSlotInfo>> GetConfirmedTransactionAsync(string signature, Commitment commitment = default);
         
         /// <summary>
         /// Gets the total transaction count of the ledger.
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<ulong>> GetTransactionCountAsync(Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<ulong>> GetTransactionCountAsync(Commitment commitment = default);
         
         /// <summary>
         /// Gets the current node's software version info.
@@ -579,7 +579,7 @@ namespace Solana.Unity.Rpc
         /// <param name="votePubKey">Filter by validator vote address, base-58 encoded string.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
-        Task<RequestResult<VoteAccounts>> GetVoteAccountsAsync(string votePubKey = null, Commitment commitment = Commitment.Finalized);
+        Task<RequestResult<VoteAccounts>> GetVoteAccountsAsync(string votePubKey = null, Commitment commitment = default);
         
         /// <summary>
         /// Requests an airdrop to the passed <c>pubKey</c> of the passed <c>lamports</c> amount.
@@ -592,7 +592,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The block commitment used to retrieve block hashes and verify success.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> RequestAirdropAsync(string pubKey, ulong lamports,
-            Commitment commitment = Commitment.Finalized);
+            Commitment commitment = default);
         
 
         /// <summary>
@@ -603,7 +603,7 @@ namespace Solana.Unity.Rpc
         /// <param name="preFlightCommitment">The block commitment used for preflight.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> SendTransactionAsync(string transaction, bool skipPreflight = false,
-            Commitment preFlightCommitment = Commitment.Finalized);
+            Commitment preFlightCommitment = default);
         
 
         /// <summary>
@@ -614,7 +614,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The block commitment used to retrieve block hashes and verify success.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> SendTransactionAsync(byte[] transaction, bool skipPreflight = false,
-             Commitment commitment = Commitment.Finalized);
+             Commitment commitment = default);
         
         
         /// <summary>
@@ -626,7 +626,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The block commitment used for confirmation.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> SendAndConfirmTransactionAsync(byte[] transaction, bool skipPreflight = false,
-            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized);
+            Commitment preFlightCommitment = default, Commitment commitment = default);
         
         /// <summary>
         /// Sends and confirm a transaction.
@@ -637,7 +637,7 @@ namespace Solana.Unity.Rpc
         /// <param name="commitment">The block commitment used for confirmation.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<string>> SendAndConfirmTransactionAsync(string transaction, bool skipPreflight = false,
-            Commitment preFlightCommitment = Commitment.Finalized, Commitment commitment = Commitment.Finalized);
+            Commitment preFlightCommitment = default, Commitment commitment = default);
         
         /// <summary>
         /// Simulate sending a transaction.
@@ -651,7 +651,7 @@ namespace Solana.Unity.Rpc
         /// <param name="accountsToReturn">List of accounts to return, as base-58 encoded strings.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<SimulationLogs>>> SimulateTransactionAsync(string transaction, bool sigVerify = false,
-            Commitment commitment = Commitment.Finalized, bool replaceRecentBlockhash = false, IList<string> accountsToReturn = null);
+            Commitment commitment = default, bool replaceRecentBlockhash = false, IList<string> accountsToReturn = null);
         
         /// <summary>
         /// Simulate sending a transaction.
@@ -665,7 +665,7 @@ namespace Solana.Unity.Rpc
         /// <param name="accountsToReturn">List of accounts to return, as base-58 encoded strings.</param>
         /// <returns>Returns an object that wraps the result along with possible errors with the request.</returns>
         Task<RequestResult<ResponseValue<SimulationLogs>>> SimulateTransactionAsync(byte[] transaction, bool sigVerify = false,
-            Commitment commitment = Commitment.Finalized, bool replaceRecentBlockhash = false, IList<string> accountsToReturn = null);
+            Commitment commitment = default, bool replaceRecentBlockhash = false, IList<string> accountsToReturn = null);
         
         /// <summary>
         /// Confirms a transaction - using polling and constant timeout based on commitment parameter.
@@ -673,7 +673,7 @@ namespace Solana.Unity.Rpc
         /// <param name="hash">The hash of the transaction.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns null if the transaction wasn't confirmed, otherwise returns the confirmation slot and possible transaction error.</returns>
-        Task<bool> ConfirmTransaction(string hash, Commitment commitment = Commitment.Finalized);
+        Task<bool> ConfirmTransaction(string hash, Commitment commitment = default);
 
         /// <summary>
         /// Low-level method to send a batch of JSON RPC requests
