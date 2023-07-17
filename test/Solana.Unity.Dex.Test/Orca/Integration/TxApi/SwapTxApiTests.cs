@@ -376,7 +376,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             
             //assertions 
             Assert.IsTrue(swapResult.WasSuccessful);
-            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swapResult.Result, _defaultCommitment));
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swapResult.Result));
             
             //get the post balance
             var tokenAPostRes =
