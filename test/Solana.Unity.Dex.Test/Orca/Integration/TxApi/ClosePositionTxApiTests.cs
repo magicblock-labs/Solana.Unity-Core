@@ -160,6 +160,8 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                 commitment: TestConfiguration.DefaultCommitment
             );
 
+            Assert.IsTrue(await newContext.RpcClient.ConfirmTransaction(closeResult.Result));
+
             Assert.IsTrue(closeResult.WasSuccessful);
             Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(closeResult.Result, _defaultCommitment));
             
