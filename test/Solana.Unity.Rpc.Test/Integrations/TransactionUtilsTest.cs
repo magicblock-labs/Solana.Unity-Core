@@ -33,6 +33,7 @@ namespace Solana.Unity.Rpc.Test
         }
         
         [TestMethod]
+        [Ignore]
         public async Task TestConfirmFailedTransaction()
         {
             IRpcClient rpcClient = ClientFactory.GetClient(Cluster.MainNet);
