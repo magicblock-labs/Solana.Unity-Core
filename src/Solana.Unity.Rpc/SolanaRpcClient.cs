@@ -62,7 +62,6 @@ namespace Solana.Unity.Rpc
         private async Task<RequestResult<T>> SendRequestAsync<T>(string method)
         {
             JsonRpcRequest req = BuildRequest<T>(method, null);
-
             return await SendRequest<T>(req);
         }
 
@@ -564,6 +563,14 @@ namespace Solana.Unity.Rpc
         /// <inheritdoc cref="IRpcClient.GetRecentBlockHash"/>
         public RequestResult<ResponseValue<BlockHash>> GetRecentBlockHash(Commitment commitment = default)
             => GetRecentBlockHashAsync(commitment).Result;
+        
+        /// <inheritdoc cref="IRpcClient.GetLatestBlockHashAsync"/>
+        public async Task<RequestResult<ResponseValue<LatestBlockHash>>> GetLatestBlockHashAsync(
+            Commitment commitment = Commitment.Finalized)
+        {
+            return await SendRequestAsync<ResponseValue<LatestBlockHash>>("getLatestBlockhash",
+                Parameters.Create(ConfigObject.Create(HandleCommitment(commitment))));
+        }
 
         /// <inheritdoc cref="IRpcClient.GetMaxRetransmitSlotAsync"/>
         public async Task<RequestResult<ulong>> GetMaxRetransmitSlotAsync()
