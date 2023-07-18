@@ -25,7 +25,7 @@ namespace Solana.Unity.Rpc
         /// </summary>
         private readonly IdGenerator _idGenerator = new IdGenerator();
 
-        public Commitment DefaultCommitment { get; set; }
+        private Commitment _defaultCommitment;
 
         /// <summary>
         /// Initialize the Rpc Client with the passed url.
@@ -39,7 +39,12 @@ namespace Solana.Unity.Rpc
             Commitment defaultCommitment = Commitment.Confirmed) 
             : base(url, logger, httpClient, rateLimiter)
         {
-            DefaultCommitment = defaultCommitment;
+            _defaultCommitment = defaultCommitment;
+        }
+        
+        public void SetDefaultCommitment(Commitment commitment)
+        {
+            _defaultCommitment = commitment;
         }
 
         #region RequestBuilder
@@ -1133,7 +1138,7 @@ namespace Solana.Unity.Rpc
         /// <returns></returns>
         private Commitment CommitmentOrDefault(Commitment commitment)
         {
-            return commitment == Commitment.None ? DefaultCommitment : commitment;
+            return commitment == Commitment.None ? _defaultCommitment : commitment;
         }
 
     }
