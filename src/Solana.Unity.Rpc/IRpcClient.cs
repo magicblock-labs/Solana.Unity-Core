@@ -365,6 +365,7 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
+        [Obsolete("GetRecentBlockHashAsync is deprecated, please use GetLatestBlockHashAsync instead.")]
         Task<RequestResult<ResponseValue<BlockHash>>> GetRecentBlockHashAsync(Commitment commitment = default);
         
         /// <summary>
