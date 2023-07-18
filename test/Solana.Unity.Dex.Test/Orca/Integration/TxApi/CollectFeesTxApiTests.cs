@@ -212,9 +212,9 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             var swap2Res = await _context.RpcClient.SendTransactionAsync(txSwap.Build(_context.WalletAccount), commitment:  _defaultCommitment);
 
             Assert.IsTrue(swap1Res.WasSuccessful);
-            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swap1Res.Result, _defaultCommitment));
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swap1Res.Result, Commitment.Finalized));
             Assert.IsTrue(swap2Res.WasSuccessful);
-            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swap2Res.Result, _defaultCommitment));
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(swap2Res.Result, Commitment.Finalized));
             
             //update fees and rewards 
             await UpdateFeesAndRewards(
@@ -249,7 +249,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
             );
 
             Assert.IsTrue(collectResult.WasSuccessful);
-            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(collectResult.Result, _defaultCommitment));
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(collectResult.Result, Commitment.Finalized));
             
 
             //get position after
