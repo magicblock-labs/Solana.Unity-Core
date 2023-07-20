@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Solana.Unity.Rpc.Models
 {
     /// <summary>
@@ -66,5 +68,17 @@ namespace Solana.Unity.Rpc.Models
         /// Last block height at which a blockhash will be valid.
         /// </summary>
         public ulong LastValidBlockHeight { get; set; }
+    }
+    
+    /// <summary>
+    /// Represents the message fees.
+    /// </summary>
+    public class MessageFeesInfo
+    {
+        
+        /// <summary>
+        /// Fee corresponding to the message at the specified blockhash
+        /// </summary>
+        public ulong Value { get; set; }
     }
 }
