@@ -240,6 +240,15 @@ namespace Solana.Unity.Rpc
         Task<RequestResult<ResponseValue<FeesInfo>>> GetFeesAsync(Commitment commitment = default);
         
         /// <summary>
+        /// Sends a transaction.
+        /// </summary>
+        /// <param name="message">The transaction message</param>
+        /// <param name="commitment">The block commitment used to retrieve block hashes and verify success.</param>
+        /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
+        Task<RequestResult<ResponseValue<ulong?>>> GetFeeForMessageAsync(byte[] message, Commitment commitment = default);
+
+        
+        /// <summary>
         /// Returns the slot of the lowest confirmed block that has not been purged from the ledger.
         /// </summary>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>

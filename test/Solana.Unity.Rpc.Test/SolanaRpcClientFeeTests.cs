@@ -73,6 +73,33 @@ namespace Solana.Unity.Rpc.Test
 
             FinishTest(messageHandlerMock, TestnetUri);
         }
+        
+        [TestMethod]
+        public async Task TestGetMessageFees()
+        {
+            var message = "AQABAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA" +
+                          "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAA";
+            var responseData = File.ReadAllText("Resources/Http/Fees/GetMessageFeesResponse.json");
+            var requestData = File.ReadAllText("Resources/Http/Fees/GetMessageFeesRequest.json");
+            var sentMessage = string.Empty;
+            var messageHandlerMock = SetupTest(
+                (s => sentMessage = s), responseData);
+
+            var httpClient = new HttpClient(messageHandlerMock.Object)
+            {
+                BaseAddress = TestnetUri,
+            };
+
+            var sut = new SolanaRpcClient(TestnetUrl, null, httpClient);
+            var result = await sut.GetFeeForMessageAsync(message: Convert.FromBase64String(message), Commitment.Processed);
+
+            Assert.AreEqual(requestData, sentMessage);
+            Assert.IsNotNull(result.Result);
+            Assert.IsTrue(result.WasSuccessful);
+            Assert.AreEqual(5000UL, result.Result.Value);
+
+            FinishTest(messageHandlerMock, TestnetUri);
+        }
 
         [TestMethod]
         public void TestGetFeesConfirmed()

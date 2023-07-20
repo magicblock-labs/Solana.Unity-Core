@@ -552,7 +552,20 @@ namespace Solana.Unity.Rpc
             return await SendRequestAsync<ResponseValue<FeesInfo>>("getFees",
                 Parameters.Create(ConfigObject.Create(HandleCommitment(commitment))));
         }
-
+        
+        /// <inheritdoc cref="IRpcClient.GetFeeForMessageAsync(byte[], Commitment)"/>
+        public async Task<RequestResult<ResponseValue<ulong?>>> GetFeeForMessageAsync(
+            byte[] message, 
+            Commitment commitment = default)
+        {
+            return await SendRequestAsync<ResponseValue<ulong?>>("getFeeForMessage",
+                Parameters.Create(
+                    Convert.ToBase64String(message),
+                    ConfigObject.Create(
+                        KeyValue.Create("commitment", commitment)
+                    )
+                ));
+        }
 
         /// <inheritdoc cref="IRpcClient.GetFees"/>
         public RequestResult<ResponseValue<FeesInfo>> GetFees(Commitment commitment = default)
