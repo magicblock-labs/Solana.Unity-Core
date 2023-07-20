@@ -676,6 +676,12 @@ namespace Solana.Unity.Rpc
             Commitment commitment = default, bool replaceRecentBlockhash = false, IList<string> accountsToReturn = null);
         
         /// <summary>
+        /// Set the default commitment used for requests.
+        /// </summary>
+        /// <param name="commitment"></param>
+        void SetDefaultCommitment(Commitment commitment);
+        
+        /// <summary>
         /// Confirms a transaction - using polling and constant timeout based on commitment parameter.
         /// </summary>
         /// <param name="hash">The hash of the transaction.</param>

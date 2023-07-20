@@ -107,12 +107,11 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             ); 
             
             Assert.IsTrue(updateResult.WasSuccessful);
-            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(updateResult.Result, _defaultCommitment));
-            await Task.Delay(TimeSpan.FromSeconds(10));
+            Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(updateResult.Result, Commitment.Finalized));
 
             //get position after
             Position positionAfter = (
-                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey, _defaultCommitment)
+                await _context.WhirlpoolClient.GetPositionAsync(position.PublicKey, Commitment.Finalized)
             ).ParsedResult;
             
             Assert.That(positionAfter.FeeOwedA, Is.GreaterThan(positionBefore.FeeOwedA));

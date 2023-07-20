@@ -146,7 +146,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
 
             //pool before liquidity decrease 
             Whirlpool poolBefore = (
-                await _context.WhirlpoolClient.GetWhirlpoolAsync(whirlpoolPda.PublicKey, Commitment.Processed)
+                await _context.WhirlpoolClient.GetWhirlpoolAsync(whirlpoolPda.PublicKey, Commitment.Finalized)
             ).ParsedResult;
             
             // Close the ata accounts
