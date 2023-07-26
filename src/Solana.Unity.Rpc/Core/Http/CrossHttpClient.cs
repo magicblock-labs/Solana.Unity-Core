@@ -70,6 +70,8 @@ public static class CrossHttpClient
         {
             response.Content = new StringContent("Error: " + e.Message);
             response.StatusCode = HttpStatusCode.ExpectationFailed;
+            _currentRequestTask?.TrySetException(new Exception(e.Message));
+            _currentRequestTask = null;
         }
         return response;
     }
