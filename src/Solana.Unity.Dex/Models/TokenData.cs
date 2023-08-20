@@ -16,8 +16,12 @@ public class TokenData
     /// <summary>
     /// The token's mint
     /// </summary>
-    public string Mint => _mint ?? _address;
-        
+    public string Mint
+    {
+        get => _mint ?? _address;
+        set => _mint = value;
+    }
+
     /// <summary>
     /// The token's mint address
     /// </summary>
