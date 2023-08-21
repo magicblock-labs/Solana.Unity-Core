@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Solana.Unity.Wallet;
 
 namespace Solana.Unity.Dex.Models;
@@ -11,11 +12,16 @@ public class TokenData
     /// The token's name
     /// </summary>
     public string Name { get; set; }
+
     /// <summary>
     /// The token's mint
     /// </summary>
-    public string Mint { get; set; }
-        
+    public string Mint
+    {
+        get => _mint ?? _address;
+        set => _mint = value;
+    }
+
     /// <summary>
     /// The token's mint address
     /// </summary>
@@ -35,11 +41,11 @@ public class TokenData
     /// The token's logo URI
     /// </summary>
     public string LogoURI { get; set; }
-            
+
     /// <summary>
     /// The token's Coingecko ID
     /// </summary>
-    public string CoingeckoId { get; set; }
+    public string CoingeckoId => _coingeckoId ?? _extensions?.CoingeckoId;
             
     /// <summary>
     /// If token is whitelisted
@@ -50,5 +56,24 @@ public class TokenData
     /// If token is a pool token
     /// </summary>
     public bool PoolToken { get; set; }
+    
+    [JsonProperty("coingeckoId")]
+    private string _coingeckoId { get; set; }
+    
+    [JsonProperty("extensions")]
+    private Extensions _extensions { get; set; }
+    
+    [JsonProperty("mint")]
+    private string _mint { get; set; }
+    
+    [JsonProperty("address")]
+    private string _address { get; set; }
+}
 
+internal class Extensions
+{
+    /// <summary>
+    /// The token's Coingecko ID
+    /// </summary>
+    public string CoingeckoId { get; set; }
 }

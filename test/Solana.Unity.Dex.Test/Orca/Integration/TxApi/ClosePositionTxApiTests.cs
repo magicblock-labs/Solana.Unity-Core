@@ -137,7 +137,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
         public static async Task ClosePositionSingleTransaction()
         {
             //create new account to be swapper, and a new context 
-            Account walletAccount = new Account();
+            Account walletAccount = new();
 
             //initialize everything 
             PublicKey whirlpoolAddr = await InitializeTestPool();
@@ -160,7 +160,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration.TxApi
                 commitment: TestConfiguration.DefaultCommitment
             );
 
-            Assert.IsTrue(await newContext.RpcClient.ConfirmTransaction(closeResult.Result));
+            Assert.IsTrue(await newContext.RpcClient.ConfirmTransaction(closeResult.Result, TestConfiguration.DefaultCommitment));
 
             Assert.IsTrue(closeResult.WasSuccessful);
             Assert.IsTrue(await _context.RpcClient.ConfirmTransaction(closeResult.Result, _defaultCommitment));

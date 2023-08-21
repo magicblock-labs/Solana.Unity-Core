@@ -26,7 +26,7 @@ public static class CrossHttpClient
         if (RuntimePlatforms.IsWebGL() || (RuntimePlatforms.IsAndroid() && RuntimePlatforms.IsMono()))
         {
             return await SendUnityWebRequest(httpClient.BaseAddress != null ? 
-                httpClient.BaseAddress: httpReq.RequestUri, httpReq);
+                httpClient.BaseAddress : httpReq.RequestUri, httpReq);
         }
         return await httpClient.SendAsync(httpReq).ConfigureAwait(false);
     }
