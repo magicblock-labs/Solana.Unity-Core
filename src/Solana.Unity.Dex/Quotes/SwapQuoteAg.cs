@@ -1,5 +1,4 @@
 using Newtonsoft.Json;
-using Solana.Unity.Wallet;
 using System.Collections.Generic;
 using System.Numerics;
 

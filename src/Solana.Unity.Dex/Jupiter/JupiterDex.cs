@@ -39,7 +39,7 @@ public class JupiterDexAg: IDexAggregator
     public JupiterDexAg(string endpoint = "https://quote-api.jup.ag/v6")
     {
         _endpoint = endpoint;
-        _httpClient = new HttpClient { BaseAddress = new Uri(endpoint) };
+        _httpClient = new HttpClient();
         _serializerOptions = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -61,7 +61,7 @@ public class JupiterDexAg: IDexAggregator
     {
         _account = account;
         _endpoint = endpoint;
-        _httpClient = new HttpClient { BaseAddress = new Uri(endpoint) };
+        _httpClient = new HttpClient();
         _serializerOptions = new JsonSerializerSettings
         {
             ContractResolver = new CamelCasePropertyNamesContractResolver(),
@@ -108,7 +108,7 @@ public class JupiterDexAg: IDexAggregator
 
         // Construct the request URL
         var apiUrl = _endpoint + "/quote?" + queryString;
-        
+
         using var httpReq = new HttpRequestMessage(HttpMethod.Get, apiUrl);
         
         // execute the REST request
@@ -118,7 +118,7 @@ public class JupiterDexAg: IDexAggregator
         {
             var responseBody = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
             // Deserialize the response JSON into SwapQuoteAg object
-            var swapQuote = Newtonsoft.Json.JsonConvert.DeserializeObject<SwapQuoteAg>(responseBody);
+            var swapQuote = JsonConvert.DeserializeObject<SwapQuoteAg>(responseBody);
             return swapQuote;
         }
 
