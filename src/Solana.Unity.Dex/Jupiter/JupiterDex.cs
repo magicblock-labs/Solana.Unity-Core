@@ -1,7 +1,6 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
-using Solana.Unity.Dex.Jupiter.Core.Types;
 using Solana.Unity.Dex.Jupiter.Core.Types.Http;
 using Solana.Unity.Dex.Models;
 using Solana.Unity.Dex.Orca.Orca;
@@ -79,6 +78,7 @@ public class JupiterDexAg: IDexAggregator
         PublicKey inputMint,
         PublicKey outputMint,
         BigInteger amount,
+        SwapMode swapMode = SwapMode.ExactIn,
         ushort? slippageBps = null,
         List<string> excludeDexes = null,
         bool onlyDirectRoutes = false,
@@ -91,6 +91,7 @@ public class JupiterDexAg: IDexAggregator
             new("inputMint", inputMint.ToString()),
             new("outputMint", outputMint.ToString()),
             new("amount", amount.ToString()),
+            new("swapMode", swapMode.ToString()),
             new("asLegacyTransaction", "false")
         };
 

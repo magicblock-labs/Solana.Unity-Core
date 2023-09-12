@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using Solana.Unity.Dex.Jupiter;
 using Solana.Unity.Dex.Models;
+using Solana.Unity.Dex.Quotes;
 using System.Threading.Tasks;
 using Solana.Unity.Dex.Test.Orca;
 using Solana.Unity.Rpc;
@@ -30,6 +31,25 @@ namespace Solana.Unity.Dex.Test.Jupiter.Integration
             BigInteger amount = 100000000;
             
             var quote = await dexAg.GetSwapQuote(inputMint, outputMint, amount);
+            
+            Assert.IsNotNull(quote);
+            Assert.IsTrue(quote.OutputAmount > 0);
+            Assert.IsTrue(quote.InputAmount > 0);
+            Assert.IsTrue(quote.RoutePlan.Count > 0);
+        }
+        
+        
+        [Test] 
+        [Description("get a swap quote")]
+        public static async Task GetSwapQuoteWithExactOut()
+        {
+            IDexAggregator dexAg = new JupiterDexAg(TestConfiguration.TestWallet.Account);
+
+            PublicKey inputMint = new("So11111111111111111111111111111111111111112"); // SOL
+            PublicKey outputMint = new("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"); // USDC
+            BigInteger amount = 100;
+            
+            var quote = await dexAg.GetSwapQuote(inputMint, outputMint, amount, SwapMode.ExactOut);
             
             Assert.IsNotNull(quote);
             Assert.IsTrue(quote.OutputAmount > 0);
