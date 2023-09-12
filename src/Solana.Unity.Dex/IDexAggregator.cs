@@ -19,13 +19,13 @@ namespace Solana.Unity.Dex
     /// </remarks>
     public interface IDexAggregator
     {
-        
         /// <summary> 
         /// Creates a quote for a swap for a specified pair of input/output token mint. 
         /// </summary> 
         /// <param name="inputMint">The mint address of the input token (the token to swap).</param> 
         /// <param name="outputMint">The mint address of the output token (the token to swap for).</param> 
-        /// <param name="amount">The amount to swap (could be of the input token or output token).</param> 
+        /// <param name="amount">The amount to swap (could be of the input token or output token).</param>
+        /// <param name="swapMode">The swap mode. ExactIn or ExactOut</param>
         /// <param name="slippageBps">The slippage % in BPS. If the output token amount exceeds the slippage then the swap transaction will fail.</param> 
         /// <param name="excludeDexes">Default is that all DEXes are included. You can pass in the DEXes that you want to exclude and separate them by ,. For example, Aldrin,Saber.</param> 
         /// <param name="onlyDirectRoutes">Default is false. Direct Routes limits Jupiter routing to single hop routes only.</param> 
@@ -36,6 +36,7 @@ namespace Solana.Unity.Dex
             PublicKey inputMint,
             PublicKey outputMint,
             BigInteger amount,
+            SwapMode swapMode = SwapMode.ExactIn,
             ushort? slippageBps = null,
             List<string> excludeDexes = null,
             bool onlyDirectRoutes = false,
