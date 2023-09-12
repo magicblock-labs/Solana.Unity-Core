@@ -61,7 +61,7 @@ namespace Solana.Unity.Rpc.Models
         /// The list of <see cref="PublicKey"/>s present in the transaction.
         /// Memorized when deserializing a transaction. Avoid to change the keys order when deserializing.
         /// </summary>
-        private IList<PublicKey> _accountKeys;
+        internal IList<PublicKey> _accountKeys;
 
         /// <summary>
         /// The recent block hash for the transaction.
@@ -88,7 +88,7 @@ namespace Solana.Unity.Rpc.Models
         /// <summary>
         /// Compile the transaction data.
         /// </summary>
-        public byte[] CompileMessage()
+        public virtual byte[] CompileMessage()
         {
             MessageBuilder messageBuilder = new() { FeePayer = FeePayer, AccountKeys = _accountKeys };
 
@@ -273,7 +273,7 @@ namespace Solana.Unity.Rpc.Models
         /// Serializes the transaction into wire format.
         /// </summary>
         /// <returns>The transaction encoded in wire format.</returns>
-        public byte[] Serialize()
+        public virtual byte[] Serialize()
         {
             byte[] signaturesLength = ShortVectorEncoding.EncodeLength(Signatures.Count);
             byte[] serializedMessage = CompileMessage();
@@ -381,6 +381,14 @@ namespace Solana.Unity.Rpc.Models
                         TransactionBuilder.SignatureLength);
                 signatures.Add(signature.ToArray());
             }
+
+            byte prefix = data[encodedLength + (signaturesLength * TransactionBuilder.SignatureLength)];
+            byte maskedPrefix = (byte)(prefix & VersionedMessage.VersionPrefixMask);
+            
+            // If the transaction is a VersionedTransaction, use VersionedTransaction.Deserialize instead.
+            if (prefix != maskedPrefix)
+                return VersionedTransaction.Deserialize(data);
+
             return Populate(
                 Message.Deserialize(data[
                     (encodedLength + (signaturesLength * TransactionBuilder.SignatureLength))..]),

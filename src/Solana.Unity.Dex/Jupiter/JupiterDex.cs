@@ -91,7 +91,7 @@ public class JupiterDexAg: IDexAggregator
             new("inputMint", inputMint.ToString()),
             new("outputMint", outputMint.ToString()),
             new("amount", amount.ToString()),
-            new("asLegacyTransaction", "true")
+            new("asLegacyTransaction", "false")
         };
 
         if (slippageBps.HasValue) queryParams.Add(new KeyValuePair<string, string>("slippageBps", slippageBps.Value.ToString()));
@@ -152,7 +152,7 @@ public class JupiterDexAg: IDexAggregator
             FeeAccount = feeAccount,
             ComputeUnitPriceMicroLamports = computeUnitPriceMicroLamports,
             UseTokenLedger = useTokenLedger,
-            AsLegacyTransaction = true
+            AsLegacyTransaction = false
         };
         
         var requestJson = JsonConvert.SerializeObject(req, _serializerOptions);
