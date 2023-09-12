@@ -25,6 +25,6 @@
     
     <PropertyGroup>
     <Product>Solana.Unity.Dex</Product>
-    <Version>1.0</Version>
+    <Version>1.2</Version>
     </PropertyGroup>
 </Project>
