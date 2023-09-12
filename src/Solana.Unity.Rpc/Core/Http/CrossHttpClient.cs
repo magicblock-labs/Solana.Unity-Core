@@ -13,7 +13,7 @@ namespace Solana.Unity.Rpc.Core.Http;
 /// </summary>
 public static class CrossHttpClient
 {
-    private static TaskCompletionSource<UnityWebRequest.Result> _currentRequestTask;
+    //private static TaskCompletionSource<UnityWebRequest.Result> _currentRequestTask;
 
     /// <summary>
     /// Send an async request using HttpClient or UnityWebRequest if running on Unity
@@ -50,10 +50,10 @@ public static class CrossHttpClient
                 request.SetRequestHeader("Content-Type", "application/json");
             }
             request.downloadHandler = new DownloadHandlerBuffer();
-            if (_currentRequestTask != null)
-            {
-                await _currentRequestTask.Task;
-            }
+            // if (_currentRequestTask != null)
+            // {
+            //     await _currentRequestTask.Task;
+            // }
             UnityWebRequest.Result result = await SendRequest(request);
         
             if (result == UnityWebRequest.Result.Success)
@@ -70,8 +70,8 @@ public static class CrossHttpClient
         {
             response.Content = new StringContent("Error: " + e.Message);
             response.StatusCode = HttpStatusCode.ExpectationFailed;
-            _currentRequestTask?.TrySetException(e);
-            _currentRequestTask = null;
+            // _currentRequestTask?.TrySetException(e);
+            // _currentRequestTask = null;
         }
         return response;
     }
@@ -81,7 +81,7 @@ public static class CrossHttpClient
         TaskCompletionSource<UnityWebRequest.Result> sendRequestTask = new();
         try
         {
-            _currentRequestTask = sendRequestTask;
+            //_currentRequestTask = sendRequestTask;
             UnityWebRequestAsyncOperation op = request.SendWebRequest();
 
             if (request.isDone)
@@ -107,8 +107,8 @@ public static class CrossHttpClient
         catch (Exception ex)
         {
             sendRequestTask.TrySetException(ex);
-            _currentRequestTask.SetException(ex);
-            _currentRequestTask = null;
+            // _currentRequestTask.SetException(ex);
+            // _currentRequestTask = null;
         }
         return sendRequestTask.Task;
     }

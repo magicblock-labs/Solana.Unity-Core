@@ -3,6 +3,9 @@ using Solana.Unity.Dex.Jupiter;
 using Solana.Unity.Dex.Models;
 using System.Threading.Tasks;
 using Solana.Unity.Dex.Test.Orca;
+using Solana.Unity.Rpc;
+using Solana.Unity.Rpc.Models;
+using Solana.Unity.Rpc.Types;
 using Solana.Unity.Wallet;
 using System.Collections.Generic;
 using System.Linq;
@@ -86,5 +89,6 @@ namespace Solana.Unity.Dex.Test.Jupiter.Integration
             Assert.IsTrue(token.Mint.Equals(orcaMint));
             Assert.IsTrue(token.Symbol.Equals("ORCA"));
         }
+        
     }
 }

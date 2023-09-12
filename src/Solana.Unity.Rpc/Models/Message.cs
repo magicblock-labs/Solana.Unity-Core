@@ -154,6 +154,13 @@ namespace Solana.Unity.Rpc.Models
         /// <returns>The Message object instance.</returns>
         public static Message Deserialize(ReadOnlySpan<byte> data)
         {
+            // Check that the message is not a VersionedMessage
+            byte prefix = data[0];
+            byte maskedPrefix = (byte)(prefix & VersionedMessage.VersionPrefixMask);
+            if(prefix != maskedPrefix)
+                throw new NotSupportedException("The message is a VersionedMessage, use VersionedMessage." +
+                                                    "Deserialize instead.");
+            
             // Read message header
             byte numRequiredSignatures = data[MessageHeader.Layout.RequiredSignaturesOffset];
             byte numReadOnlySignedAccounts = data[MessageHeader.Layout.ReadOnlySignedAccountsOffset];
