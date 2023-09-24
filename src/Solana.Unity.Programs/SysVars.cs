@@ -15,8 +15,12 @@ namespace Solana.Unity.Programs
         /// <summary>
         /// The public key of the Recent Block Hashes System Variable. 
         /// </summary>
-        public static readonly PublicKey
-            RecentBlockHashesKey = new("SysvarRecentB1ockHashes11111111111111111111");
+        public static readonly PublicKey RecentBlockHashesKey = new("SysvarRecentB1ockHashes11111111111111111111");
+
+        /// <summary>
+        /// The public key of the Recent Slot Hashes System Variable. 
+        /// </summary>
+        public static readonly PublicKet RecentSlotHashesKey = new("SysvarS1otHashes111111111111111111111111111");
 
         /// <summary>
         /// The public key of the Rent System Variable.
