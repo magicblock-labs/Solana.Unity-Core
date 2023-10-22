@@ -10,6 +10,10 @@ namespace Solana.Unity.Rpc
     public static class ClientFactory
     {
         /// <summary>
+        /// The local net cluster.
+        /// </summary>
+        private const string RpcLocalNet = "http://127.0.0.1:8899";
+        /// <summary>
         /// The dev net cluster.
         /// </summary>
         private const string RpcDevNet = "https://api.devnet.solana.com";
@@ -24,6 +28,10 @@ namespace Solana.Unity.Rpc
         /// </summary>
         private const string RpcMainNet = "https://api.mainnet-beta.solana.com";
 
+        /// <summary>
+        /// The localnet net cluster.
+        /// </summary>
+        private const string StreamingRpcLocalNet = "ws://127.0.0.1:8900";
 
         /// <summary>
         /// The dev net cluster.
@@ -91,6 +99,7 @@ namespace Solana.Unity.Rpc
             {
                 Cluster.DevNet => RpcDevNet,
                 Cluster.TestNet => RpcTestNet,
+                Cluster.LocalNet => RpcLocalNet,
                 _ => RpcMainNet,
             };
             
@@ -147,6 +156,7 @@ namespace Solana.Unity.Rpc
             {
                 Cluster.DevNet => StreamingRpcDevNet,
                 Cluster.TestNet => StreamingRpcTestNet,
+                Cluster.LocalNet => StreamingRpcLocalNet,
                 _ => StreamingRpcMainNet,
             };
             return GetStreamingClient(url, logger);

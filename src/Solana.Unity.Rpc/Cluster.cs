@@ -42,6 +42,11 @@ namespace Solana.Unity.Rpc
         /// <remarks>
         /// Tokens that are issued on Mainnet Beta are real SOL.
         /// </remarks>
-        MainNet
+        MainNet,
+        
+        /// <summary>
+        /// A local cluster for development and testing.
+        /// </summary>
+        LocalNet
     }
 }
