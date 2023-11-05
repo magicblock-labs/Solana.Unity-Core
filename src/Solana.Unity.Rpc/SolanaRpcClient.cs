@@ -433,11 +433,13 @@ namespace Solana.Unity.Rpc
 
         /// <inheritdoc cref="IRpcClient.GetTransactionAsync"/>
         public async Task<RequestResult<TransactionMetaSlotInfo>> GetTransactionAsync(string signature,
-            Commitment commitment = default)
+            Commitment commitment = default, int maxSupportedTransactionVersion = 0)
         {
             return await SendRequestAsync<TransactionMetaSlotInfo>("getTransaction",
                 Parameters.Create(signature,
-                    ConfigObject.Create(KeyValue.Create("encoding", "json"), HandleCommitment(commitment))));
+                    ConfigObject.Create(KeyValue.Create("encoding", "json"), HandleCommitment(commitment),
+                    KeyValue.Create("maxSupportedTransactionVersion", maxSupportedTransactionVersion)))
+                );
         }
 
         /// <inheritdoc cref="IRpcClient.GetConfirmedTransactionAsync(string, Commitment)"/>
