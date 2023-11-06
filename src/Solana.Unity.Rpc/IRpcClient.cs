@@ -546,7 +546,7 @@ namespace Solana.Unity.Rpc
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<ResponseValue<TokenBalance>>> GetTokenSupplyAsync(string tokenMintPubKey,
             Commitment commitment = default);
-        
+
         /// <summary>
         /// Returns transaction details for a confirmed transaction.
         /// <remarks>
@@ -558,9 +558,10 @@ namespace Solana.Unity.Rpc
         /// </summary>
         /// <param name="signature">Transaction signature as base-58 encoded string.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
+        /// <param name="maxSupportedTransactionVersion">The max supported transaction version (1 for versioned)</param>
         /// <returns>Returns a task that holds the asynchronous operation result and state.</returns>
         Task<RequestResult<TransactionMetaSlotInfo>> GetTransactionAsync(string signature,
-            Commitment commitment = default);
+            Commitment commitment = default, int maxSupportedTransactionVersion = 0);
 
         /// <summary>
         /// Returns transaction details for a confirmed transaction.
