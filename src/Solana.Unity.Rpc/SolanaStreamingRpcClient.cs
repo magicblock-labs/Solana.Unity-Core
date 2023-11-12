@@ -15,6 +15,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Debug = UnityEngine.Debug;
 
 namespace Solana.Unity.Rpc
 {
@@ -27,17 +28,19 @@ namespace Solana.Unity.Rpc
         /// <summary>
         /// Message Id generator.
         /// </summary>
-        private readonly IdGenerator _idGenerator = new IdGenerator();
+        private readonly IdGenerator _idGenerator = new();
 
         /// <summary>
         /// Maps the internal ids to the unconfirmed subscription state objects.
         /// </summary>
-        private readonly Dictionary<int, SubscriptionState> unconfirmedRequests = new Dictionary<int, SubscriptionState>();
+        private readonly Dictionary<int, SubscriptionState> _unconfirmedRequests = new();
 
         /// <summary>
         /// Maps the server ids to the confirmed subscription state objects.
         /// </summary>
-        private readonly Dictionary<int, SubscriptionState> confirmedSubscriptions = new Dictionary<int, SubscriptionState>();
+        private readonly Dictionary<int, SubscriptionState> _confirmedSubscriptions = new();
+
+        private Commitment _defaultCommitment = Commitment.Processed;
 
         /// <summary>
         /// Internal constructor.
@@ -48,22 +51,65 @@ namespace Solana.Unity.Rpc
         /// <param name="clientWebSocket">The possible ClientWebSocket instance.</param>
         internal SolanaStreamingRpcClient(string url, object logger = null, IWebSocket websocket = default, ClientWebSocket clientWebSocket = default) : base(url, logger, websocket, clientWebSocket)
         {
+            ConnectionStateChangedEvent += (_, state) =>
+            {
+                Debug.Log("ConnectionStateChangedEvent: " + state);
+                Debug.Log(ClientSocket.CloseStatus);
+                Debug.Log(ClientSocket.CloseStatusDescription);
+                Debug.Log(_confirmedSubscriptions.Count);
+                if (state == WebSocketState.Closed) TryReconnect();
+            };
+        }
+
+        /// <summary>
+        /// Try Reconnect to the server and reopening the confirmed subscription.
+        /// </summary>
+        private async void TryReconnect()
+        {
+            Debug.Log("Reconnecting...");
+            ClientSocket.Dispose();
+            var confirmedSubscriptions = CloneObject(_confirmedSubscriptions);
+            _unconfirmedRequests.Clear();
+            _confirmedSubscriptions.Clear();
+            foreach (var sub in confirmedSubscriptions)
+            {
+                SubscriptionState subState = sub.Value;
+                JsonRpcRequest req = subState.Request;
+                subState.ChangeState(SubscriptionStatus.Unsubscribed);
+                await Subscribe(subState, req).ConfigureAwait(false);
+            }
+        }
+
+        /// <inheritdoc cref="IStreamingRpcClient.ConnectAsync"/>
+        public void SetDefaultCommitment(Commitment commitment)
+        {
+            _defaultCommitment = commitment;
+        }
+        
+        /// <summary>
+        /// Return commitment if not None, otherwise return the default.
+        /// </summary>
+        /// <param name="commitment"></param>
+        /// <returns></returns>
+        private Commitment CommitmentOrDefault(Commitment commitment)
+        {
+            return commitment == Commitment.None ? _defaultCommitment : commitment;
         }
 
         /// <inheritdoc cref="StreamingRpcClient.CleanupSubscriptions"/>
         protected override void CleanupSubscriptions()
         {
-            foreach (var sub in confirmedSubscriptions)
+            foreach (var sub in _confirmedSubscriptions)
             {
                 sub.Value.ChangeState(SubscriptionStatus.Unsubscribed, "Connection terminated");
             }
 
-            foreach (var sub in unconfirmedRequests)
+            foreach (var sub in _unconfirmedRequests)
             {
                 sub.Value.ChangeState(SubscriptionStatus.Unsubscribed, "Connection terminated");
             }
-            unconfirmedRequests.Clear();
-            confirmedSubscriptions.Clear();
+            _unconfirmedRequests.Clear();
+            _confirmedSubscriptions.Clear();
         }
 
 
@@ -127,8 +173,8 @@ namespace Solana.Unity.Rpc
             SubscriptionState sub;
             lock (this)
             {
-                unconfirmedRequests.TryGetValue(id, out sub);
-                if (!unconfirmedRequests.Remove(id))
+                _unconfirmedRequests.TryGetValue(id, out sub);
+                if (!_unconfirmedRequests.Remove(id))
                 {
                     if (_logger != null)
                     {
@@ -149,8 +195,8 @@ namespace Solana.Unity.Rpc
             SubscriptionState sub;
             lock (this)
             {
-                confirmedSubscriptions.TryGetValue(id, out sub);
-                if (!confirmedSubscriptions.Remove(id))
+                _confirmedSubscriptions.TryGetValue(id, out sub);
+                if (!_confirmedSubscriptions.Remove(id))
                 {
                     if (_logger != null)
                     {
@@ -175,11 +221,11 @@ namespace Solana.Unity.Rpc
             SubscriptionState sub;
             lock (this)
             {
-                unconfirmedRequests.TryGetValue(internalId, out sub);
-                if (unconfirmedRequests.Remove(internalId))
+                _unconfirmedRequests.TryGetValue(internalId, out sub);
+                if (_unconfirmedRequests.Remove(internalId))
                 {
                     sub.SubscriptionId = resultId;
-                    confirmedSubscriptions.Add(resultId, sub);
+                    _confirmedSubscriptions.Add(resultId, sub);
                 }
             }
 
@@ -195,7 +241,7 @@ namespace Solana.Unity.Rpc
         {
             lock (this)
             {
-                unconfirmedRequests.Add(internalId, subscription);
+                _unconfirmedRequests.Add(internalId, subscription);
             }
         }
 
@@ -208,7 +254,7 @@ namespace Solana.Unity.Rpc
         {
             lock (this)
             {
-                return confirmedSubscriptions[subscriptionId];
+                return _confirmedSubscriptions[subscriptionId];
             }
         }
         #endregion
@@ -269,10 +315,12 @@ namespace Solana.Unity.Rpc
         }
 
         #region AccountInfo
-        /// <inheritdoc cref="IStreamingRpcClient.SubscribeAccountInfoAsync(string, Action{SubscriptionState, ResponseValue{AccountInfo}}, Commitment)"/>
-        public async Task<SubscriptionState> SubscribeAccountInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = Commitment.Finalized)
+        
 
+        /// <inheritdoc cref="IStreamingRpcClient.SubscribeAccountInfoAsync(string, Action{SubscriptionState, ResponseValue{AccountInfo}}, Commitment)"/>
+        public async Task<SubscriptionState> SubscribeAccountInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = default)
         {
+            commitment = CommitmentOrDefault(commitment);
             var parameters = new List<object> { pubkey };
             var configParams = new Dictionary<string, object> { { "encoding", "base64" } };
 
@@ -291,15 +339,16 @@ namespace Solana.Unity.Rpc
         }
 
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeAccountInfo(string, Action{SubscriptionState, ResponseValue{AccountInfo}}, Commitment)"/>
-        public SubscriptionState SubscribeAccountInfo(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = Commitment.Finalized)
+        public SubscriptionState SubscribeAccountInfo(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = default)
             => SubscribeAccountInfoAsync(pubkey, callback, commitment).Result;
         #endregion
 
         #region TokenAccount
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeTokenAccountAsync(string, Action{SubscriptionState, ResponseValue{TokenAccountInfo}}, Commitment)"/>
-        public async Task<SubscriptionState> SubscribeTokenAccountAsync(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = Commitment.Finalized)
+        public async Task<SubscriptionState> SubscribeTokenAccountAsync(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = default)
 
         {
+            commitment = CommitmentOrDefault(commitment);
             var parameters = new List<object> { pubkey };
             var configParams = new Dictionary<string, object> { { "encoding", "jsonParsed" } };
 
@@ -318,14 +367,15 @@ namespace Solana.Unity.Rpc
         }
 
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeTokenAccount(string, Action{SubscriptionState, ResponseValue{TokenAccountInfo}}, Commitment)"/>
-        public SubscriptionState SubscribeTokenAccount(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = Commitment.Finalized)
+        public SubscriptionState SubscribeTokenAccount(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = default)
             => SubscribeTokenAccountAsync(pubkey, callback, commitment).Result;
         #endregion
 
         #region Logs
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeLogInfoAsync(string, Action{SubscriptionState, ResponseValue{LogInfo}}, Commitment)"/>
-        public async Task<SubscriptionState> SubscribeLogInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized)
+        public async Task<SubscriptionState> SubscribeLogInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default)
         {
+            commitment = CommitmentOrDefault(commitment);
             var parameters = new List<object> { new Dictionary<string, object> { { "mentions", new List<string> { pubkey } } } };
 
             if (commitment != Commitment.Finalized)
@@ -341,12 +391,13 @@ namespace Solana.Unity.Rpc
         }
 
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeLogInfo(string, Action{SubscriptionState, ResponseValue{LogInfo}}, Commitment)"/>
-        public SubscriptionState SubscribeLogInfo(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized)
+        public SubscriptionState SubscribeLogInfo(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default)
             => SubscribeLogInfoAsync(pubkey, callback, commitment).Result;
 
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeLogInfoAsync(LogsSubscriptionType, Action{SubscriptionState, ResponseValue{LogInfo}}, Commitment)"/>
-        public async Task<SubscriptionState> SubscribeLogInfoAsync(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized)
+        public async Task<SubscriptionState> SubscribeLogInfoAsync(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default)
         {
+            commitment = CommitmentOrDefault(commitment);
             var parameters = new List<object> { subscriptionType };
 
             if (commitment != Commitment.Finalized)
@@ -362,14 +413,15 @@ namespace Solana.Unity.Rpc
         }
 
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeLogInfo(LogsSubscriptionType, Action{SubscriptionState, ResponseValue{LogInfo}}, Commitment)"/>
-        public SubscriptionState SubscribeLogInfo(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized)
+        public SubscriptionState SubscribeLogInfo(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default)
             => SubscribeLogInfoAsync(subscriptionType, callback, commitment).Result;
         #endregion
 
         #region Signature
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeSignatureAsync(string, Action{SubscriptionState, ResponseValue{ErrorResult}}, Commitment)"/>
-        public async Task<SubscriptionState> SubscribeSignatureAsync(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = Commitment.Finalized)
+        public async Task<SubscriptionState> SubscribeSignatureAsync(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = default)
         {
+            commitment = CommitmentOrDefault(commitment);
             var parameters = new List<object> { transactionSignature };
 
             if (commitment != Commitment.Finalized)
@@ -385,14 +437,15 @@ namespace Solana.Unity.Rpc
         }
 
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeSignature(string, Action{SubscriptionState, ResponseValue{ErrorResult}}, Commitment)"/>
-        public SubscriptionState SubscribeSignature(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = Commitment.Finalized)
+        public SubscriptionState SubscribeSignature(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = default)
             => SubscribeSignatureAsync(transactionSignature, callback, commitment).Result;
         #endregion
 
         #region Program
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeProgramAsync(string, Action{SubscriptionState, ResponseValue{AccountKeyPair}}, Commitment)"/>
-        public async Task<SubscriptionState> SubscribeProgramAsync(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = Commitment.Finalized)
+        public async Task<SubscriptionState> SubscribeProgramAsync(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = default)
         {
+            commitment = CommitmentOrDefault(commitment);
             var parameters = new List<object> { programPubkey };
             var configParams = new Dictionary<string, object> { { "encoding", "base64" } };
 
@@ -410,7 +463,7 @@ namespace Solana.Unity.Rpc
         }
 
         /// <inheritdoc cref="IStreamingRpcClient.SubscribeProgram(string, Action{SubscriptionState, ResponseValue{AccountKeyPair}}, Commitment)"/>
-        public SubscriptionState SubscribeProgram(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = Commitment.Finalized)
+        public SubscriptionState SubscribeProgram(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = default)
             => SubscribeProgramAsync(programPubkey, callback, commitment).Result;
         #endregion
 
@@ -470,11 +523,12 @@ namespace Solana.Unity.Rpc
                 Console.WriteLine($"{msg.Id} {msg.Method} [Sending]{jsonString}");
             }
 
-            ReadOnlyMemory<byte> mem = new ReadOnlyMemory<byte>(json);
+            ReadOnlyMemory<byte> mem = new(json);
 
             try
             {
                 await ClientSocket.SendAsync(mem, WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
+                sub.SetRequest(msg);
                 AddSubscription(sub, msg.Id);
             }
             catch (Exception e)
