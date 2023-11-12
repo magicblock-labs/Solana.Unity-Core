@@ -14,6 +14,9 @@ namespace Solana.Unity.Rpc.Core.Sockets
         Task CloseAsync(CancellationToken cancellationToken);
         Task SendAsync(ReadOnlyMemory<byte> buffer, WebSocketMessageType messageType, bool endOfMessage, CancellationToken cancellationToken);
         Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription, CancellationToken cancellationToken);
-        Task<WebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, CancellationToken cancellationToken);
+
+        public abstract event WebSocketMessageEventHandler OnMessage;
+        public delegate void WebSocketMessageEventHandler(byte[] data);
+        public event EventHandler<WebSocketState> ConnectionStateChangedEvent;
     }
 }

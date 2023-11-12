@@ -1,5 +1,4 @@
-﻿using NativeWebSocket;
-using System;
+﻿using System;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,8 +12,10 @@ namespace Solana.Unity.Rpc.Core.Sockets
         private NativeWebSocket.IWebSocket webSocket;
 
         public WebSocketCloseStatus? CloseStatus => WebSocketCloseStatus.NormalClosure;
-
+        
         public string CloseStatusDescription => "Not implemented";
+        
+        private TaskCompletionSource<bool> _webSocketConnectionTask = new();
 
         public WebSocketState State
         {
@@ -33,37 +34,57 @@ namespace Solana.Unity.Rpc.Core.Sockets
             }
         }
 
-        public Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription, CancellationToken cancellationToken)
-            => webSocket.Close();
+        public Task CloseAsync(WebSocketCloseStatus closeStatus, string statusDescription,
+            CancellationToken cancellationToken)
+        {
+            return webSocket.Close();
+        }
 
         public Task ConnectAsync(Uri uri, CancellationToken cancellationToken)
         {
             webSocket = WebSocket.Create(uri.AbsoluteUri);
+            webSocket.OnOpen += () =>
+            {
+                _webSocketConnectionTask.TrySetResult(true);
+                webSocket.OnMessage += MessageReceived;
+                ConnectionStateChangedEvent?.Invoke(this, State);
+            };
+            webSocket.OnClose += _ =>
+            {
+                webSocket.OnMessage -= MessageReceived;
+                ConnectionStateChangedEvent?.Invoke(this, State);
+            };
             return webSocket.Connect();
+        }
+
+        private void MessageReceived(byte[] message)
+        {
+            OnMessage?.Invoke(message);
         }
 
         public Task CloseAsync(CancellationToken cancellationToken)
             => webSocket.Close();
 
-        public Task<WebSocketReceiveResult> ReceiveAsync(Memory<byte> buffer, CancellationToken cancellationToken)
-        {
-            TaskCompletionSource<WebSocketReceiveResult> receiveMessageTask = new();
+        public event IWebSocket.WebSocketMessageEventHandler OnMessage;
+        public event EventHandler<WebSocketState> ConnectionStateChangedEvent;
 
-            void WebSocketOnOnMessage(byte[] bytes)
+        public Task SendAsync(ReadOnlyMemory<byte> buffer, WebSocketMessageType messageType, bool endOfMessage, CancellationToken cancellationToken)
+        {
+            if (webSocket.State == NativeWebSocket.WebSocketState.Connecting)
             {
-                bytes.CopyTo(buffer);
-                WebSocketReceiveResult webSocketReceiveResult = new(bytes.Length, WebSocketMessageType.Text, true);
-                MainThreadUtil.Run(() => receiveMessageTask.SetResult(webSocketReceiveResult));
-                webSocket.OnMessage -= WebSocketOnOnMessage;
-                Console.WriteLine("Message received");
+                return _webSocketConnectionTask.Task.ContinueWith(_ =>
+                {
+                    if (webSocket.State != NativeWebSocket.WebSocketState.Open)
+                    {
+                        throw new WebSocketException(WebSocketError.InvalidState, "WebSocket is not connected.");
+                    }
+                    return webSocket.Send(buffer.ToArray());
+                }, cancellationToken).Unwrap();
             }
-            webSocket.OnMessage += WebSocketOnOnMessage;
-            return receiveMessageTask.Task;
-        }
-
-        public Task SendAsync(ReadOnlyMemory<byte> buffer, WebSocketMessageType messageType, bool endOfMessage,
-            CancellationToken cancellationToken)
-        {
+            if (webSocket.State != NativeWebSocket.WebSocketState.Open)
+            {
+                throw new WebSocketException(WebSocketError.InvalidState, "WebSocket is not connected.");
+            }
             return webSocket.Send(buffer.ToArray());
         }
 

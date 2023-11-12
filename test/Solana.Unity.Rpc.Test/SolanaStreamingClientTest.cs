@@ -45,29 +45,6 @@ namespace Solana.Unity.Rpc.Test
 
             _socketMock.Setup(_ => _.SendAsync(It.IsAny<ReadOnlyMemory<byte>>(), WebSocketMessageType.Text, true, It.IsAny<CancellationToken>()))
                 .Callback<ReadOnlyMemory<byte>, WebSocketMessageType, bool, CancellationToken>((mem, _, _, _) => sentPayloadCaptureCallback(mem));
-            _socketMock.Setup(_ => _.ReceiveAsync(It.IsAny<Memory<byte>>(), It.IsAny<CancellationToken>()))
-                .Callback<Memory<byte>, CancellationToken>((mem, _) =>
-                {
-                    if (!_isSubConfirmed)
-                    {
-                        //_subConfirmEvent.WaitOne();
-                        subConfirmContent.CopyTo(mem);
-                        _isSubConfirmed = true;
-                    }
-                    else if (!_hasNotified)
-                    {
-                        notificationContents.CopyTo(mem);
-                        _hasNotified = true;
-
-                        _socketMock.SetupGet(s => s.State).Returns(WebSocketState.Closed);
-                    }
-                    else if (!_hasEnded)
-                    {
-                        _hasEnded = true;
-                    }
-
-                }).Returns(() => _hasEnded ? _valueTaskEnd : _hasNotified ? _valueTaskNotification : _valueTaskConfirmation);
-
         }
 
         [TestInitialize]
@@ -765,18 +742,6 @@ namespace Solana.Unity.Rpc.Test
 
             _socketMock.Setup(_ => _.SendAsync(It.IsAny<ReadOnlyMemory<byte>>(), WebSocketMessageType.Text, true, It.IsAny<CancellationToken>()))
                 .Callback<ReadOnlyMemory<byte>, WebSocketMessageType, bool, CancellationToken>((mem, _, _, _) => result = mem);
-
-            _ = _socketMock.Setup(_ => _.ReceiveAsync(It.IsAny<Memory<byte>>(), It.IsAny<CancellationToken>())).
-                Callback<Memory<byte>, CancellationToken>((mem, _) =>
-                {
-                    if (currentMessageIdx == 0)
-                        signal.WaitOne();
-                    payloads[currentMessageIdx++].CopyTo(mem);
-                }).Returns(() => Task.FromResult(
-                    new WebSocketReceiveResult(
-                        payloads[currentMessageIdx - 1].Length,
-                        payloads[currentMessageIdx - 1].Length == 0 ? WebSocketMessageType.Close : WebSocketMessageType.Text,
-                        currentMessageIdx == 2 ? false : true)));
 
             var sut = new SolanaStreamingRpcClient("wss://api.mainnet-beta.solana.com/", null, _socketMock.Object);
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Solana.Unity.Rpc.Messages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,6 +30,11 @@ namespace Solana.Unity.Rpc.Core.Sockets
         /// The current state of the subscription.
         /// </summary>
         public SubscriptionStatus State { get; protected set; }
+        
+        /// <summary>
+        /// The JsonRpcRequest for this subscription.
+        /// </summary>
+        internal JsonRpcRequest Request;
 
         /// <summary>
         /// The last error message.
@@ -95,6 +101,15 @@ namespace Solana.Unity.Rpc.Core.Sockets
 
         /// <inheritdoc cref="Unsubscribe"/>
         public async Task UnsubscribeAsync() => await _rpcClient.UnsubscribeAsync(this).ConfigureAwait(false);
+
+        /// <summary>
+        /// Set the request for this subscription.
+        /// </summary>
+        /// <param name="request"></param>
+        public void SetRequest(JsonRpcRequest request)
+        {
+            Request = request;
+        }
     }
 
     /// <summary>

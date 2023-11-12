@@ -56,6 +56,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
             _logger = logger;
             _sem = new SemaphoreSlim(1, 1);
             _connectionStats = new ConnectionStats();
+            ClientSocket.ConnectionStateChangedEvent += (sender, state) => ConnectionStateChangedEvent?.Invoke(sender, state);
         }
 
         /// <summary>
@@ -70,13 +71,23 @@ namespace Solana.Unity.Rpc.Core.Sockets
                 if (ClientSocket.State != WebSocketState.Open)
                 {
                     await ClientSocket.ConnectAsync(NodeAddress, CancellationToken.None);
-                    _ = StartListening();
+                    ClientSocket.OnMessage += DispatchMessage;
                     ConnectionStateChangedEvent?.Invoke(this, State);
                 }
             }
             finally
             {
                 _sem.Release();
+            }
+        }
+
+        private void DispatchMessage(byte[] message)
+        {
+            HandleNewMessage(new Memory<byte>(message));
+            _connectionStats.AddReceived((uint)message.Length);
+            if (ClientSocket.State != WebSocketState.Open && ClientSocket.State != WebSocketState.Connecting)
+            {
+                ConnectionStateChangedEvent?.Invoke(this, State);
             }
         }
 
@@ -94,6 +105,7 @@ namespace Solana.Unity.Rpc.Core.Sockets
                     //and will also notify when there is a non-user triggered disconnection event
 
                     // handle disconnection cleanup
+                    ClientSocket.OnMessage -= DispatchMessage;
                     ClientSocket.Dispose();
                     ClientSocket = new WebSocketWrapper();
                     CleanupSubscriptions();
@@ -102,78 +114,6 @@ namespace Solana.Unity.Rpc.Core.Sockets
             finally
             {
                 _sem.Release();
-            }
-        }
-
-        /// <summary>
-        /// Starts listeing to new messages.
-        /// </summary>
-        /// <returns>Returns the task representing the asynchronous task.</returns>
-        private async Task StartListening()
-        {
-            while (ClientSocket.State is WebSocketState.Open or WebSocketState.Connecting)
-            {
-                try
-                {
-                    await ReadNextMessage();
-                }
-                catch (Exception e)
-                {
-                    if (_logger != null)
-                    {
-                        Console.WriteLine($"Exception trying to read next message: {e.Message}");
-                    }
-                }
-            }
-
-            if (_logger != null)
-            {
-                Console.WriteLine($"Stopped reading messages. ClientSocket.State changed to {ClientSocket.State}");
-            }
-            ConnectionStateChangedEvent?.Invoke(this, State);
-        }
-
-        /// <summary>
-        /// Reads the next message from the socket.
-        /// </summary>
-        /// <param name="cancellationToken">The cancelation token.</param>
-        /// <returns>Returns the task representing the asynchronous task.</returns>
-        private async Task ReadNextMessage(CancellationToken cancellationToken = default)
-        {
-            var buffer = new byte[32768];
-            Memory<byte> mem = new(buffer);
-            WebSocketReceiveResult result = await ClientSocket.ReceiveAsync(mem, cancellationToken);
-            int count = result.Count;
-
-            if (result.MessageType == WebSocketMessageType.Close)
-            {
-                await ClientSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, string.Empty, cancellationToken);
-            }
-            else
-            {
-                if (!result.EndOfMessage)
-                {
-                    MemoryStream ms = new MemoryStream();
-                    ms.Write(mem.Span.ToArray(), 0, mem.Span.Length);
-
-
-                    while (!result.EndOfMessage)
-                    {
-                        result = await ClientSocket.ReceiveAsync(mem, cancellationToken).ConfigureAwait(false);
-
-                        var memSlice = mem.Slice(0, result.Count).Span.ToArray();
-                        ms.Write(memSlice, 0, memSlice.Length);
-                        count += result.Count;
-                    }
-
-                    mem = new Memory<byte>(ms.ToArray());
-                }
-                else
-                {
-                    mem = mem.Slice(0, count);
-                }
-                _connectionStats.AddReceived((uint)count);
-                HandleNewMessage(mem);
             }
         }
 

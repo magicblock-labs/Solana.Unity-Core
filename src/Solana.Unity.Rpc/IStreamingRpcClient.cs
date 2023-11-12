@@ -1,8 +1,8 @@
+using System;
 using Solana.Unity.Rpc.Core.Sockets;
 using Solana.Unity.Rpc.Messages;
 using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
-using System;
 using System.Net.WebSockets;
 using System.Threading.Tasks;
 
@@ -32,6 +32,12 @@ namespace Solana.Unity.Rpc
         /// Statistics of the current connection.
         /// </summary>
         IConnectionStatistics Statistics { get; }
+        
+        /// <summary>
+        /// Set the default commitment used for requests.
+        /// </summary>
+        /// <param name="commitment"></param>
+        void SetDefaultCommitment(Commitment commitment);
 
         /// <summary>
         /// Subscribes asynchronously to AccountInfo notifications.
@@ -43,7 +49,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        Task<SubscriptionState> SubscribeAccountInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = Commitment.Finalized);
+        Task<SubscriptionState> SubscribeAccountInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes to the AccountInfo. This is a synchronous and blocking function.
@@ -55,7 +61,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object representing the state of the subscription.</returns>
-        SubscriptionState SubscribeAccountInfo(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = Commitment.Finalized);
+        SubscriptionState SubscribeAccountInfo(string pubkey, Action<SubscriptionState, ResponseValue<AccountInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes asynchronously to Token Account notifications. Note: Only works if the account is a Token Account.
@@ -67,7 +73,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        Task<SubscriptionState> SubscribeTokenAccountAsync(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = Commitment.Finalized);
+        Task<SubscriptionState> SubscribeTokenAccountAsync(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes  to Token Account notifications. Note: Only works if the account is a Token Account.
@@ -79,7 +85,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object representing the state of the subscription.</returns>
-        SubscriptionState SubscribeTokenAccount(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = Commitment.Finalized);
+        SubscriptionState SubscribeTokenAccount(string pubkey, Action<SubscriptionState, ResponseValue<TokenAccountInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes asynchronously to the logs notifications that mention a given public key.
@@ -91,7 +97,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        Task<SubscriptionState> SubscribeLogInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized);
+        Task<SubscriptionState> SubscribeLogInfoAsync(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes asynchronously to the logs notifications.
@@ -103,7 +109,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        Task<SubscriptionState> SubscribeLogInfoAsync(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized);
+        Task<SubscriptionState> SubscribeLogInfoAsync(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes to the logs notifications that mention a given public key. This is a synchronous and blocking function.
@@ -115,7 +121,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object representing the state of the subscription.</returns>
-        SubscriptionState SubscribeLogInfo(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized);
+        SubscriptionState SubscribeLogInfo(string pubkey, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes to the logs notifications. This is a synchronous and blocking function.
@@ -127,7 +133,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object representing the state of the subscription.</returns>
-        SubscriptionState SubscribeLogInfo(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = Commitment.Finalized);
+        SubscriptionState SubscribeLogInfo(LogsSubscriptionType subscriptionType, Action<SubscriptionState, ResponseValue<LogInfo>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes asynchronously to a transaction signature to receive notification when the transaction is confirmed.
@@ -139,7 +145,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        Task<SubscriptionState> SubscribeSignatureAsync(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = Commitment.Finalized);
+        Task<SubscriptionState> SubscribeSignatureAsync(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes to a transaction signature to receive notification when the transaction is confirmed. This is a synchronous and blocking function.
@@ -151,7 +157,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object representing the state of the subscription.</returns>
-        SubscriptionState SubscribeSignature(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = Commitment.Finalized);
+        SubscriptionState SubscribeSignature(string transactionSignature, Action<SubscriptionState, ResponseValue<ErrorResult>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes asynchronously to changes to a given program account data.
@@ -163,7 +169,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>The task object representing the asynchronous operation.</returns>
-        Task<SubscriptionState> SubscribeProgramAsync(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = Commitment.Finalized);
+        Task<SubscriptionState> SubscribeProgramAsync(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes to changes to a given program account data. This is a synchronous and blocking function.
@@ -175,7 +181,7 @@ namespace Solana.Unity.Rpc
         /// <param name="callback">The callback to handle data notifications.</param>
         /// <param name="commitment">The state commitment to consider when querying the ledger state.</param>
         /// <returns>Returns an object representing the state of the subscription.</returns>
-        SubscriptionState SubscribeProgram(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = Commitment.Finalized);
+        SubscriptionState SubscribeProgram(string programPubkey, Action<SubscriptionState, ResponseValue<AccountKeyPair>> callback, Commitment commitment = default);
 
         /// <summary>
         /// Subscribes asynchronously to receive notifications anytime a slot is processed by the validator.
