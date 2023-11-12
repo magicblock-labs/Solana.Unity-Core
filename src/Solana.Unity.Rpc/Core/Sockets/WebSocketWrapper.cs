@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,11 +12,9 @@ namespace Solana.Unity.Rpc.Core.Sockets
         private NativeWebSocket.IWebSocket webSocket;
 
         public WebSocketCloseStatus? CloseStatus => WebSocketCloseStatus.NormalClosure;
-
+        
         public string CloseStatusDescription => "Not implemented";
         
-        private readonly ConcurrentQueue<byte[]> _mMessageQueue = new();
-        private TaskCompletionSource<Tuple<byte[], WebSocketReceiveResult>> _receiveMessageTask;
         private TaskCompletionSource<bool> _webSocketConnectionTask = new();
 
         public WebSocketState State
@@ -63,21 +60,10 @@ namespace Solana.Unity.Rpc.Core.Sockets
         private void MessageReceived(byte[] message)
         {
             OnMessage?.Invoke(message);
-            _mMessageQueue.Enqueue(message);
-            DispatchMessage(message);
         }
 
         public Task CloseAsync(CancellationToken cancellationToken)
             => webSocket.Close();
-        
-        private void DispatchMessage(byte[] message)
-        {
-            if(_receiveMessageTask == null) return;
-            WebSocketReceiveResult webSocketReceiveResult = new(message.Length, WebSocketMessageType.Text, true);
-            Tuple<byte[], WebSocketReceiveResult> messageTuple = new(message, webSocketReceiveResult);
-            _receiveMessageTask.TrySetResult(messageTuple);
-            _receiveMessageTask = null;
-        }
 
         public event IWebSocket.WebSocketMessageEventHandler OnMessage;
         public event EventHandler<WebSocketState> ConnectionStateChangedEvent;

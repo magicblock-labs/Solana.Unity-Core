@@ -11,11 +11,11 @@ using Solana.Unity.Rpc.Types;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Debug = UnityEngine.Debug;
 
 namespace Solana.Unity.Rpc
 {
@@ -53,11 +53,10 @@ namespace Solana.Unity.Rpc
         {
             ConnectionStateChangedEvent += (_, state) =>
             {
-                Debug.Log("ConnectionStateChangedEvent: " + state);
-                Debug.Log(ClientSocket.CloseStatus);
-                Debug.Log(ClientSocket.CloseStatusDescription);
-                Debug.Log(_confirmedSubscriptions.Count);
-                if (state == WebSocketState.Closed) TryReconnect();
+                if (state == WebSocketState.Closed)
+                {
+                    TryReconnect();
+                }
             };
         }
 
@@ -66,17 +65,15 @@ namespace Solana.Unity.Rpc
         /// </summary>
         private async void TryReconnect()
         {
-            Debug.Log("Reconnecting...");
-            ClientSocket.Dispose();
-            var confirmedSubscriptions = CloneObject(_confirmedSubscriptions);
+            await ConnectAsync();
+            var confirmedSubscriptions = _confirmedSubscriptions.Values.ToArray();
             _unconfirmedRequests.Clear();
             _confirmedSubscriptions.Clear();
             foreach (var sub in confirmedSubscriptions)
             {
-                SubscriptionState subState = sub.Value;
-                JsonRpcRequest req = subState.Request;
-                subState.ChangeState(SubscriptionStatus.Unsubscribed);
-                await Subscribe(subState, req).ConfigureAwait(false);
+                JsonRpcRequest req = sub.Request;
+                sub.ChangeState(SubscriptionStatus.Unsubscribed);
+                await Subscribe(sub, req).ConfigureAwait(false);
             }
         }
 
