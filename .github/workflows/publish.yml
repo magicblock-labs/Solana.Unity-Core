@@ -10,6 +10,10 @@ jobs:
     name: build, pack & publish
     runs-on: ubuntu-latest
     steps:
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
       - name: Get the sources
         uses: actions/checkout@v2
       - name: Extract release notes
@@ -23,13 +27,9 @@ jobs:
         run: |
           dotnet tool install Cake.Tool --version 1.1.0
           dotnet tool restore
-          sh -c "$(curl -sSfL https://release.solana.com/v1.14.11/install)"
-          export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
-          solana-test-validator -u m -c whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc -c CtXfPzz36dH5Ws4UYKZvrQ1Xqzn42ecDW6y8NKuiN8nD -c metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s -c PwDiXFxQsGra4sFFTT8r1QWRMd4vfumiWC1jfWNfdYT --mint 5ZWj7a1f8tWkjBESHKgrLmXshuXxqeY9SYcfbshpAqPG > /dev/null &
-          sleep 5 
           dotnet cake --target=Pack --verbosity=verbose
       - name: Publish Solana.Unity.Extensions on version change
-        uses: rohith/publish-nuget@v2
+        uses: Rebel028/publish-nuget@v2.8.0
         with:
           PROJECT_FILE_PATH: src/Solana.Unity.Extensions/Solana.Unity.Extensions.csproj
           PACKAGE_NAME: Solana.Unity.Extensions
@@ -40,7 +40,7 @@ jobs:
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
           INCLUDE_SYMBOLS: true
       - name: Publish Solana.Unity.Wallet on version change
-        uses: rohith/publish-nuget@v2
+        uses: Rebel028/publish-nuget@v2.8.0
         with:
           PROJECT_FILE_PATH: src/Solana.Unity.Wallet/Solana.Unity.Wallet.csproj
           PACKAGE_NAME: Solana.Unity.Wallet
@@ -51,7 +51,7 @@ jobs:
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
           INCLUDE_SYMBOLS: true
       - name: Publish Solana.Unity.Rpc on version change
-        uses: rohith/publish-nuget@v2
+        uses: Rebel028/publish-nuget@v2.8.0
         with:
           PROJECT_FILE_PATH: src/Solana.Unity.Rpc/Solana.Unity.Rpc.csproj
           PACKAGE_NAME: Solana.Unity.Rpc
@@ -62,7 +62,7 @@ jobs:
           INCLUDE_SYMBOLS: true
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
       - name: Publish Solana.Unity.KeyStore on version change
-        uses: rohith/publish-nuget@v2
+        uses: Rebel028/publish-nuget@v2.8.0
         with:
           PROJECT_FILE_PATH: src/Solana.Unity.KeyStore/Solana.Unity.KeyStore.csproj
           PACKAGE_NAME: Solana.Unity.KeyStore
@@ -74,7 +74,7 @@ jobs:
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
       - name: Publish Solana.Unity.Programs on version change
         id: publish_nuget
-        uses: rohith/publish-nuget@v2
+        uses: Rebel028/publish-nuget@v2.8.0
         with:
           PROJECT_FILE_PATH: src/Solana.Unity.Programs/Solana.Unity.Programs.csproj
           PACKAGE_NAME: Solana.Unity.Programs
@@ -84,47 +84,3 @@ jobs:
           NUGET_KEY: ${{secrets.NUGET_API_KEY}}
           INCLUDE_SYMBOLS: true
           NUGET_SOURCE: https://api.nuget.org/v3/index.json
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.publish_nuget.outputs.Version }}
-          release_name: ${{ steps.publish_nuget.outputs.Version }}
-          body_path: RELEASE-NOTES.txt
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-      - name: Upload Solana.Unity.Extensions release assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Solana.Unity.Extensions.dll
-          tag: ${{ steps.publish_nuget.outputs.Version }}
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solana.Unity.Wallet release assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Solana.Unity.Wallet.dll
-          tag: ${{ steps.publish_nuget.outputs.Version }}
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solana.Unity.Rpc release assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
-          file: artifacts/Solana.Unity.Rpc.dll
-          tag: ${{ steps.publish_nuget.outputs.Version }}
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solana.Unity.KeyStore release assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: artifacts/Solana.Unity.KeyStore.dll
-          tag: ${{ steps.publish_nuget.outputs.VERSION }}
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-      - name: Upload Solana.Unity.Programs release assets
-        uses: svenstaro/upload-release-action@v2
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: artifacts/Solana.Unity.Programs.dll
-          tag: ${{ steps.publish_nuget.outputs.VERSION }}
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
