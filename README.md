@@ -35,7 +35,7 @@ Solana.Unity is a ported version of [Solnet](https://blockmountain.io/Solnet/), 
 
 If you are looking for the installable version via Unity Package Manager with examples, see here: https://github.com/magicblock-labs/Solana.Unity-SDK. 
 
-Several changes have been made to make it compatible with Unity, incompatibile libraries have been replaced and external dependencies have been reduced. The API and documentation remain unchanged. The original tests are run on every commit.
+Several changes have been made to make it compatible with Unity, incompatible libraries have been replaced and external dependencies have been reduced. The API and documentation remain unchanged. The original tests are run on every commit.
     
 ## Solnet
 
@@ -67,7 +67,7 @@ Solnet is Solana's .NET SDK to integrate with the .NET ecosystem. Wherever you a
       - Name Service Program
       - Shared Memory Program
 
-For the sake of maintainability and sometimes due to the size and complexity of some other programs, this repository will only contain Solana's Native Programs and Programs who are part of the SPL,
+For the sake of maintainability and sometimes due to the size and complexity of some other programs, this repository will only contain Solana's Native Programs and Programs which are part of the SPL,
 for a list of other commonly needed programs see below:
 
 - [Serum](https://github.com/bmresearch/Solnet.Serum/)
@@ -428,7 +428,7 @@ var sig = wallet.Send(source, 12.75D, target, feePayer);
 
 ## Support
 
-Consider supporting us for mantaining the integration with Unity:
+Consider supporting us for maintaining the integration with Unity:
 
 * Sol Address: **59JofSV1DiU2rrhFRghvFY2j8Pmhq4cgbEp6dSTJMiHx**
 
