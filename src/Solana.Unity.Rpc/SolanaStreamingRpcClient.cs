@@ -222,7 +222,8 @@ namespace Solana.Unity.Rpc
                 if (_unconfirmedRequests.Remove(internalId))
                 {
                     sub.SubscriptionId = resultId;
-                    _confirmedSubscriptions.Add(resultId, sub);
+                    if(!_confirmedSubscriptions.ContainsKey(resultId))
+                        _confirmedSubscriptions.Add(resultId, sub);
                 }
             }
 
