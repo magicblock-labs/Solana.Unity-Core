@@ -151,19 +151,11 @@ namespace Orca
             //get tick array address
             Pda tickArrayPda = PdaUtils.GetTickArray(context.ProgramId, whirlpoolAddress, startTickIndex);
             
-            //try to retrieve the tick array 
-            var tickArrayResult = await context.WhirlpoolClient.GetTickArrayAsync(
-                tickArrayPda.PublicKey, 
-                commitment
-            ); 
+            //try to retrieve the tick array
+            var result = await context.RpcClient.GetAccountInfoAsync(tickArrayPda.PublicKey, commitment);
             
             //determine if initialized 
-            if (tickArrayResult.WasSuccessful) 
-            {
-                TickArray tickArray = tickArrayResult.ParsedResult;
-                return tickArray != null && tickArray.Ticks[0].Initialized;
-            }
-            return false;
+            return result.WasSuccessful && result.Result.Value != null;
         }
     }
 }
