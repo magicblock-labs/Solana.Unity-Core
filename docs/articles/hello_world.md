@@ -76,7 +76,7 @@ Console.WriteLine($"TxHash: {transactionHash.Result}");
 ```
 
 Some takeaways from the previous code:
-- The request ammount sounds huge, be mindfull that 1 Sol = 1 Billion lamports. Both the balance and airdrop methods use lamports as units.
+- The request amount sounds huge, be mindful that 1 Sol = 1 Billion lamports. Both the balance and airdrop methods use lamports as units.
 - The requestAirdrop request returns a transaction hash. Only after about 1 minute will the funds be available (depending on [commitment parameter](https://docs.solana.com/developing/clients/jsonrpc-api#configuring-state-commitment) levels)
 
 The delay between the request transaction and its confirmation means we can't do requests straight away that depend on having funds. That brings us to the next part.
@@ -109,8 +109,8 @@ var subscription = streamingRpcClient.SubscribeSignature(transactionHash.Result,
 });
 ```
 
-With the streaming client, every method works the same. When you subscribe to any method, you receive a subscription state object (this object will allow you to unsubscribe at any time or to receive notifications about changes to the state of the subscription) and you need to pass an handle to a data handler method that receives a SubscriptionState and the data itself (with the `SubscriptionState` parameter, you can reuse your data handlers and still know which subscription triggered a given update).
-Diving deeper into the example data handler, when you are notified its possible that there were errors with a given transaction, but if everything goes right, then the `Error` value should be null. And now requesting the balance should return the value requested.
+With the streaming client, every method works the same. When you subscribe to any method, you receive a subscription state object (this object will allow you to unsubscribe at any time or to receive notifications about changes to the state of the subscription) and you need to pass a handle to a data handler method that receives a SubscriptionState and the data itself (with the `SubscriptionState` parameter, you can reuse your data handlers and still know which subscription triggered a given update).
+Diving deeper into the example data handler, when you are notified it's possible that there were errors with a given transaction, but if everything goes right, then the `Error` value should be null. And now requesting the balance should return the value requested.
 
 Note: if your program keeps exiting before you receive the notification, add a `Console.ReadLine()` at the end of your program.
 
@@ -138,7 +138,7 @@ To sum things nicely, a transaction is a collection of instructions, each transa
 
 The Solnet.Programs library, abstracts the usage of programs, and the creation of instructions that interact with these programs. For this example, we are using the static class `MemoProgram`.
 
-Putting this together wew can quickly write:
+Putting this together we can quickly write:
 
 ```
 var memoInstruction = MemoProgram.NewMemo(wallet.Account, "Hello Solana World, using Solnet :)");
