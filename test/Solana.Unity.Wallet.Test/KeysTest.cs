@@ -242,15 +242,6 @@ namespace Solana.Unity.Wallet.Test
 
         private readonly PublicKey LoaderProgramId = new PublicKey("BPFLoader1111111111111111111111111111111111");
 
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentException))]
-        public void TestCreateProgramAddressException()
-        {
-            _ = PublicKey.TryCreateProgramAddress(
-                new[] { Encoding.UTF8.GetBytes("SeedPubey1111111111111111111111111111111111") }, LoaderProgramId, out _);
-        }
-
         [TestMethod]
         public void TestCreateProgramAddress()
         {

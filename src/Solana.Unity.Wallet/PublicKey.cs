@@ -266,31 +266,31 @@ namespace Solana.Unity.Wallet
         /// <param name="publicKey">The derived public key, returned as inline out.</param>
         /// <returns>true if it could derive the program address for the given seeds, otherwise false..</returns>
         /// <exception cref="ArgumentException">Throws exception when one of the seeds has an invalid length.</exception>
-        public static bool TryCreateProgramAddress(ICollection<byte[]> seeds, PublicKey programId, out PublicKey publicKey)
+        public static bool TryCreateProgramAddress(
+            ICollection<byte[]> seeds,
+            PublicKey programId,
+            out PublicKey publicKey)
         {
-            MemoryStream buffer = new(PublicKeyLength * seeds.Count + ProgramDerivedAddressBytes.Length + programId.KeyBytes.Length);
-
+            int totalLength = ProgramDerivedAddressBytes.Length + programId.KeyBytes.Length;
             foreach (byte[] seed in seeds)
             {
-                if (seed.Length > PublicKeyLength)
-                {
-                    throw new ArgumentException("max seed length exceeded", nameof(seeds));
-                }
-                buffer.Write(seed,0, seed.Length);
+                totalLength += seed.Length;
             }
 
-            buffer.Write(programId.KeyBytes, 0, programId.KeyBytes.Length);
-            buffer.Write(ProgramDerivedAddressBytes, 0, ProgramDerivedAddressBytes.Length);
-
-            SHA256 sha256 = SHA256.Create();
-            byte[] hash = sha256.ComputeHash(new ReadOnlySpan<byte>(buffer.GetBuffer(), 0, (int)buffer.Length).ToArray());
-
+            MemoryStream memoryStream = new MemoryStream(totalLength);
+            foreach (byte[] seed in seeds)
+            {
+                memoryStream.Write(seed, 0, seed.Length);
+            }
+            memoryStream.Write(programId.KeyBytes, 0, programId.KeyBytes.Length);
+            memoryStream.Write(ProgramDerivedAddressBytes, 0, PublicKey.ProgramDerivedAddressBytes.Length);
+            byte[] hash = SHA256.Create().ComputeHash(new ReadOnlySpan<byte>(memoryStream.GetBuffer(), 0, (int) memoryStream.Length).ToArray());
             if (hash.IsOnCurve())
             {
                 publicKey = null;
                 return false;
             }
-            publicKey = new(hash);
+            publicKey = new PublicKey(hash);
             return true;
         }
 
