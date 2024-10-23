@@ -26,7 +26,7 @@ jobs:
         run: |
           dotnet tool install Cake.Tool --version 1.1.0
           dotnet tool restore
-          sh -c "$(curl -sSfL https://release.solana.com/v1.14.11/install)"
+          sh -c "$(curl -sSfL https://release.anza.xyz/stable/install)"
           export PATH="/home/runner/.local/share/solana/install/active_release/bin:$PATH"
           solana-test-validator -u m -c whirLbMiicVdio4qvUfM5KAg6Ct8VwpYzGff3uctyCc -c CtXfPzz36dH5Ws4UYKZvrQ1Xqzn42ecDW6y8NKuiN8nD -c metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s -c PwDiXFxQsGra4sFFTT8r1QWRMd4vfumiWC1jfWNfdYT --mint 5ZWj7a1f8tWkjBESHKgrLmXshuXxqeY9SYcfbshpAqPG > /dev/null &
           sleep 5
