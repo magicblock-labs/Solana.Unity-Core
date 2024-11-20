@@ -309,7 +309,7 @@ namespace Solana.Unity.Rpc
                     break;
             }
 
-            sub.HandleData(result);
+            MainThreadUtil.Run(() => sub.HandleData(result));
         }
 
         #region AccountInfo
