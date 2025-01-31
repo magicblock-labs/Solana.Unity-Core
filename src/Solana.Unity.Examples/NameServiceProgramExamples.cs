@@ -1,6 +1,8 @@
 using Solana.Unity.Programs;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Builders;
+using Solana.Unity.Rpc.Core.Http;
+using Solana.Unity.Rpc.Models;
 using Solana.Unity.Wallet;
 using System;
 using System.Threading.Tasks;
@@ -75,7 +77,8 @@ namespace Solana.Unity.Examples
             var reverseRegistry = GetReverseRegistryKey(ownerAccount.PublicKey.Key);
             Console.WriteLine($"ReverseRegistryKey: {reverseRegistry.Key}");
 
-            var tx = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var tx = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(payerAccount).AddInstruction(
                     NameServiceProgram.CreateNameRegistry(
                         twitterHandleRegistry,

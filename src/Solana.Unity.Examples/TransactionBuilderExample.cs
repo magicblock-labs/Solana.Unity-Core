@@ -27,7 +27,8 @@ namespace Solana.Unity.Examples
             Account fromAccount = wallet.GetAccount(10);
             Account toAccount = wallet.GetAccount(8);
 
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             byte[] tx = new TransactionBuilder()
@@ -73,7 +74,9 @@ namespace Solana.Unity.Examples
             Account initialAccount = wallet.GetAccount(3333);
             Console.WriteLine($"InitialAccount: {initialAccount}");
 
-            byte[] tx = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+
+            byte[] tx = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount.PublicKey,
@@ -142,7 +145,9 @@ namespace Solana.Unity.Examples
             Account initialAccount = wallet.GetAccount(26);
             Console.WriteLine($"InitialAccount: {initialAccount}");
 
-            byte[] tx = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+
+            byte[] tx = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.MintTo(
                     mintAccount.PublicKey,
@@ -187,7 +192,9 @@ namespace Solana.Unity.Examples
             Account newAccount = wallet.GetAccount(33);
             Console.WriteLine($"NewAccount: {newAccount}");
 
-            byte[] tx = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+
+            byte[] tx = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount.PublicKey,
@@ -243,8 +250,10 @@ namespace Solana.Unity.Examples
             Account newAccount = wallet.GetAccount(27);
             Console.WriteLine($"NewAccount: {newAccount}");
 
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                         ownerAccount.PublicKey,
@@ -300,8 +309,10 @@ namespace Solana.Unity.Examples
             Account newAuthority = wallet.GetAccount(1129);
             Console.WriteLine($"NewAuthority: {newAuthority}");
 
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount.PublicKey,
@@ -408,7 +419,9 @@ namespace Solana.Unity.Examples
             Account mintAccount = wallet.GetAccount(21);
             Account initialAccount = wallet.GetAccount(26);
 
-            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+
+            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.Burn(
                     initialAccount.PublicKey,
@@ -446,7 +459,8 @@ namespace Solana.Unity.Examples
             Account fromAccount = wallet.GetAccount(10);
             Account toAccount = wallet.GetAccount(8);
 
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             TransactionBuilder txBuilder = new TransactionBuilder()

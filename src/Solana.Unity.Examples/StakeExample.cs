@@ -24,7 +24,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             await rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "yrdy1", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
@@ -64,7 +65,8 @@ namespace Solana.Unity.Examples
             var b58 = new Base58Encoder();
             string f = b58.EncodeData(seed);
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             Account toAccount = wallet.GetAccount(1);
@@ -105,7 +107,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
 
             Account fromAccount = wallet.Account;
             Account toAccount = wallet.GetAccount(1);
@@ -142,7 +145,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "dog5", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
@@ -197,7 +201,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             Account stakeAccount = wallet.GetAccount(22);
@@ -250,7 +255,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
 
             Account a6 = wallet.GetAccount(6);

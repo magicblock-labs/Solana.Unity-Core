@@ -16,6 +16,8 @@ using Solana.Unity.Dex.Orca.Core.Program;
 using Solana.Unity.Dex.Orca.Core.Errors;
 using Solana.Unity.Dex.Orca.Core.Accounts;
 using Solana.Unity.Dex.Ticks;
+using Solana.Unity.Rpc.Core.Http;
+using Solana.Unity.Rpc.Models;
 
 namespace Solana.Unity.Dex.Test.Orca.Integration
 {
@@ -287,7 +289,8 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             );
 
             //initialize tick array, open position, and increase liquidity in one transaction 
-            string latestBlockHash = _context.RpcClient.GetLatestBlockHashAsync(_context.WhirlpoolClient.DefaultCommitment).Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await _context.RpcClient.GetLatestBlockHashAsync(_context.WhirlpoolClient.DefaultCommitment);
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             byte[] tx = new TransactionBuilder()
                 .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(openPositionParams.Accounts.Funder)

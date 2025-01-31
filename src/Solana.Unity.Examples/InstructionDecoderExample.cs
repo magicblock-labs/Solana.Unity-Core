@@ -1,6 +1,7 @@
 ﻿using Solana.Unity.Programs;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Builders;
+using Solana.Unity.Rpc.Core.Http;
 using Solana.Unity.Rpc.Models;
 using System;
 using System.IO;
@@ -24,7 +25,8 @@ namespace Solana.Unity.Examples
             var fromAccount = wallet.GetAccount(10);
             var toAccount = wallet.GetAccount(8);
 
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             var msgBytes = new TransactionBuilder()

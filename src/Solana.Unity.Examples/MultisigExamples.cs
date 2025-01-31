@@ -49,7 +49,8 @@ namespace Solana.Unity.Examples
             Account signerAccount4 = wallet.GetAccount(25103);
             Account signerAccount5 = wallet.GetAccount(25104);
 
-            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount.PublicKey,
@@ -90,7 +91,8 @@ namespace Solana.Unity.Examples
             string createMultiSigAndMintSignature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(createMultiSigAndMintSignature);
 
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount,
@@ -171,7 +173,8 @@ namespace Solana.Unity.Examples
             Account signerAccount2 = wallet.GetAccount(25101);
             Account signerAccount4 = wallet.GetAccount(25103);
 
-            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.MintToChecked(
                     mintAccount.PublicKey,
@@ -222,7 +225,8 @@ namespace Solana.Unity.Examples
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
 
             ulong minBalanceForExemptionMultiSig =
                 (await rpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.MultisigAccountDataSize)).Result;
@@ -385,7 +389,8 @@ namespace Solana.Unity.Examples
             Account freezeSigner5 = wallet.GetAccount(25414);
 
             // First we create a multi sig account to use as the token's freeze authority
-            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount,
@@ -422,7 +427,8 @@ namespace Solana.Unity.Examples
 
             // Then we create an account which will be the token's mint authority
             // In this same transaction we initialize the token mint with said authorities
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount,
@@ -470,7 +476,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(signature);
 
             // Here we mint tokens to an account using the mint authority multi sig
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount,
@@ -516,7 +523,8 @@ namespace Solana.Unity.Examples
 
             // After doing this, we freeze the account to which we just minted tokens
             // Notice how the signers used are different, because the `freezeAuthority` has different signers
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.FreezeAccount(
                         initialAccount,
@@ -550,7 +558,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(signature);
 
             // Because we're actually cool people, we now thaw that same account and then set the authority to nothing
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.ThawAccount(
                     initialAccount,
@@ -648,7 +657,8 @@ namespace Solana.Unity.Examples
             Account tokenAccountSigner4 = wallet.GetAccount(25493);
             Account tokenAccountSigner5 = wallet.GetAccount(25494);
 
-            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount.PublicKey,
@@ -685,7 +695,8 @@ namespace Solana.Unity.Examples
             string signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount.PublicKey,
@@ -729,7 +740,8 @@ namespace Solana.Unity.Examples
             signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.ApproveChecked(
                         tokenAccountWithMultisigOwner,
@@ -764,7 +776,8 @@ namespace Solana.Unity.Examples
             signature = await Examples.SubmitTxSendAndLog(txBytes);
             Examples.PollConfirmedTx(signature);
 
-            msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.TransferChecked(
                     tokenAccountWithMultisigOwner,
@@ -852,7 +865,8 @@ namespace Solana.Unity.Examples
             Account tokenAccountSigner4 = wallet.GetAccount(25493);
             Account tokenAccountSigner5 = wallet.GetAccount(25494);
 
-            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.MintToChecked(
                     mintAccount,
@@ -945,7 +959,8 @@ namespace Solana.Unity.Examples
 
             Console.WriteLine($"Account Balance >> {balance.Result.Value.UiAmountString}");
 
-            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.BurnChecked(
                     mintAccount,

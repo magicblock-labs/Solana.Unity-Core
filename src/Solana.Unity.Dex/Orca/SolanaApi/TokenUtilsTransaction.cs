@@ -10,6 +10,7 @@ using Solana.Unity.Dex.Orca.Address;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Models;
 using Solana.Unity.Rpc.Types;
+using Solana.Unity.Rpc.Core.Http;
 
 namespace Solana.Unity.Dex.Orca.SolanaApi
 {
@@ -33,8 +34,9 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
         {
             ulong minBalanceForExemptionMint =
                 (await rpc.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
-            
-            byte[] tx = new TransactionBuilder().SetRecentBlockHash(rpc.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
+            byte[] tx = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(authority)
                 .AddInstruction(SystemProgram.CreateAccount(
                     fromAccount: authority,
@@ -80,9 +82,10 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
                 
                 var tempAccount = new Account();
                 var sta = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(tempAccount, mint);
+                RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
                 var trxBuild=  new TransactionBuilder()    
                     .SetFeePayer(feePayer.PublicKey)
-                    .SetRecentBlockHash(rpc.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+                    .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                     .AddInstruction(SystemProgram.CreateAccount(
                         feePayer,
                         tempAccount,
@@ -121,8 +124,9 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
             }
             else
             {
+                RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
                 var txBuilder = new TransactionBuilder()
-                    .SetRecentBlockHash(rpc.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+                    .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                     .SetFeePayer(feePayer.PublicKey)
                     .AddInstruction(
                         AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
@@ -164,8 +168,9 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
             Account feePayer
         )
         {
+            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(rpc.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(feePayer.PublicKey)
                 .AddInstruction(TokenProgram.MintTo(
                     mint,

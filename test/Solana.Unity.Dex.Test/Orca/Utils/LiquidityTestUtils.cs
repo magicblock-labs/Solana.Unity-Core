@@ -12,6 +12,7 @@ using Solana.Unity.Programs;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Builders;
 using Solana.Unity.Rpc.Types;
+using Solana.Unity.Rpc.Models;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {
@@ -304,9 +305,10 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             );
             if (!exists)
             {
+                RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
                 TransactionBuilder builder = new();
                 builder.SetFeePayer(feePayer);
-                builder.SetRecentBlockHash(rpc.GetLatestBlockHashAsync().Result.Result.Value.Blockhash);
+                builder.SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash);
                 builder.AddInstruction(
                     AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
                         feePayer, owner, mintAddress, idempotent: true
