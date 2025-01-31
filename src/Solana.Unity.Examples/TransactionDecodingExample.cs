@@ -27,7 +27,6 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = await RpcClient.GetRecentBlockHashAsync();
             ulong minBalanceForExemptionAcc =
                 (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             ulong minBalanceForExemptionMint =
@@ -44,7 +43,7 @@ namespace Solana.Unity.Examples
             Console.WriteLine($"InitialAccount: {initialAccount}");
 
             byte[] msgData = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.InitializeMint(
                     mintAccount.PublicKey,

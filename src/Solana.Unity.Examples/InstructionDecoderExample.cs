@@ -24,11 +24,11 @@ namespace Solana.Unity.Examples
             var fromAccount = wallet.GetAccount(10);
             var toAccount = wallet.GetAccount(8);
 
-            var blockHash = await rpcClient.GetRecentBlockHashAsync();
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            string latestBlockHash = rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash;
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             var msgBytes = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(SystemProgram.Transfer(fromAccount.PublicKey, toAccount.PublicKey, 10000000))
                 .AddInstruction(MemoProgram.NewMemo(fromAccount.PublicKey, "Hello from Sol.Net :)"))

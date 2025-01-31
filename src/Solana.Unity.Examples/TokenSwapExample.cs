@@ -36,9 +36,8 @@ namespace Solana.Unity.Examples
             var tokenBUserAccount = new Account();
 
             //setup some mints and tokens owned by wallet
-            RequestResult<ResponseValue<BlockHash>> blockHash = await RpcClient.GetRecentBlockHashAsync();
             var tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -112,9 +111,8 @@ namespace Solana.Unity.Examples
             var swapTokenBAccount = new Account();
 
             //init the swap authority's token accounts
-            blockHash = await RpcClient.GetRecentBlockHashAsync();
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -161,9 +159,8 @@ namespace Solana.Unity.Examples
             var poolFeeAccount = new Account();
 
             //create the pool mint and the user and fee pool token accounts
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -206,9 +203,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(txSig);
 
             //create the swap
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -247,9 +243,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(txSig);
 
             //now a user can swap in the pool
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.Swap(
                     swap,
@@ -268,9 +263,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(txSig);
 
             //user can add liq
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.DepositAllTokenTypes(
                     swap,
@@ -289,9 +283,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(txSig);
 
             //user can remove liq
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.WithdrawAllTokenTypes(
                     swap,
@@ -311,9 +304,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(txSig);
 
             //user can deposit single
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.DepositSingleTokenTypeExactAmountIn(
                     swap,
@@ -330,9 +322,8 @@ namespace Solana.Unity.Examples
             Examples.PollConfirmedTx(txSig);
 
             //user can withdraw single
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.WithdrawSingleTokenTypeExactAmountOut(
                     swap,

@@ -55,10 +55,8 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
             Commitment commitment = Commitment.Finalized
         )
         {
-            var recentHash = await ctx.RpcClient.GetRecentBlockHashAsync();
-
             var tb = new TransactionBuilder()
-                .SetRecentBlockHash(recentHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(from.PublicKey)
                 .AddInstruction(SystemProgram.Transfer(from.PublicKey, to, lamports));
 
@@ -84,10 +82,8 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
             Commitment commitment = Commitment.Finalized
         )
         {
-            var recentHash = await ctx.RpcClient.GetRecentBlockHashAsync();
-
             var tx = new TransactionBuilder()
-                .SetRecentBlockHash(recentHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(feePayer)
                 .AddInstruction(SystemProgram.CreateAccount(
                     fromAccount: fromAccount,

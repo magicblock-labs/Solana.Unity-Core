@@ -57,9 +57,7 @@ namespace Solana.Unity.Programs.Abstract
             TransactionBuilder tb = new TransactionBuilder();
             tb.AddInstruction(instruction);
 
-            var recentHash = await RpcClient.GetRecentBlockHashAsync();
-
-            tb.SetRecentBlockHash(recentHash.Result.Value.Blockhash);
+            tb.SetRecentBlockHash(RpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash);
             tb.SetFeePayer(feePayer);
 
             var wireFmt = tb.CompileMessage();

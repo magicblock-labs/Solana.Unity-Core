@@ -287,9 +287,9 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             );
 
             //initialize tick array, open position, and increase liquidity in one transaction 
-            var blockHash = await _context.RpcClient.GetRecentBlockHashAsync(_context.WhirlpoolClient.DefaultCommitment);
+            string latestBlockHash = _context.RpcClient.GetLatestBlockHashAsync(_context.WhirlpoolClient.DefaultCommitment).Result.Result.Value.Blockhash;
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(openPositionParams.Accounts.Funder)
                 .AddInstruction(WhirlpoolProgram.InitializeTickArray(
                     programId: _context.ProgramId,

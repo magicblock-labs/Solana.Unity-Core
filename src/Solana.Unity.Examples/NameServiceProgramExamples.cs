@@ -53,7 +53,6 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(MnemonicWords);
 
-            var blockHash = await rpcClient.GetRecentBlockHashAsync();
             var minBalanceForExemptionNameAcc =
                 (await rpcClient.GetMinimumBalanceForRentExemptionAsync(NameServiceProgram.NameAccountSize + 96)).Result;
 
@@ -76,7 +75,7 @@ namespace Solana.Unity.Examples
             var reverseRegistry = GetReverseRegistryKey(ownerAccount.PublicKey.Key);
             Console.WriteLine($"ReverseRegistryKey: {reverseRegistry.Key}");
 
-            var tx = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+            var tx = new TransactionBuilder().SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash)
                 .SetFeePayer(payerAccount).AddInstruction(
                     NameServiceProgram.CreateNameRegistry(
                         twitterHandleRegistry,

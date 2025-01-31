@@ -1069,7 +1069,7 @@ namespace Orca
         )
         {
             tb.SetFeePayer(feePayer);
-            tb.SetRecentBlockHash((await rpcClient.GetRecentBlockHashAsync(commitment)).Result.Value.Blockhash);
+            tb.SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash);
 
             return Transaction.Deserialize(tb.Serialize());
         }

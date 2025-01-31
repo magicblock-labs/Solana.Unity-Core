@@ -43,10 +43,8 @@ namespace Solana.Unity.Examples
 
                     var memoInstruction = MemoProgram.NewMemoV2("Hello Solana World, using Solana.Unity :)");
 
-                    var recentHash = await rpcClient.GetRecentBlockHashAsync();
-
                     var tx = new TransactionBuilder().AddInstruction(memoInstruction).SetFeePayer(wallet.Account)
-                        .SetRecentBlockHash(recentHash.Result.Value.Blockhash).Build(wallet.Account);
+                        .SetRecentBlockHash(rpcClient.GetLatestBlockHashAsync().Result.Result.Value.Blockhash).Build(wallet.Account);
 
                     var txHash = await rpcClient.SendTransactionAsync(tx);
 

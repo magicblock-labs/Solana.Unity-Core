@@ -302,12 +302,11 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             bool exists = await TokenUtilsTransaction.TokenAccountExists(
                 rpc, ata, commitment
             );
-            var recentHash = await rpc.GetRecentBlockHashAsync(commitment);
             if (!exists)
             {
                 TransactionBuilder builder = new();
                 builder.SetFeePayer(feePayer);
-                builder.SetRecentBlockHash(recentHash.Result.Value.Blockhash);
+                builder.SetRecentBlockHash(rpc.GetLatestBlockHashAsync().Result.Result.Value.Blockhash);
                 builder.AddInstruction(
                     AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
                         feePayer, owner, mintAddress, idempotent: true

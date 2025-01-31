@@ -45,8 +45,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             mintAccount = (mintAccount == null) ? new Account() : mintAccount;
             Account ownerAccount = authority;
 
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
-            byte[] tx = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+            byte[] tx = new TransactionBuilder().SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync(commitment).Result.Result.Value.Blockhash)
                 .SetFeePayer(authority)
                 .AddInstruction(SystemProgram.CreateAccount(
                     fromAccount: ownerAccount.PublicKey,
@@ -85,9 +84,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             ulong minBalanceForExemption =
                 (await ctx.RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
 
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync(commitment).Result.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     fromAccount: ownerAccount,
@@ -131,9 +129,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             ulong minBalanceForExemption =
                 (await ctx.RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
 
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync(commitment).Result.Result.Value.Blockhash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(SystemProgram.CreateAccount(    //create account 
                     fromAccount: fromAccount,
@@ -179,9 +176,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             Commitment commitment = Commitment.Finalized
         )
         {
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
-            
-            byte[] tx = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+            byte[] tx = new TransactionBuilder().SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync(commitment).Result.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.Approve(
                     source: tokenAccount,
@@ -212,9 +207,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             Commitment commitment = Commitment.Finalized
         )
         {
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
-
-            byte[] tx = new TransactionBuilder().SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+            byte[] tx = new TransactionBuilder().SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync(commitment).Result.Result.Value.Blockhash)
                 .SetFeePayer(authorityAccount)
                 .AddInstruction(TokenProgram.SetAuthority(
                     account: tokenAccount, 
@@ -248,9 +241,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             Commitment commitment = Commitment.Finalized
         )
         {
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync(commitment).Result.Result.Value.Blockhash)
                 .SetFeePayer(feePayer.PublicKey)
                 .AddInstruction(TokenProgram.MintTo(
                     mint,
@@ -281,9 +273,8 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             Commitment commitment = Commitment.Finalized
         )
         {
-            var blockHash = await ctx.RpcClient.GetRecentBlockHashAsync(commitment);
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(ctx.RpcClient.GetLatestBlockHashAsync(commitment).Result.Result.Value.Blockhash)
                 .SetFeePayer(ctx.WalletPubKey)
                 .AddInstruction(
                     TokenProgram.Transfer(
@@ -353,11 +344,10 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
                 balance = (await rpc.GetTokenBalanceByOwnerAsync(
                     authority.PublicKey, mint)).Result.Value.AmountUlong;
             }
-            var blockHash = await rpc.GetRecentBlockHashAsync(commitment: Commitment.Finalized);
             TransactionBuilder txb = new();
             txb
                 .SetFeePayer(authority)
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash);
+                .SetRecentBlockHash(rpc.GetLatestBlockHashAsync(commitment: Commitment.Finalized).Result.Result.Value.Blockhash);
             if (balance > 0)
             {
                 // Send the balance to a random ATA, close fails if balance is not 0 for not native tokens
