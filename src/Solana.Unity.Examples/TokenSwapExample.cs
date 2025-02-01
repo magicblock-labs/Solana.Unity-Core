@@ -35,7 +35,7 @@ namespace Solana.Unity.Examples
             var tokenBMint = new Account();
             var tokenBUserAccount = new Account();
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
 
             //setup some mints and tokens owned by wallet
             var tx = new TransactionBuilder()

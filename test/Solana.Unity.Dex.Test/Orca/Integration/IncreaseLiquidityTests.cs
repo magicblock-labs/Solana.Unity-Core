@@ -289,7 +289,7 @@ namespace Solana.Unity.Dex.Test.Orca.Integration
             );
 
             //initialize tick array, open position, and increase liquidity in one transaction 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await _context.RpcClient.GetLatestBlockHashAsync(_context.WhirlpoolClient.DefaultCommitment);
+            var latestBlockHashItem = await _context.RpcClient.GetLatestBlockHashAsync(_context.WhirlpoolClient.DefaultCommitment);
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             byte[] tx = new TransactionBuilder()
                 .SetRecentBlockHash(latestBlockHash)

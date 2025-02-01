@@ -48,7 +48,7 @@ namespace Solana.Unity.Examples
             Console.WriteLine($"MintAccount: {mintAccount}");
             Console.WriteLine($"InitialAccount: {initialAccount}");
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
 
             byte[] createAndInitializeMintToTx = new TransactionBuilder().

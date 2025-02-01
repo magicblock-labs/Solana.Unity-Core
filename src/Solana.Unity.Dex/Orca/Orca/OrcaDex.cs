@@ -1070,7 +1070,7 @@ namespace Orca
         )
         {
             tb.SetFeePayer(feePayer);
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHash = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHash = await rpcClient.GetLatestBlockHashAsync();
             tb.SetRecentBlockHash(latestBlockHash.Result.Value.Blockhash);
 
             return Transaction.Deserialize(tb.Serialize());

@@ -24,7 +24,7 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             await rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
@@ -65,7 +65,7 @@ namespace Solana.Unity.Examples
             var b58 = new Base58Encoder();
             string f = b58.EncodeData(seed);
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
@@ -107,7 +107,7 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
 
             Account fromAccount = wallet.Account;
@@ -145,7 +145,7 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
@@ -201,7 +201,7 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
@@ -255,7 +255,7 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
 

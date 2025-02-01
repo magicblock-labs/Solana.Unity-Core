@@ -49,7 +49,7 @@ namespace Solana.Unity.Examples
             Account signerAccount4 = wallet.GetAccount(25103);
             Account signerAccount5 = wallet.GetAccount(25104);
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
@@ -173,7 +173,7 @@ namespace Solana.Unity.Examples
             Account signerAccount2 = wallet.GetAccount(25101);
             Account signerAccount4 = wallet.GetAccount(25103);
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.MintToChecked(
@@ -225,7 +225,7 @@ namespace Solana.Unity.Examples
         {
             Wallet.Wallet wallet = new Wallet.Wallet(MnemonicWords);
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
 
             ulong minBalanceForExemptionMultiSig =
@@ -389,7 +389,7 @@ namespace Solana.Unity.Examples
             Account freezeSigner5 = wallet.GetAccount(25414);
 
             // First we create a multi sig account to use as the token's freeze authority
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
@@ -657,7 +657,7 @@ namespace Solana.Unity.Examples
             Account tokenAccountSigner4 = wallet.GetAccount(25493);
             Account tokenAccountSigner5 = wallet.GetAccount(25494);
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
@@ -865,7 +865,7 @@ namespace Solana.Unity.Examples
             Account tokenAccountSigner4 = wallet.GetAccount(25493);
             Account tokenAccountSigner5 = wallet.GetAccount(25494);
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.MintToChecked(
@@ -959,7 +959,7 @@ namespace Solana.Unity.Examples
 
             Console.WriteLine($"Account Balance >> {balance.Result.Value.UiAmountString}");
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             byte[] msgData = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(ownerAccount)
                 .AddInstruction(TokenProgram.BurnChecked(

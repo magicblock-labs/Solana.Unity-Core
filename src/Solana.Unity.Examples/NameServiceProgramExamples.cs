@@ -77,7 +77,7 @@ namespace Solana.Unity.Examples
             var reverseRegistry = GetReverseRegistryKey(ownerAccount.PublicKey.Key);
             Console.WriteLine($"ReverseRegistryKey: {reverseRegistry.Key}");
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             var tx = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(payerAccount).AddInstruction(
                     NameServiceProgram.CreateNameRegistry(

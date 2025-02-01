@@ -305,7 +305,7 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             );
             if (!exists)
             {
-                RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
+                var latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
                 TransactionBuilder builder = new();
                 builder.SetFeePayer(feePayer);
                 builder.SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash);

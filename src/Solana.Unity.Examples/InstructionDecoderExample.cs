@@ -25,7 +25,7 @@ namespace Solana.Unity.Examples
             var fromAccount = wallet.GetAccount(10);
             var toAccount = wallet.GetAccount(8);
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
             string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             Console.WriteLine($"BlockHash >> {latestBlockHash}");
 

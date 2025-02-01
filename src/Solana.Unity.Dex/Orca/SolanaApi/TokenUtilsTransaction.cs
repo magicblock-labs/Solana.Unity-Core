@@ -35,7 +35,7 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
             ulong minBalanceForExemptionMint =
                 (await rpc.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
 
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
             byte[] tx = new TransactionBuilder().SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(authority)
                 .AddInstruction(SystemProgram.CreateAccount(
@@ -82,7 +82,7 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
                 
                 var tempAccount = new Account();
                 var sta = AssociatedTokenAccountProgram.DeriveAssociatedTokenAccount(tempAccount, mint);
-                RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
+                var latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
                 var trxBuild=  new TransactionBuilder()    
                     .SetFeePayer(feePayer.PublicKey)
                     .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
@@ -124,7 +124,7 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
             }
             else
             {
-                RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
+                var latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
                 var txBuilder = new TransactionBuilder()
                     .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                     .SetFeePayer(feePayer.PublicKey)
@@ -168,7 +168,7 @@ namespace Solana.Unity.Dex.Orca.SolanaApi
             Account feePayer
         )
         {
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
+            var latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
             byte[] tx = new TransactionBuilder()
                 .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(feePayer.PublicKey)

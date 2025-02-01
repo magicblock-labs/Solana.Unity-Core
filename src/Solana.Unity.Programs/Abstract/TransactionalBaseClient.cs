@@ -54,7 +54,7 @@ namespace Solana.Unity.Programs.Abstract
         protected async Task<RequestResult<string>> SignAndSendTransaction(TransactionInstruction instruction, PublicKey feePayer, 
             Func<byte[], PublicKey, byte[]> signingCallback, Commitment commitment = Commitment.Finalized)
         {
-            RequestResult<Solana.Unity.Rpc.Messages.ResponseValue<LatestBlockHash>> latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+           var latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
             TransactionBuilder tb = new TransactionBuilder();
             tb.AddInstruction(instruction);
             tb.SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash);
