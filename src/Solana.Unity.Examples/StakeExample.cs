@@ -24,14 +24,15 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             await rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "yrdy1", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(SystemProgram.CreateAccountWithSeed(
                      fromAccount,
@@ -64,17 +65,18 @@ namespace Solana.Unity.Examples
             var b58 = new Base58Encoder();
             string f = b58.EncodeData(seed);
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             Account toAccount = wallet.GetAccount(1);
             rpcClient.RequestAirdropAsync(toAccount.PublicKey, 100_000_000);
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "dog5", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
 
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(StakeProgram.AuthorizeWithSeed(
                     stakeAccount,
@@ -105,16 +107,17 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
 
             Account fromAccount = wallet.Account;
             Account toAccount = wallet.GetAccount(1);
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "dog1", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
 
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(StakeProgram.Authorize(
                     stakeAccount,
@@ -142,7 +145,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             PublicKey.TryCreateWithSeed(fromAccount.PublicKey, "dog5", StakeProgram.ProgramIdKey, out PublicKey stakeAccount);
@@ -158,10 +162,10 @@ namespace Solana.Unity.Examples
                 UnixTimestamp = 0
             };
 
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(SystemProgram.CreateAccountWithSeed(
                     fromAccount.PublicKey,
@@ -197,7 +201,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minbalanceforexception = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
             Account fromAccount = wallet.Account;
             Account stakeAccount = wallet.GetAccount(22);
@@ -214,10 +219,10 @@ namespace Solana.Unity.Examples
                 UnixTimestamp = 0
             };
 
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(SystemProgram.CreateAccount(
                     fromAccount.PublicKey,
@@ -250,7 +255,8 @@ namespace Solana.Unity.Examples
         {
             var wallet = new Wallet.Wallet(new Mnemonic(MnemonicWords));
             rpcClient.RequestAirdropAsync(wallet.Account.PublicKey, 100_000_000);
-            RequestResult<ResponseValue<BlockHash>> blockHash = await rpcClient.GetRecentBlockHashAsync();
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
             ulong minBalance = (await rpcClient.GetMinimumBalanceForRentExemptionAsync(StakeProgram.StakeAccountDataSize)).Result;
 
             Account a6 = wallet.GetAccount(6);
@@ -258,10 +264,10 @@ namespace Solana.Unity.Examples
             Account a4 = wallet.GetAccount(4);
             Account a3 = wallet.GetAccount(3);
 
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             byte[] tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(a6)
                 .AddInstruction(SystemProgram.CreateAccountWithSeed(
                     a6.PublicKey,

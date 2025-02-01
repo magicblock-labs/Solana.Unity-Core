@@ -35,10 +35,11 @@ namespace Solana.Unity.Examples
             var tokenBMint = new Account();
             var tokenBUserAccount = new Account();
 
+            var latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //setup some mints and tokens owned by wallet
-            RequestResult<ResponseValue<BlockHash>> blockHash = await RpcClient.GetRecentBlockHashAsync();
             var tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -111,10 +112,11 @@ namespace Solana.Unity.Examples
             var swapTokenAAccount= new Account();
             var swapTokenBAccount = new Account();
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //init the swap authority's token accounts
-            blockHash = await RpcClient.GetRecentBlockHashAsync();
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -160,10 +162,11 @@ namespace Solana.Unity.Examples
             var poolUserAccount = new Account();
             var poolFeeAccount = new Account();
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //create the pool mint and the user and fee pool token accounts
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -205,10 +208,11 @@ namespace Solana.Unity.Examples
             txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //create the swap
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(SystemProgram.CreateAccount(
                     wallet.Account,
@@ -246,10 +250,11 @@ namespace Solana.Unity.Examples
             txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //now a user can swap in the pool
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.Swap(
                     swap,
@@ -267,10 +272,11 @@ namespace Solana.Unity.Examples
             txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //user can add liq
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.DepositAllTokenTypes(
                     swap,
@@ -288,10 +294,11 @@ namespace Solana.Unity.Examples
             txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //user can remove liq
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.WithdrawAllTokenTypes(
                     swap,
@@ -310,10 +317,11 @@ namespace Solana.Unity.Examples
             txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //user can deposit single
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.DepositSingleTokenTypeExactAmountIn(
                     swap,
@@ -329,10 +337,11 @@ namespace Solana.Unity.Examples
             txSig = await Examples.SubmitTxSendAndLog(tx);
             Examples.PollConfirmedTx(txSig);
 
+            latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+
             //user can withdraw single
-            blockHash = await RpcClient.GetRecentBlockHashAsync();;
             tx = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash)
                 .SetFeePayer(wallet.Account)
                 .AddInstruction(program.WithdrawSingleTokenTypeExactAmountOut(
                     swap,

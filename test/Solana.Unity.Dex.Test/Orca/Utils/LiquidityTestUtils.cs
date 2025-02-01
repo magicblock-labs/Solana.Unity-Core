@@ -12,6 +12,7 @@ using Solana.Unity.Programs;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Builders;
 using Solana.Unity.Rpc.Types;
+using Solana.Unity.Rpc.Models;
 
 namespace Solana.Unity.Dex.Test.Orca.Utils
 {
@@ -302,12 +303,12 @@ namespace Solana.Unity.Dex.Test.Orca.Utils
             bool exists = await TokenUtilsTransaction.TokenAccountExists(
                 rpc, ata, commitment
             );
-            var recentHash = await rpc.GetRecentBlockHashAsync(commitment);
             if (!exists)
             {
+                var latestBlockHashItem = await rpc.GetLatestBlockHashAsync();
                 TransactionBuilder builder = new();
                 builder.SetFeePayer(feePayer);
-                builder.SetRecentBlockHash(recentHash.Result.Value.Blockhash);
+                builder.SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash);
                 builder.AddInstruction(
                     AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
                         feePayer, owner, mintAddress, idempotent: true

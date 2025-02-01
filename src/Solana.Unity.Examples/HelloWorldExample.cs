@@ -1,6 +1,8 @@
 ﻿using Solana.Unity.Programs;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Builders;
+using Solana.Unity.Rpc.Core.Http;
+using Solana.Unity.Rpc.Models;
 using Solana.Unity.Wallet;
 using Solana.Unity.Wallet.Bip39;
 using System;
@@ -43,10 +45,10 @@ namespace Solana.Unity.Examples
 
                     var memoInstruction = MemoProgram.NewMemoV2("Hello Solana World, using Solana.Unity :)");
 
-                    var recentHash = await rpcClient.GetRecentBlockHashAsync();
+                    var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
 
                     var tx = new TransactionBuilder().AddInstruction(memoInstruction).SetFeePayer(wallet.Account)
-                        .SetRecentBlockHash(recentHash.Result.Value.Blockhash).Build(wallet.Account);
+                        .SetRecentBlockHash(latestBlockHashItem.Result.Value.Blockhash).Build(wallet.Account);
 
                     var txHash = await rpcClient.SendTransactionAsync(tx);
 

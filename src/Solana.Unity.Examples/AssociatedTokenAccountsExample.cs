@@ -33,8 +33,6 @@ namespace Solana.Unity.Examples
             #region Create and Initialize a token Mint Account
 
 
-            RequestResult<ResponseValue<BlockHash>> blockHash = await RpcClient.GetRecentBlockHashAsync();
-
             ulong minBalanceForExemptionAcc =
                 (await RpcClient.GetMinimumBalanceForRentExemptionAsync(TokenProgram.TokenAccountDataSize)).Result;
             ulong minBalanceForExemptionMint =
@@ -50,8 +48,11 @@ namespace Solana.Unity.Examples
             Console.WriteLine($"MintAccount: {mintAccount}");
             Console.WriteLine($"InitialAccount: {initialAccount}");
 
+            var latestBlockHashItem = await RpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
+
             byte[] createAndInitializeMintToTx = new TransactionBuilder().
-                SetRecentBlockHash(blockHash.Result.Value.Blockhash).
+                SetRecentBlockHash(latestBlockHash).
                 SetFeePayer(ownerAccount).
                 AddInstruction(SystemProgram.CreateAccount(
                     ownerAccount,
@@ -104,7 +105,7 @@ namespace Solana.Unity.Examples
             Console.WriteLine($"AssociatedTokenAccount: {associatedTokenAccount}");
 
             byte[] createAssociatedTokenAccountTx = new TransactionBuilder().
-                SetRecentBlockHash(blockHash.Result.Value.Blockhash).
+                SetRecentBlockHash(latestBlockHash).
                 SetFeePayer(ownerAccount).
                 AddInstruction(AssociatedTokenAccountProgram.CreateAssociatedTokenAccount(
                     ownerAccount,

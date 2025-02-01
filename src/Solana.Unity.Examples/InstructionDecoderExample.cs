@@ -1,6 +1,7 @@
 ﻿using Solana.Unity.Programs;
 using Solana.Unity.Rpc;
 using Solana.Unity.Rpc.Builders;
+using Solana.Unity.Rpc.Core.Http;
 using Solana.Unity.Rpc.Models;
 using System;
 using System.IO;
@@ -24,11 +25,12 @@ namespace Solana.Unity.Examples
             var fromAccount = wallet.GetAccount(10);
             var toAccount = wallet.GetAccount(8);
 
-            var blockHash = await rpcClient.GetRecentBlockHashAsync();
-            Console.WriteLine($"BlockHash >> {blockHash.Result.Value.Blockhash}");
+            var latestBlockHashItem = await rpcClient.GetLatestBlockHashAsync();
+            string latestBlockHash = latestBlockHashItem.Result.Value.Blockhash;
+            Console.WriteLine($"BlockHash >> {latestBlockHash}");
 
             var msgBytes = new TransactionBuilder()
-                .SetRecentBlockHash(blockHash.Result.Value.Blockhash)
+                .SetRecentBlockHash(latestBlockHash)
                 .SetFeePayer(fromAccount)
                 .AddInstruction(SystemProgram.Transfer(fromAccount.PublicKey, toAccount.PublicKey, 10000000))
                 .AddInstruction(MemoProgram.NewMemo(fromAccount.PublicKey, "Hello from Sol.Net :)"))

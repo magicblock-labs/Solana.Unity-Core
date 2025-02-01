@@ -22,6 +22,7 @@ using Solana.Unity.Dex.Orca.Orca;
 using Solana.Unity.Dex.Quotes;
 using Solana.Unity.Dex.Ticks;
 using System.Linq;
+using Solana.Unity.Rpc.Core.Http;
 
 namespace Orca
 {
@@ -1069,7 +1070,8 @@ namespace Orca
         )
         {
             tb.SetFeePayer(feePayer);
-            tb.SetRecentBlockHash((await rpcClient.GetRecentBlockHashAsync(commitment)).Result.Value.Blockhash);
+            var latestBlockHash = await rpcClient.GetLatestBlockHashAsync();
+            tb.SetRecentBlockHash(latestBlockHash.Result.Value.Blockhash);
 
             return Transaction.Deserialize(tb.Serialize());
         }
