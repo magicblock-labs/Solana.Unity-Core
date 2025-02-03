@@ -108,7 +108,7 @@ public class JupiterDexAg: IDexAggregator
         var queryString = string.Join("&", queryParams.Select(kv => $"{kv.Key}={kv.Value}"));
 
         // Construct the request URL
-        var apiUrl = _endpoint + "/quote/v1?" + queryString;
+        var apiUrl = _endpoint + "/swap/v1/quote?" + queryString;
 
         using var httpReq = new HttpRequestMessage(HttpMethod.Get, apiUrl);
         
@@ -141,7 +141,7 @@ public class JupiterDexAg: IDexAggregator
         userPublicKey ??= _account;
         
         // Construct the request URL
-        var apiUrl = _endpoint + "/swap/v1";
+        var apiUrl = _endpoint + "/swap/v1/swap";
 
         var req = new SwapRequest()
         {
