@@ -136,12 +136,28 @@ public class JupiterDexAg: IDexAggregator
         bool useSharedAccounts = true, 
         PublicKey feeAccount = null,
         BigInteger? computeUnitPriceMicroLamports = null,
-        bool useTokenLedger = false)
+        bool useTokenLedger = false,
+        ulong maxLamports = 1_400_000,
+        string priorityLevel = "medium",
+        int jitoTipLamports = 0
+        )
     {
         userPublicKey ??= _account;
         
         // Construct the request URL
         var apiUrl = _endpoint + "/swap";
+
+        var priorityLevelObject = new PriorityLevelWithMaxLamports()
+        {
+            MaxLamports = maxLamports,
+            PriorityLevel = priorityLevel
+        }
+
+        var prioritizationFeePart = new PrioritizationFeeLamportsContainer()
+        {
+            PriorityLevelWithMaxLamports = priorityLevelObject,
+            JitoTipLamports = jitoTipLamports
+        }
 
         var req = new SwapRequest()
         {
@@ -153,7 +169,8 @@ public class JupiterDexAg: IDexAggregator
             FeeAccount = feeAccount,
             ComputeUnitPriceMicroLamports = computeUnitPriceMicroLamports,
             UseTokenLedger = useTokenLedger,
-            AsLegacyTransaction = false
+            AsLegacyTransaction = false,
+            PrioritizationFeeLamports = prioritizationFeePart
         };
         
         var requestJson = JsonConvert.SerializeObject(req, _serializerOptions);
