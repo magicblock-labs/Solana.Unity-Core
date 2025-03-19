@@ -1,6 +1,5 @@
 using Solana.Unity.Rpc.Types;
 using System;
-using System.IO;
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,6 +57,21 @@ namespace Solana.Unity.Rpc.Core.Sockets
             _connectionStats = new ConnectionStats();
             ClientSocket.ConnectionStateChangedEvent += (sender, state) => ConnectionStateChangedEvent?.Invoke(sender, state);
         }
+        
+        /// <summary>
+        /// Constructor that setups the client with a IWebSocket instance.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <param name="socket"></param>
+        protected StreamingRpcClient(string url, IWebSocket socket)
+        {
+            NodeAddress = new Uri(url);
+            ClientSocket = socket ?? new WebSocketWrapper();
+            _logger = null;
+            _sem = new SemaphoreSlim(1, 1);
+            _connectionStats = new ConnectionStats();
+            ClientSocket.ConnectionStateChangedEvent += (sender, state) => ConnectionStateChangedEvent?.Invoke(sender, state);
+        }
 
         /// <summary>
         /// Initializes the websocket connection and starts receiving messages asynchronously.
@@ -65,7 +79,8 @@ namespace Solana.Unity.Rpc.Core.Sockets
         /// <returns>Returns the task representing the asynchronous task.</returns>
         public async Task ConnectAsync()
         {
-            _sem.Wait();
+            if (ClientSocket.State == WebSocketState.Open) return;
+            await _sem.WaitAsync().ConfigureAwait(false);
             try
             {
                 if (ClientSocket.State != WebSocketState.Open)
@@ -94,7 +109,8 @@ namespace Solana.Unity.Rpc.Core.Sockets
         /// <inheritdoc cref="IStreamingRpcClient.DisconnectAsync"/>
         public async Task DisconnectAsync()
         {
-            _sem.Wait();
+            if (ClientSocket.State == WebSocketState.Closed) return;
+            await _sem.WaitAsync().ConfigureAwait(false);
             try
             {
                 if (ClientSocket.State == WebSocketState.Open)

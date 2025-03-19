@@ -60,6 +60,7 @@ namespace Solana.Unity.Rpc
             };
         }
 
+
         /// <summary>
         /// Try Reconnect to the server and reopening the confirmed subscription.
         /// </summary>

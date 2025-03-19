@@ -1,3 +1,4 @@
+using NativeWebSocket;
 using Solana.Unity.Rpc.Utilities;
 using System.Net.Http;
 using System.Net.WebSockets;
@@ -161,6 +162,20 @@ namespace Solana.Unity.Rpc
             };
             return GetStreamingClient(url, logger);
         }
+        
+        public static IStreamingRpcClient GetStreamingClient(
+            Cluster cluster,
+            IWebSocket socket)
+        {
+            var url = cluster switch
+            {
+                Cluster.DevNet => StreamingRpcDevNet,
+                Cluster.TestNet => StreamingRpcTestNet,
+                Cluster.LocalNet => StreamingRpcLocalNet,
+                _ => StreamingRpcMainNet,
+            };
+            return GetStreamingClient(url, null, socket, null);
+        }
 
         /// <summary>
         /// Instantiate a streaming client.
@@ -169,7 +184,7 @@ namespace Solana.Unity.Rpc
         /// <param name="logger">The logger.</param>
         /// <param name="clientWebSocket">A ClientWebSocket instance. If null, a new instance will be created.</param>
         /// <returns>The streaming client.</returns>
-        public static IStreamingRpcClient GetStreamingClient(string url, object logger = null, ClientWebSocket clientWebSocket = null)
+        public static IStreamingRpcClient GetStreamingClient(string url, object logger = null, IWebSocket socket = null, ClientWebSocket clientWebSocket = null)
         {
             return new SolanaStreamingRpcClient(url, logger, null, clientWebSocket);
         }
