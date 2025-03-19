@@ -45,6 +45,10 @@ namespace Solana.Unity.Rpc.Core.Sockets
             webSocket = WebSocket.Create(uri.AbsoluteUri);
             webSocket.OnOpen += () =>
             {
+                MainThreadUtil.Run(() =>
+                {
+                    _webSocketConnectionTask.TrySetResult(true);
+                });
                 _webSocketConnectionTask.TrySetResult(true);
                 webSocket.OnMessage += MessageReceived;
                 ConnectionStateChangedEvent?.Invoke(this, State);
