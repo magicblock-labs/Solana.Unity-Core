@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading;
 
 namespace Solana.Unity.Wallet
 {
@@ -259,6 +260,21 @@ namespace Solana.Unity.Wallet
         private static readonly byte[] ProgramDerivedAddressBytes = "ProgramDerivedAddress"u8.ToArray();
 
         /// <summary>
+        /// A thread-local buffer for all Pda Seeds taht we can reuse
+        /// </summary>
+        private static readonly ThreadLocal<List<byte[]>> PdaSeedsBuffer = new(() => []);
+        
+        /// <summary>
+        /// A thread local buffer for the bump array that we can reuse
+        /// </summary>
+        private static readonly ThreadLocal<byte[]> BumpArray = new(() => new byte[1]);
+        
+        /// <summary>
+        /// A thread local sha256 instance that we can reuse
+        /// </summary>
+        private static readonly ThreadLocal<SHA256> Sha256 = new(SHA256.Create);
+
+        /// <summary>
         /// Derives a program address.
         /// </summary>
         /// <param name="seeds">The address seeds.</param>
@@ -268,7 +284,7 @@ namespace Solana.Unity.Wallet
         /// <exception cref="ArgumentException">Throws exception when one of the seeds has an invalid length.</exception>
         public static bool TryCreateProgramAddress(ICollection<byte[]> seeds, PublicKey programId, out PublicKey publicKey)
         {
-            using SHA256 sha256 = SHA256.Create();
+            SHA256 sha256 = Sha256.Value;
             sha256.Initialize();
             
             foreach (byte[] seed in seeds)
@@ -295,10 +311,7 @@ namespace Solana.Unity.Wallet
             publicKey = new PublicKey(hash);
             return true;
         }
-
-        private static readonly List<byte[]> PdaSeedsBuffer = [];
-        private static readonly byte[] BumpArray = new byte[1];
-
+        
         /// <summary>
         /// Attempts to find a program address for the passed seeds and program Id.
         /// </summary>
@@ -309,30 +322,33 @@ namespace Solana.Unity.Wallet
         /// <returns>True whenever the address for a nonce was found, otherwise false.</returns>
         public static bool TryFindProgramAddress(IEnumerable<byte[]> seeds, PublicKey programId, out PublicKey address, out byte bump)
         {
-            PdaSeedsBuffer.Clear();
-            PdaSeedsBuffer.AddRange(seeds);
-
-            if (PdaSeedsBuffer.Any(seed => seed.Length > PublicKeyLength))
+            List<byte[]> pdaSeedsBuffer = PdaSeedsBuffer.Value;
+            pdaSeedsBuffer.Clear();
+            pdaSeedsBuffer.AddRange(seeds);
+            
+            if (pdaSeedsBuffer.Any(seed => seed.Length > PublicKeyLength))
             {
                 throw new ArgumentException("max seed length exceeded", nameof(seeds));
             }
             
-            using SHA256 sha256 = SHA256.Create();
+            byte[] bumpArray = BumpArray.Value;
+            SHA256 sha256 = Sha256.Value;
+            
             for (bump = 255; ; bump--)
             {
                 sha256.Initialize();
 
-                foreach (byte[] seed in PdaSeedsBuffer)
+                foreach (byte[] seed in pdaSeedsBuffer)
                 {
                     sha256.TransformBlock(seed, 0, seed.Length, null, 0);
                 }
-                
-                BumpArray[0] = bump;
-                sha256.TransformBlock(BumpArray, 0, 1, null, 0);
+            
+                bumpArray[0] = bump;
+                sha256.TransformBlock(bumpArray, 0, 1, null, 0);
                 sha256.TransformBlock(programId.KeyBytes, 0, programId.KeyBytes.Length, null, 0);
                 sha256.TransformBlock(ProgramDerivedAddressBytes, 0, ProgramDerivedAddressBytes.Length, null, 0);
                 sha256.TransformFinalBlock([], 0, 0);
-                
+            
                 byte[] hash = sha256.Hash!;
                 if (!hash.IsOnCurve())
                 {
