@@ -367,7 +367,7 @@ namespace Solana.Unity.Rpc
         /// <param name="memCmpList">The list of comparisons to match against the program account data.</param>
         /// <returns>A task which may return a request result holding the context and account info.</returns>
         Task<RequestResult<List<AccountKeyPair>>> GetProgramAccountsAsync(string pubKey, Commitment commitment = default,
-            int? dataSize = null, IList<MemCmp> memCmpList = null);
+            int? dataSize = null, IList<MemCmp> memCmpList = null, DataSlice dataSlice = null);
         
         /// <summary>
         /// Gets a recent block hash.
