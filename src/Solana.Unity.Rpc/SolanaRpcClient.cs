@@ -153,7 +153,7 @@ namespace Solana.Unity.Rpc
 
         /// <inheritdoc cref="IRpcClient.GetProgramAccountsAsync"/>
         public async Task<RequestResult<List<AccountKeyPair>>> GetProgramAccountsAsync(string pubKey,
-            Commitment commitment = default, int? dataSize = null, IList<MemCmp> memCmpList = null)
+            Commitment commitment = default, int? dataSize = null, IList<MemCmp> memCmpList = null, DataSlice dataSlice = null)
         {
             List<object> filters = Parameters.Create(ConfigObject.Create(KeyValue.Create("dataSize", dataSize)));
             if (memCmpList != null)
@@ -164,11 +164,22 @@ namespace Solana.Unity.Rpc
                         KeyValue.Create("bytes", filter.Bytes))))));
             }
 
+            Dictionary<string, object> dataSliceData = null;
+            if (dataSlice != null)
+            {
+                dataSliceData = new Dictionary<string, object>
+                {
+                    { "offset", dataSlice.Offset }, 
+                    { "length", dataSlice.Length }
+                };
+            }
+            
             return await SendRequestAsync<List<AccountKeyPair>>("getProgramAccounts",
                 Parameters.Create(
                     pubKey,
                     ConfigObject.Create(
                         KeyValue.Create("encoding", "base64"),
+                        KeyValue.Create("dataSlice", dataSliceData),
                         KeyValue.Create("filters", filters),
                         HandleCommitment(commitment))));
         }
