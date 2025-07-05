@@ -17,7 +17,7 @@
     <a href="https://coveralls.io/github/garbles-labs/Solana.Unity-Core?branch=master">
         <img src="https://coveralls.io/repos/github/garbles-labs/Solana.Unity-Core/badge.svg?branch=master" 
             alt="Coverage Status" ></a>
-    <a href="">
+    <a href="https://github.com/magicblock-labs/Solana.Unity-Core/blob/master/LICENSE">
         <img src="https://img.shields.io/github/license/garbles-labs/Solana.Unity-Core?style=flat-square"
             alt="Code License"></a>
     <a href="https://twitter.com/intent/follow?screen_name=garblesfun">
