@@ -1,5 +1,6 @@
 ﻿using Solana.Unity.Extensions.Models.TokenMint;
 using System;
+using System.Globalization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -74,9 +75,9 @@ namespace Solana.Unity.Extensions
         public override string ToString()
         {
             if (Symbol == TokenName)
-                return $"{QuantityDecimal} {Symbol}";
+                return $"{QuantityDecimal.ToString(CultureInfo.InvariantCulture)} {Symbol}";
             else
-                return $"{QuantityDecimal} {Symbol} ({TokenName})";
+                return $"{QuantityDecimal.ToString(CultureInfo.InvariantCulture)} {Symbol} ({TokenName})";
         }
 
         /// <summary>

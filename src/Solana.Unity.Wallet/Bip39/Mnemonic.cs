@@ -197,7 +197,7 @@ namespace Solana.Unity.Wallet.Bip39
         {
             Pkcs5S2ParametersGenerator gen = new(new Sha512Digest());
             gen.Init(password, salt, 2048);
-            return ((KeyParameter)gen.GenerateDerivedParameters(512)).GetKey();
+            return ((KeyParameter)gen.GenerateDerivedMacParameters(512)).GetKey();
         }
 
         /// <summary>
