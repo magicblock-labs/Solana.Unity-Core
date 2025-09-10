@@ -35,7 +35,7 @@ public class JupiterDexAg: IDexAggregator
     /// Public constructor; Create the JupiterDexAg instance with the account to use for the aggregator. 
     /// </summary>
     /// <param name="endpoint"></param>
-    public JupiterDexAg(string endpoint = "https://quote-api.jup.ag/v6")
+    public JupiterDexAg(string endpoint = "https://api.jup.ag/")
     {
         _endpoint = endpoint;
         _httpClient = new HttpClient();
@@ -56,7 +56,7 @@ public class JupiterDexAg: IDexAggregator
     /// </summary>
     /// <param name="account"></param>
     /// <param name="endpoint"></param>
-    public JupiterDexAg(PublicKey account, string endpoint = "https://quote-api.jup.ag/v6")
+    public JupiterDexAg(PublicKey account, string endpoint = "https://api.jup.ag/")
     {
         _account = account;
         _endpoint = endpoint;
@@ -108,7 +108,7 @@ public class JupiterDexAg: IDexAggregator
         var queryString = string.Join("&", queryParams.Select(kv => $"{kv.Key}={kv.Value}"));
 
         // Construct the request URL
-        var apiUrl = _endpoint + "/quote?" + queryString;
+        var apiUrl = _endpoint + "/swap/v1/quote?" + queryString;
 
         using var httpReq = new HttpRequestMessage(HttpMethod.Get, apiUrl);
         
@@ -141,7 +141,7 @@ public class JupiterDexAg: IDexAggregator
         userPublicKey ??= _account;
         
         // Construct the request URL
-        var apiUrl = _endpoint + "/swap";
+        var apiUrl = _endpoint + "/swap/v1/swap";
 
         var req = new SwapRequest()
         {
