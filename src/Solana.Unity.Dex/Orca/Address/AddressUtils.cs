@@ -20,28 +20,8 @@ namespace Solana.Unity.Dex.Orca.Address
         /// <returns>A Pda (program-derived address) off the curve, or null.</returns>
         public static Pda FindProgramAddress(IEnumerable<byte[]> seeds, PublicKey programId)
         {
-            byte nonce = 255;
-
-            while (nonce != 0)
-            {
-                PublicKey address;
-                List<byte[]> seedsWithNonce = new List<byte[]>(seeds);
-                seedsWithNonce.Add(new byte[] { nonce });
-
-                //try to generate the address 
-                bool created = PublicKey.TryCreateProgramAddress(new List<byte[]>(seedsWithNonce), programId, out address);
-
-                //if succeeded, return 
-                if (created)
-                {
-                    return new Pda(address, nonce);
-                }
-                
-                //decrease the nonce and retry if failed 
-                nonce--;
-            }
-
-            return null;
+            return PublicKey.TryFindProgramAddress(seeds, programId, out PublicKey pubkey, out byte bump) 
+                ? new Pda(pubkey, bump) : null;
         }
 
         /// <summary> 
