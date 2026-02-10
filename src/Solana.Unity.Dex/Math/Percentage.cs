@@ -150,12 +150,12 @@ namespace Solana.Unity.Dex.Math
                     {
                         double dTemp = dValue;
                         long iMultiple = 1;
-                        string strTemp = dValue.ToString();
+                        string strTemp = dValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
                         while (strTemp.IndexOf("E") > 0)    // if in the form like 12E-9
                         {
                             dTemp *= 10;
                             iMultiple *= 10;
-                            strTemp = dTemp.ToString();
+                            strTemp = dTemp.ToString(System.Globalization.CultureInfo.InvariantCulture);
                         }
                         int i = 0;
                         while (strTemp[i] != '.')
