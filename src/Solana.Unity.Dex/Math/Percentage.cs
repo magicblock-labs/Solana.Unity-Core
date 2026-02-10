@@ -176,9 +176,9 @@ namespace Solana.Unity.Dex.Math
             {
                 throw new PercentageException("Conversion not possible due to overflow");
             }
-            catch (Exception)
+            catch (Exception exp)
             {
-                throw new PercentageException("Conversion not possible");
+                throw new PercentageException("Conversion not possible: " + exp.Message);
             }
         }
 
