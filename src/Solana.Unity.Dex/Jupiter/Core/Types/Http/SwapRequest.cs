@@ -53,4 +53,37 @@ public class SwapRequest
     /// Is this a legacy transaction
     /// </summary>
     public bool AsLegacyTransaction { get; set; }
+
+    /// <summary>
+    /// To specify a level or amount of additional fees to prioritize the transaction
+    /// It can be used for both priority fee and jito tip
+    /// </summary>
+    public PrioritizationFeeLamportsContainer PrioritizationFeeLamports { get; set; }
+}
+
+/// <summary>
+/// Represents prioritization fee settings
+/// </summary>
+public class PrioritizationFeeLamportsContainer
+{
+    /// <summary>
+    /// Represents the max Lamports and priority level
+    /// </summary>
+    public PriorityLevelWithMaxLamports PriorityLevelWithMaxLamports { get; set; }
+}
+
+/// <summary>
+/// Represents the max Lamports and priority level
+/// </summary>
+public class PriorityLevelWithMaxLamports
+{
+    /// <summary>
+    /// Maximum lamports to cap the priority fee estimation, to prevent overpaying
+    /// </summary>
+    public ulong MaxLamports { get; set; }
+
+    /// <summary>
+    /// Either medium, high or veryHigh
+    /// </summary>
+    public string PriorityLevel { get; set; }  // Example: "veryHigh"
 }
