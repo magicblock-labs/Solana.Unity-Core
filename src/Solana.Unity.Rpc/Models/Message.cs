@@ -189,10 +189,9 @@ namespace Solana.Unity.Rpc.Models
 
             // Read the number of instructions in the message
             (int instructionsLength, int instructionsLengthEncodedLength) =
-                ShortVectorEncoding.DecodeLength(
-                    ShortVectorEncoding.GetEncodedLengthSpan(data,
+                ShortVectorEncoding.DecodeLengthAt(data,
                         MessageHeader.Layout.HeaderLength + accountAddressLengthEncodedLength +
-                        (accountAddressLength * PublicKey.PublicKeyLength) + PublicKey.PublicKeyLength));
+                        (accountAddressLength * PublicKey.PublicKeyLength) + PublicKey.PublicKeyLength);
 
             List<CompiledInstruction> instructions = new(instructionsLength);
             int instructionsOffset =

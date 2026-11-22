@@ -21,6 +21,24 @@ namespace Solana.Unity.Rpc.Utilities
         /// <param name="offset">The offset of the encoded value.</param>
         /// <returns>The span to pass to <see cref="DecodeLength"/>.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown when there is no byte at the given offset.</exception>
+        /// <summary>
+        /// Decodes the compact-u16 at the given offset, reading at most <see cref="SpanLength"/> bytes and fewer when
+        /// the data ends sooner. Throws when the value is not terminated (its last byte still has the continuation bit).
+        /// </summary>
+        /// <param name="data">The data that holds the encoded value.</param>
+        /// <param name="offset">The offset of the encoded value.</param>
+        /// <returns>The decoded value and the number of bytes it used.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when there is no byte at the given offset.</exception>
+        /// <exception cref="ArgumentException">Thrown when the encoded value is not terminated.</exception>
+        internal static (int Value, int Length) DecodeLengthAt(ReadOnlySpan<byte> data, int offset)
+        {
+            ReadOnlySpan<byte> span = GetEncodedLengthSpan(data, offset);
+            (int value, int length) = DecodeLength(span);
+            if ((span[length - 1] & 0x80) != 0)
+                throw new ArgumentException("Unterminated compact-u16 length.", nameof(data));
+            return (value, length);
+        }
+
         internal static ReadOnlySpan<byte> GetEncodedLengthSpan(ReadOnlySpan<byte> data, int offset)
         {
             if (offset < 0 || offset >= data.Length)

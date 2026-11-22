@@ -62,6 +62,17 @@ namespace Solana.Unity.Rpc.Test
         }
 
         [TestMethod]
+        public void DeserializeVersionedTransactionRejectsMissingLookupCount()
+        {
+            // Zero instructions with the address table lookup count cut off: the lookup count must not default to 0.
+            byte[] full = Convert.FromBase64String(Base64VersionedTxZeroInstructions);
+            byte[] bytes = full[..^1];
+            bool threw = false;
+            try { _ = Transaction.Deserialize(bytes); } catch (Exception) { threw = true; }
+            Assert.IsTrue(threw);
+        }
+
+        [TestMethod]
         public void TestSignVersionedTransactions()
         {
             // Deserialize the versioned transaction

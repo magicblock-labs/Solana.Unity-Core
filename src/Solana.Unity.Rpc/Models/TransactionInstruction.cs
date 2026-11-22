@@ -91,10 +91,9 @@ namespace Solana.Unity.Rpc.Models
             instructionLength += 1; // ProgramIdIndex is zero
 
             // Read the number of keys for the instruction
-            ReadOnlySpan<byte> encodedKeyIndicesLength =
-                ShortVectorEncoding.GetEncodedLengthSpan(data, instructionLength);
+            int keyIndicesCountOffset = instructionLength;
             (int keyIndicesLength, int keyIndicesLengthEncodedLength) =
-                ShortVectorEncoding.DecodeLength(encodedKeyIndicesLength);
+                ShortVectorEncoding.DecodeLengthAt(data, instructionLength);
             instructionLength += keyIndicesLengthEncodedLength;
 
             // Read the key indices for the instruction accounts
@@ -106,10 +105,8 @@ namespace Solana.Unity.Rpc.Models
             }
 
             // Read the length of the instruction's data
-            ReadOnlySpan<byte> encodedDataLength =
-                ShortVectorEncoding.GetEncodedLengthSpan(data, instructionLength);
-
-            (int dataLength, int dataLengthEncodedLength) = ShortVectorEncoding.DecodeLength(encodedDataLength);
+            int dataLengthOffset = instructionLength;
+            (int dataLength, int dataLengthEncodedLength) = ShortVectorEncoding.DecodeLengthAt(data, instructionLength);
             instructionLength += dataLengthEncodedLength;
 
             // Read the instruction data
@@ -119,9 +116,9 @@ namespace Solana.Unity.Rpc.Models
             return (Instruction: new CompiledInstruction
             {
                 ProgramIdIndex = programIdIndex,
-                KeyIndicesCount = encodedKeyIndicesLength[..keyIndicesLengthEncodedLength].ToArray(),
+                KeyIndicesCount = data.Slice(keyIndicesCountOffset, keyIndicesLengthEncodedLength).ToArray(),
                 KeyIndices = keyIndices,
-                DataLength = encodedDataLength[..dataLengthEncodedLength].ToArray(),
+                DataLength = data.Slice(dataLengthOffset, dataLengthEncodedLength).ToArray(),
                 Data = instructionEncodedData
             }, Length: instructionLength);
         }

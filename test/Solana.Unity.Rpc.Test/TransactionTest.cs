@@ -182,6 +182,30 @@ namespace Solana.Unity.Rpc.Test
         }
 
         [TestMethod]
+        public void TransactionDeserializeRejectsUnterminatedInstructionCountTest()
+        {
+            // Same message, but the instruction count is a lone 0x80 whose continuation bit points past the end.
+            byte[] bytes = Convert.FromBase64String(ZeroInstructionsTransaction);
+            bytes[^1] = 0x80;
+            bool threw = false;
+            try { _ = Transaction.Deserialize(bytes); } catch (Exception) { threw = true; }
+            Assert.IsTrue(threw);
+        }
+
+        [TestMethod]
+        public void TransactionDeserializeAcceptsNonCanonicalZeroInstructionCountTest()
+        {
+            // 0x80 0x00 is a terminated, non-canonical encoding of zero; it was accepted before and still is.
+            byte[] canonical = Convert.FromBase64String(ZeroInstructionsTransaction);
+            byte[] bytes = new byte[canonical.Length + 1];
+            canonical.CopyTo(bytes, 0);
+            bytes[^2] = 0x80;
+            bytes[^1] = 0x00;
+            Transaction tx = Transaction.Deserialize(bytes);
+            Assert.AreEqual(0, tx.Instructions.Count);
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TransactionDeserializeMissingInstructionCountTest()
         {
