@@ -127,6 +127,16 @@ namespace Solana.Unity.Rpc.Test
             "AApQAAAAAAAAAG3fbh12Whk9nL4UbO63msHLSF7V9bN5E6jPWFfv8AqQUEAgEABAEBBQMBAgAJB0BCDwAAAAAABgECEkhlbGxvIG" +
             "Zyb20gU29sLk5ldA==";
 
+        private const string EmptyLastInstructionTransaction =
+            "AQ61qZFf1Eq5tooVLXUOnm2pwa9WQufJ5dwvWe/6eO9FqRUrDCpWSXDWQXvu0Llq9fY2xHPWS2mVOco7cTIhyQ4BAAIEV9P/AiUT" +
+            "CbWOL7dsUx8qrRgqD0O0wGr1p24RvVPEZQh17HBNmbFCfrltyiXNmNbTZ227SBJqFVcV1Dn+xgICEQAAAAAAAAAAAAAAAAAAAAAA" +
+            "AAAAAAAAAAAAAAAAAAAABUpTWpkpIQZNJOhxYNo4fHw1td28kruB5B+oQEEFRI3Dj8pEevGnpgEIHbHXXZrjjFDtYQHS/aUrvQpU" +
+            "wKZn9gICAgABDAIAAAABAAAAAAAAAAMAAA==";
+
+        private const string ZeroInstructionsTransaction =
+            "ARitOS678vNTC5SYPhIPGRXy9ANgV4OCY4y7BNbuTUrm9S6y2qwGL/kI4SwR6/bvSdqIgeBNHEF4QZb1Rpq1BKEBAAABKFpANJCL" +
+            "MNqlkm6drqxoPt84joQvWa3xqttCBOmukY7ql/zjRzxN0lIxrCexMitz4lBiwVyxksBBuA0wCZOjAQA=";
+
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void TransactionDeserializeExceptionTest()
@@ -139,6 +149,44 @@ namespace Solana.Unity.Rpc.Test
         public void TransactionDeserializeArgumentNullExceptionTest()
         {
             _ = Transaction.Deserialize((string)null);
+        }
+
+        [TestMethod]
+        public void TransactionDeserializeEmptyLastInstructionTest()
+        {
+            // Mainnet transaction whose last instruction is a Memo with no accounts and no data,
+            // so the message ends right after its two zero-length compact-u16 values.
+            Transaction tx = Transaction.Deserialize(EmptyLastInstructionTransaction);
+
+            Assert.AreEqual(1, tx.Signatures.Count);
+            Assert.AreEqual("EAPfr5sagyJxq5CipxLU3dqNTnfgz9sNPwnCPr3x9XM7", tx.RecentBlockHash);
+            Assert.AreEqual(2, tx.Instructions.Count);
+            Assert.AreEqual("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+                Encoders.Base58.EncodeData(tx.Instructions[1].ProgramId));
+            Assert.AreEqual(0, tx.Instructions[1].Keys.Count);
+            Assert.AreEqual(0, tx.Instructions[1].Data.Length);
+            Assert.AreEqual(EmptyLastInstructionTransaction, Convert.ToBase64String(tx.Serialize()));
+        }
+
+        [TestMethod]
+        public void TransactionDeserializeZeroInstructionsTest()
+        {
+            // The message ends with an instruction count of zero.
+            Transaction tx = Transaction.Deserialize(ZeroInstructionsTransaction);
+
+            Assert.AreEqual(1, tx.Signatures.Count);
+            Assert.AreEqual("3iX8KTi7wJJ3jqUxYrLSDowEyB4isqcrQUWe74YuNgiZ", tx.FeePayer.Key);
+            Assert.AreEqual("GnkpZoNJmc7p7Sppf6oKEgXDDsxfzEGUzX58kXwc89uJ", tx.RecentBlockHash);
+            Assert.AreEqual(0, tx.Instructions.Count);
+            Assert.AreEqual(ZeroInstructionsTransaction, Convert.ToBase64String(tx.Serialize()));
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TransactionDeserializeMissingInstructionCountTest()
+        {
+            byte[] tx = Convert.FromBase64String(ZeroInstructionsTransaction);
+            _ = Transaction.Deserialize(tx[..^1]);
         }
 
         [TestMethod]

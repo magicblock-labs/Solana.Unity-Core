@@ -14,6 +14,21 @@ namespace Solana.Unity.Rpc.Utilities
         internal const int SpanLength = 3;
 
         /// <summary>
+        /// Gets the bytes that may hold a compact-u16 starting at the given offset: <see cref="SpanLength"/>
+        /// bytes, or fewer when the data ends sooner (for example a last instruction with no accounts and no data).
+        /// </summary>
+        /// <param name="data">The data that holds the encoded value.</param>
+        /// <param name="offset">The offset of the encoded value.</param>
+        /// <returns>The span to pass to <see cref="DecodeLength"/>.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when there is no byte at the given offset.</exception>
+        internal static ReadOnlySpan<byte> GetEncodedLengthSpan(ReadOnlySpan<byte> data, int offset)
+        {
+            if (offset < 0 || offset >= data.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            return data.Slice(offset, Math.Min(SpanLength, data.Length - offset));
+        }
+
+        /// <summary>
         /// Encodes the number of account keys present in the transaction as a short vector, see remarks.
         /// <remarks>
         /// See the documentation for more information on this encoding:

@@ -92,7 +92,7 @@ namespace Solana.Unity.Rpc.Models
 
             // Read the number of keys for the instruction
             ReadOnlySpan<byte> encodedKeyIndicesLength =
-                data.Slice(instructionLength, ShortVectorEncoding.SpanLength);
+                ShortVectorEncoding.GetEncodedLengthSpan(data, instructionLength);
             (int keyIndicesLength, int keyIndicesLengthEncodedLength) =
                 ShortVectorEncoding.DecodeLength(encodedKeyIndicesLength);
             instructionLength += keyIndicesLengthEncodedLength;
@@ -107,9 +107,7 @@ namespace Solana.Unity.Rpc.Models
 
             // Read the length of the instruction's data
             ReadOnlySpan<byte> encodedDataLength =
-                data.Length > instructionLength + ShortVectorEncoding.SpanLength ?
-                    data.Slice(instructionLength, ShortVectorEncoding.SpanLength)
-                    : data.Slice(instructionLength, data.Length - instructionLength);
+                ShortVectorEncoding.GetEncodedLengthSpan(data, instructionLength);
 
             (int dataLength, int dataLengthEncodedLength) = ShortVectorEncoding.DecodeLength(encodedDataLength);
             instructionLength += dataLengthEncodedLength;
