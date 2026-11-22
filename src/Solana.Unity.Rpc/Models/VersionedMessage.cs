@@ -73,11 +73,9 @@ namespace Solana.Unity.Rpc.Models
 
             // Read the number of instructions in the message
             (int instructionsLength, int instructionsLengthEncodedLength) =
-                ShortVectorEncoding.DecodeLength(
-                    data.Slice(
+                ShortVectorEncoding.DecodeLengthAt(data,
                         MessageHeader.Layout.HeaderLength + accountAddressLengthEncodedLength +
-                        (accountAddressLength * PublicKey.PublicKeyLength) + PublicKey.PublicKeyLength,
-                        ShortVectorEncoding.SpanLength));
+                        (accountAddressLength * PublicKey.PublicKeyLength) + PublicKey.PublicKeyLength);
 
             List<CompiledInstruction> instructions = new(instructionsLength);
             int instructionsOffset =
@@ -104,6 +102,8 @@ namespace Solana.Unity.Rpc.Models
                 (accountAddressLength * PublicKey.PublicKeyLength) + PublicKey.PublicKeyLength +
                 instructionsLengthEncodedLength + instructionsDataLength;
             
+            if (tableLookupOffset >= data.Length)
+                throw new ArgumentOutOfRangeException(nameof(data), "The address table lookup count is missing.");
             ReadOnlySpan<byte> tableLookupData = data[tableLookupOffset..];
             
             (int addressTableLookupsCount, int addressTableLookupsEncodedCount) = ShortVectorEncoding.DecodeLength(tableLookupData);
